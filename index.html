@@ -612,7 +612,7 @@
         .infra-sub-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
         .infra-sub-label {
             font-size: 0.85em;
@@ -621,6 +621,52 @@
             margin-bottom: 5px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 4px;
+        }
+
+        /* 基础设施层模块专用布局 - 纵向对齐外部集成 */
+        .infra-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .infra-tag {
+            background-color: #ffffff;
+            border: 1px solid #dcdfe6;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            padding: 10px 8px;
+            min-height: 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .infra-tag:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            background-color: #f9f9f9;
+        }
+        .infra-tag .label {
+            color: #555;
+            font-size: 0.88em;
+            margin-bottom: 3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+            font-weight: 600;
+        }
+        .infra-tag .sub-text {
+            font-size: 0.68em;
+            color: #777;
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            padding: 0 2px;
         }
 
         /* 外部集成模块专用布局 */
@@ -918,24 +964,57 @@
             <!-- 原平台底座内容 -->
             <div class="infra-sub-group">
                 <div class="infra-sub-label">平台支撑 (Platform / PaaS)</div>
-                <div class="plat-items">
-                    <span class="tag">K8S 容器</span>
-                    <span class="tag">Nacos 注册中心</span>
-                    <span class="tag">Cron/Job 调度</span>
-                    <span class="tag">Observability (Log/Trace)</span>
-                    <span class="tag">CI/CD 流水线</span>
+                <div class="infra-items">
+                    <div class="box infra-tag">
+                        <span class="label">K8S 容器</span>
+                        <span class="sub-text">容器编排平台</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">Nacos 注册中心</span>
+                        <span class="sub-text">服务发现与配置</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">Cron/Job 调度</span>
+                        <span class="sub-text">定时任务管理</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">Observability</span>
+                        <span class="sub-text">日志/链路追踪</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">CI/CD 流水线</span>
+                        <span class="sub-text">持续集成部署</span>
+                    </div>
                 </div>
             </div>
             <!-- 原数据底座内容 -->
             <div class="infra-sub-group">
                 <div class="infra-sub-label">数据存储 (Storage)</div>
-                <div class="plat-items">
-                    <span class="tag">MySQL/RDS</span>
-                    <span class="tag">Redis 缓存</span>
-                    <span class="tag">OSS 文件</span>
-                    <span class="tag">RocketMQ</span>
-                    <span class="tag">ElasticSearch</span>
-                    <span class="tag">Data Warehouse</span>
+                <div class="infra-items">
+                    <div class="box infra-tag">
+                        <span class="label">MySQL/RDS</span>
+                        <span class="sub-text">关系型数据库</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">Redis 缓存</span>
+                        <span class="sub-text">内存数据库</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">OSS 文件</span>
+                        <span class="sub-text">对象存储服务</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">RocketMQ</span>
+                        <span class="sub-text">消息队列中间件</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">ElasticSearch</span>
+                        <span class="sub-text">搜索引擎</span>
+                    </div>
+                    <div class="box infra-tag">
+                        <span class="label">Data Warehouse</span>
+                        <span class="sub-text">数据仓库</span>
+                    </div>
                 </div>
             </div>
         </div>
