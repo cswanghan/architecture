@@ -619,23 +619,24 @@
             font-size: 0.85em;
             font-weight: bold;
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 4px;
         }
 
-        /* 基础设施层模块专用布局 - 纵向对齐外部集成 */
+        /* 基础设施层模块专用布局 - 横向排列缩短高度 */
         .infra-items {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .infra-tag {
             background-color: #ffffff;
             border: 1px solid #dcdfe6;
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-            padding: 10px 8px;
-            min-height: 56px;
+            padding: 8px 10px;
+            min-height: 48px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -643,6 +644,8 @@
             text-align: center;
             border-radius: 4px;
             transition: all 0.2s;
+            flex: 1;
+            min-width: 120px;
         }
         .infra-tag:hover {
             transform: translateY(-1px);
@@ -651,8 +654,8 @@
         }
         .infra-tag .label {
             color: #555;
-            font-size: 0.88em;
-            margin-bottom: 3px;
+            font-size: 0.82em;
+            margin-bottom: 2px;
             line-height: 1.2;
             white-space: nowrap;
             overflow: hidden;
@@ -660,9 +663,9 @@
             font-weight: 600;
         }
         .infra-tag .sub-text {
-            font-size: 0.68em;
+            font-size: 0.65em;
             color: #777;
-            line-height: 1.15;
+            line-height: 1.1;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
