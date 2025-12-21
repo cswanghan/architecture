@@ -550,13 +550,17 @@
 
         /* 外部集成模块 */
         .layer-external {
-            background: #f4f5f7;
-            padding: 25px 20px 20px 20px;
+            background-color: #f0fbff;
+            border: 1px solid #bce0f0;
+            border-left: 4px solid #0077aa;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             border-radius: var(--radius);
-            border: 1px dashed #999;
             position: relative;
             /* 位于右列 (和AI栏一列) */
-            grid-column: 2; 
+            grid-column: 2;
         }
         .layer-external::before {
             content: "外部集成";
@@ -565,10 +569,9 @@
             left: 20px;
             background: #fff;
             padding: 0 8px;
-            color: #666;
+            color: #0077aa;
             font-weight: 700;
             font-size: 0.9em;
-            border: 1px solid #ddd;
             border-radius: 4px;
         }
 
@@ -620,6 +623,53 @@
             padding-bottom: 4px;
         }
 
+        /* 外部集成模块专用布局 */
+        .external-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .external-tag {
+            background-color: #ffffff;
+            border: 1px solid #cceeff;
+            box-shadow: 0 2px 4px rgba(0,119,170,0.1);
+            padding: 10px 8px;
+            min-height: 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .external-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,119,170,0.15);
+            background-color: #f5fbff;
+        }
+        .external-tag .label {
+            color: #0077aa;
+            font-size: 0.88em;
+            margin-bottom: 3px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+            font-weight: 600;
+        }
+        .external-tag .sub-text {
+            font-size: 0.68em;
+            color: #5599bb;
+            line-height: 1.15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            padding: 0 2px;
+        }
+
+        /* 保留原有的plat-items和tag样式，供基础设施层使用 */
         .plat-items {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -892,10 +942,19 @@
     </div>
 
     <div class="layer-external">
-        <div class="plat-items">
-            <span class="tag">钉钉/企微</span>
-            <span class="tag">IoT 设备</span>
-            <span class="tag">支付渠道</span>
+        <div class="external-items">
+            <div class="box external-tag">
+                <span class="label">钉钉/企微</span>
+                <span class="sub-text">企业协作平台</span>
+            </div>
+            <div class="box external-tag">
+                <span class="label">IoT 设备</span>
+                <span class="sub-text">物联网接入</span>
+            </div>
+            <div class="box external-tag">
+                <span class="label">支付渠道</span>
+                <span class="sub-text">在线支付服务</span>
+            </div>
         </div>
     </div>
 
