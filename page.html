@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧校园：端到端技术架构图 (结构化布局 - 普惠体版)</title>
+    <!-- 尝试引入阿里普惠体 (如果环境支持)，同时设置备选方案 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-alibaba-puhuiti@2.0.3/css/2.0/3500.css">
+    <style>
+        :root {
+            --bg-color: #fdfdfd;
+            --border-color: #333; 
+            --shadow: 4px 4px 0px rgba(0,0,0,0.08); 
+            --radius: 6px; 
+            
+            /* 颜色定义 */
+            --c-access: #eafcf0;   /* 绿色 - 接入 */
+            --c-edge: #eafcf0;     /* 绿色 - 边界 */
+            --c-biz: #eef8ff;      /* 蓝色 - 业务 */
+            --c-func: #ffffff;     /* 白色 - 功能 */
+            --c-cap: #fff0f0;      /* 红色 - 微服务 */
+            --c-data: #f5f0ff;     /* 紫色 - 主数据 */
+            --c-infra: #fff5eb;    /* 橙色 - 公共支撑 */
+            --c-plat: #f7f8fa;     /* 灰色 - 底座 */
+            --c-ai: #f0fbff;       /* 浅蓝 - AI */
+            
+            --border-style: solid;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: "Alibaba PuHuiTi 2.0", "Alibaba PuHuiTi", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #222; 
+            display: flex;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+        /* 基础盒子样式 */
+        .box {
+            border: 1px solid #888; 
+            border-radius: var(--radius);
+            padding: 12px;
+            background: white;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 10px rgba(0,0,0,0.1);
+            border-color: #000;
+            z-index: 10;
+        }
+
+        .label {
+            font-weight: 700; 
+            display: block;
+            margin-bottom: 6px;
+            text-align: center;
+            font-size: 1.05em;
+            color: #111;
+        }
+
+        .sub-text {
+            display: block;
+            font-size: 0.85em;
+            color: #555;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* 主容器：Grid 布局 */
+        .architecture-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
+            /* 调整最大宽度：增加到 1800px */
+            max-width: 1800px;
+            width: 100%;
+        }
+
+        /* 跨列标题 */
+        .main-title {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 24px;
+            border: none; 
+            background: transparent;
+            color: #111;
+            letter-spacing: 1px;
+        }
+
+        /* === 第0层：访问入口 === */
+        .layer-access {
+            grid-column: 1 / -1;
+            background-color: rgba(230, 255, 237, 0.4);
+            border: 1px dashed #1f7a1f;
+            /* 优化内边距：顶部留出标签空间，底部收紧 */
+            padding: 28px 10px 12px 10px; 
+            position: relative;
+            /* 确保父容器包裹住内容 */
+            height: auto;
+            min-height: auto;
+        }
+        /* 标签样式：访问入口 */
+        .layer-access::before {
+            content: "访问入口 (多端用户)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #1f7a1f;
+            font-weight: 700;
+            font-size: 0.9em;
+            border-radius: 4px;
+        }
+
+        .access-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px; /* 间距由 15px 减小到 10px */
+        }
+        
+        /* 修改 .item-access 样式，极度紧凑化 */
+        .item-access { 
+            background-color: var(--c-access); 
+            border: 1px solid #b0dcb5; 
+            border-radius: 4px; 
+            /* 减小内边距 */
+            padding: 6px 4px; 
+            /* 移除固定最小高度，改为内容自适应但有底限 */
+            min-height: 42px; 
+            text-align: center;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.03); /* 阴影变浅 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto; /* 自适应高度 */
+            transition: all 0.2s;
+        }
+
+        /* 内部标签对齐 - 字体调小 */
+        .item-access .label {
+            color: #1f7a1f; 
+            font-size: 0.85em; /* 0.9em -> 0.85em */
+            margin-bottom: 2px;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        /* 内部副标题对齐 - 字体调小 */
+        .item-access .sub-text {
+            color: #538053; 
+            font-size: 0.7em; /* 0.75em -> 0.7em */
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        /* === 第0.5层：边界 (网络接入层) === */
+        .layer-edge {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            gap: 10px; 
+            /* 增加顶部内边距，为"网络接入层"标题留出空间 */
+            padding: 28px 10px 12px 10px;
+            background: rgba(230, 255, 237, 0.2);
+            border: 1px dashed #1f7a1f;
+            border-radius: var(--radius);
+            position: relative;
+        }
+        
+        /* 添加标题：网络接入层 */
+        .layer-edge::before {
+            content: "网络接入层";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #1f7a1f; /* 保持绿色系 */
+            font-weight: 700;
+            font-size: 0.9em;
+            border-radius: 4px;
+        }
+        
+        /* 修改 .item-edge 样式，完全对齐 .item-access */
+        .item-edge { 
+            background-color: var(--c-edge); 
+            border: 1px solid #b0dcb5; /* 细实线边框 */
+            border-radius: 4px; 
+            padding: 6px 15px; /* 左右稍微宽一点，因为是单行文字 */
+            min-height: 42px; /* 高度与教师端对齐 */
+            font-size: 0.85em; /* 字体大小与教师端 Label 对齐 */
+            font-weight: 700; /* 加粗 */
+            color: #1f7a1f; /* 字体颜色 */
+            
+            text-align: center;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        /* 添加 Hover 效果 */
+        .item-edge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+        }
+
+        /* === 左侧主列容器 === */
+        .main-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 10px;
+        }
+
+        /* === 第一层：业务中心 (统一模块 - 紧凑版) === */
+        .layer-business {
+            background-color: #f4faff; 
+            border: 1px solid #cceeff;
+            border-left: 4px solid #0033cc;
+            /* 增加顶部内边距，防止标签遮挡内容，同时底部留白 */
+            padding: 20px 15px 15px 15px; 
+            position: relative;
+        }
+        /* 标签样式：业务中心 */
+        .layer-business::before {
+            content: "业务中心 (Business Center)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #0033cc;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 强制4列 */
+            gap: 10px; 
+            /* 确保 Grid 自身不设高度限制，随内容撑开 */
+            height: auto;
+        }
+
+        /* 业务卡片样式 - 深度紧凑化 */
+        .item-business-card {
+            background-color: white;
+            border: 1px solid #9fcaff;
+            border-top: 3px solid #0033cc;
+            display: flex;
+            flex-direction: column;
+            padding: 8px; /* 减小内边距 */
+            height: 100%; 
+            box-sizing: border-box; /* 防止边距撑大 */
+        }
+        
+        .biz-header {
+            text-align: center;
+            margin-bottom: 6px; /* 减小间距 */
+            padding-bottom: 4px;
+            border-bottom: 1px dashed #eee;
+        }
+        .biz-header .label {
+            color: #0033cc;
+            margin-bottom: 0px;
+            font-size: 0.95em; /* 字体稍小 */
+            line-height: 1.2;
+        }
+        .biz-header .sub-text {
+            color: #666;
+            font-size: 0.75em;
+            margin-top: 2px;
+        }
+
+        /* 列表改为强制 Grid 2列，大幅节省垂直空间 */
+        .biz-list ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 强制两列 */
+            gap: 4px; /* 极小间距 */
+        }
+        .biz-list li {
+            font-size: 12px; /* 显式设置小字号 */
+            color: #444;
+            background: #f4f7fa; /* 更淡的背景 */
+            padding: 3px 2px;
+            text-align: center;
+            border-radius: 2px;
+            white-space: nowrap; /* 不换行 */
+            overflow: hidden;
+            text-overflow: ellipsis; /* 超出省略 */
+            line-height: 1.3;
+        }
+
+        /* === 第三层：微服务中心 === */
+        .layer-capability {
+            background-color: #fffbfb;
+            border: 1px solid #ffcccc;
+            border-left: 4px solid #cc0000;
+            /* 调整内边距：底部留足空间 */
+            padding: 25px 10px 15px 10px; 
+            position: relative;
+            /* 确保父容器随内容撑开，不塌陷 */
+            display: flex;
+            flex-direction: column;
+        }
+        .layer-capability::before {
+            content: "微服务中心 (Capability Center)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #cc0000;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        
+        .cap-grid {
+            /* 强制一行7列 */
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px; 
+            /* 确保 Grid 自身高度自适应 */
+            height: auto;
+        }
+        .item-cap {
+            background-color: var(--c-cap);
+            border: 1px solid #ffd6d6;
+            border-radius: 4px; 
+            padding: 8px 2px; 
+            /* 关键：确保宽度可压缩 */
+            min-width: 0; 
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* 移除 height: 100% 以避免不必要的拉伸问题，改用 self-stretch */
+            height: auto; 
+            min-height: 50px; /* 给一个最小高度保证视觉一致性 */
+        }
+        .item-cap .label {
+            color: #990000;
+            font-size: 0.9em; 
+            margin-bottom: 2px;
+            line-height: 1.2;
+            white-space: nowrap; /* 中文标题不换行 */
+            overflow: hidden;
+            width: 100%;
+        }
+        .item-cap .sub-text {
+            font-size: 0.7em; /* 字体调小 */
+            color: #884444;
+            line-height: 1.1;
+            /* 核心修复：强制不换行，超出省略，防止撑高 */
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%; /* 限制宽度 */
+            padding: 0 2px;
+        }
+
+        /* === 支撑层 === */
+        .support-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .layer-mdm { 
+            background: #faf8ff; 
+            border: 1px dashed #aa88dd; 
+            padding: 25px 10px 15px 10px; /* 调整内边距和微服务中心一致 */
+            position: relative;
+        }
+        /* 标签样式：MDM */
+        .layer-mdm::before {
+            content: "基础数据中台";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #6600cc;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .layer-infra { 
+            background: #fff8f2; 
+            border: 1px dashed #ddaa88; 
+            padding: 25px 10px 15px 10px; /* 调整内边距和微服务中心一致 */
+            position: relative;
+        }
+        /* 标签样式：公共支撑 */
+        .layer-infra::before {
+            content: "公共支撑服务";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #cc6600;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .mini-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px; /* 减小间距 */
+        }
+
+        /* 统一 MDM 和 Infra 模块的样式，对齐 item-cap */
+        .item-mdm, .item-infra {
+            padding: 8px 5px; /* 内边距对齐 */
+            min-height: 50px; /* 高度对齐 */
+            border-radius: 4px; /* 圆角对齐 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.05); /* 阴影对齐 */
+            transition: all 0.2s;
+        }
+
+        /* 标签对齐 */
+        .item-mdm .label, .item-infra .label {
+            font-size: 0.9em; /* 字体大小对齐 */
+            margin-bottom: 2px;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        /* 副标题对齐 */
+        .item-mdm .sub-text, .item-infra .sub-text {
+             font-size: 0.75em; /* 字体大小对齐 */
+             line-height: 1.1;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+             width: 100%;
+        }
+
+        /* MDM 特定配色 */
+        .item-mdm { 
+            background-color: var(--c-data); 
+            border: 1px solid #dccceb; 
+        }
+        .item-mdm .label { color: #5500aa; } /* 深紫色 */
+        .item-mdm .sub-text { color: #775599; }
+
+        /* Infra 特定配色 */
+        .item-infra { 
+            background-color: var(--c-infra); 
+            border: 1px solid #ebdccc; 
+        }
+        .item-infra .label { color: #b35900; } /* 深褐色 */
+        .item-infra .sub-text { color: #996633; }
+
+        /* === 右侧 AI 栏 === */
+        .ai-sidebar {
+            background-color: #f0fbff;
+            border: 1px solid #bce0f0;
+            border-left: 4px solid #0077aa; 
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-radius: var(--radius);
+            position: relative; 
+        }
+        .ai-sidebar::before {
+            content: "AI & MCP 智能化层";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #0077aa;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        
+        .item-ai {
+            background-color: #ffffff;
+            border: 1px solid #cceeff;
+            box-shadow: 0 2px 4px rgba(0,119,170,0.1);
+        }
+        
+        /* 外部集成 & 基础设施层 - 重新布局
+           移除了 bottom-layer-group，改为直接子网格
+        */
+
+        /* 外部集成模块 */
+        .layer-external {
+            background: #f4f5f7;
+            padding: 25px 20px 20px 20px;
+            border-radius: var(--radius);
+            border: 1px dashed #999;
+            position: relative;
+            /* 位于右列 (和AI栏一列) */
+            grid-column: 2; 
+        }
+        .layer-external::before {
+            content: "外部集成";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #666;
+            font-weight: 700;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* 基础设施层模块 */
+        .layer-infrastructure {
+            background: #f4f5f7;
+            padding: 25px 20px 20px 20px;
+            border-radius: var(--radius);
+            border: 1px solid #ddd;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            /* 位于左列 (和主业务一列) */
+            grid-column: 1;
+        }
+        .layer-infrastructure::before {
+            content: "基础设施层 (Infrastructure)";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
+            color: #333;
+            font-weight: 700;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .infra-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 内部再分两块：Runtime 和 Storage */
+            gap: 20px;
+            height: 100%;
+        }
+
+        .infra-sub-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .infra-sub-label {
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+        }
+
+        .plat-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .tag {
+            background: #ffffff;
+            color: #444;
+            padding: 8px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            border: 1px solid #dcdfe6;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .tag:hover {
+            background: #e6f7ff;
+            border-color: #91d5ff;
+            color: #0050b3;
+            transform: translateY(-1px);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 1024px) {
+            .architecture-container { grid-template-columns: 1fr; }
+            .ai-sidebar { order: -1; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #bce0f0; border-left: 4px solid #0077aa;}
+            .layer-infrastructure, .layer-external { grid-column: 1; } /* 移动端回归单列 */
+            .infra-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="architecture-container">
+    
+    <div class="main-title">技术架构图</div>
+
+    <!-- 0. 访问入口 -->
+    <div class="layer-access box">
+        <div class="access-grid">
+            <div class="box item-access">
+                <span class="label">教师端 (Web/PC)</span>
+                <span class="sub-text">备课 / 作业 / 课堂</span>
+            </div>
+            <div class="box item-access">
+                <span class="label">学生端 (H5/小程序)</span>
+                <span class="sub-text">任务 / 学习 / 评价</span>
+            </div>
+            <div class="box item-access">
+                <span class="label">家长端 (H5/小程序)</span>
+                <span class="sub-text">通知 / 缴费 / 画像</span>
+            </div>
+            <div class="box item-access">
+                <span class="label">管理端 (Web)</span>
+                <span class="sub-text">教务 / 排课 / 运营</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 0.5 边界层 -->
+    <div class="layer-edge">
+        <div class="box item-edge">CDN / 静态加速</div>
+        <div class="box item-edge">WAF / 安全防护</div>
+        <div class="box item-edge">SLB / 负载均衡</div>
+        <div class="box item-edge">API Gateway (网关)</div>
+        <div class="box item-edge">BFF / SSR 聚合层</div>
+    </div>
+
+    <!-- 左侧主业务区域 -->
+    <div class="main-column">
+        
+        <!-- 1 & 2. 业务中心 (合并统一 - 紧凑版) -->
+        <div class="layer-business box">
+            <div class="business-grid">
+                <!-- 教学线卡片 -->
+                <div class="box item-business-card">
+                    <div class="biz-header">
+                        <div class="label">教学线</div>
+                        <div class="sub-text">学习中心</div>
+                    </div>
+                    <div class="biz-list">
+                        <ul>
+                            <li>学习任务流</li>
+                            <li>阅读打卡</li>
+                            <li>学生画像</li>
+                            <li>大评价体系</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 教务线卡片 -->
+                <div class="box item-business-card">
+                    <div class="biz-header">
+                        <div class="label">教务线</div>
+                        <div class="sub-text">教学管理</div>
+                    </div>
+                    <div class="biz-list">
+                        <ul>
+                            <li>智能排课</li>
+                            <li>课表展示</li>
+                            <li>日程管理</li>
+                            <li>选课/调课</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 校务线卡片 -->
+                <div class="box item-business-card">
+                    <div class="biz-header">
+                        <div class="label">校务线</div>
+                        <div class="sub-text">行政运营</div>
+                    </div>
+                    <div class="biz-list">
+                        <ul>
+                            <li>缴费/周计划</li>
+                            <li>考勤管理</li>
+                            <li>通用流程(请假)</li>
+                            <li>健康体测</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 育人线卡片 -->
+                <div class="box item-business-card">
+                    <div class="biz-header">
+                        <div class="label">育人线</div>
+                        <div class="sub-text">德育成长</div>
+                    </div>
+                    <div class="biz-list">
+                        <ul>
+                            <li>行为记录</li>
+                            <li>宿舍自评</li>
+                            <li>教师绩效</li>
+                            <li>荣誉体系</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 微服务中心 -->
+        <div class="layer-capability box">
+            <div class="cap-grid">
+                <div class="box item-cap">
+                    <span class="label">调度中心</span>
+                    <span class="sub-text">Scheduling</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">评价中心</span>
+                    <span class="sub-text">Evaluation</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">任务中心</span>
+                    <span class="sub-text">Task</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">日程中心</span>
+                    <span class="sub-text">Calendar</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">通用应用</span>
+                    <span class="sub-text">Common App</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">健康服务</span>
+                    <span class="sub-text">Health</span>
+                </div>
+                <div class="box item-cap">
+                    <span class="label">教师绩效</span>
+                    <span class="sub-text">Teacher Time</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 & 5. 数据中台与公共支撑 -->
+        <div class="support-row">
+            <div class="layer-mdm">
+                <div class="mini-grid">
+                    <div class="box item-mdm">
+                        <span class="label">组织架构</span>
+                        <span class="sub-text">集团-学校多级</span>
+                    </div>
+                    <div class="box item-mdm">
+                        <span class="label">时间维度</span>
+                        <span class="sub-text">学年/学期管理</span>
+                    </div>
+                    <div class="box item-mdm">
+                        <span class="label">教学元数据</span>
+                        <span class="sub-text">科目/课程库/节次</span>
+                    </div>
+                    <div class="box item-mdm">
+                        <span class="label">人员档案</span>
+                        <span class="sub-text">钉钉同步/学籍</span>
+                    </div>
+                </div>
+            </div>
+            <div class="layer-infra">
+                <div class="mini-grid">
+                    <div class="box item-infra"><span class="label">安全鉴权</span><span class="sub-text">SSO / ACL</span></div>
+                    <div class="box item-infra"><span class="label">交互触达</span><span class="sub-text">Message Center</span></div>
+                    <div class="box item-infra"><span class="label">聚合展示</span><span class="sub-text">Student Profile</span></div>
+                    <div class="box item-infra"><span class="label">文件运维</span><span class="sub-text">OSS / Card</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End Main Column -->
+
+    <!-- 右侧 AI 栏 -->
+    <div class="ai-sidebar">
+        <div class="box item-ai">
+            <span class="label">Agent Backend</span>
+            <span class="sub-text">对话 / 规划 / 解释<br>(Python/FastAPI)</span>
+        </div>
+        <div class="box item-ai">
+            <span class="label">MCP Gateway</span>
+            <span class="sub-text">工具目录 / 审计 / 鉴权</span>
+        </div>
+        <div class="box item-ai">
+            <span class="label">Tool Adapters</span>
+            <span class="sub-text">微服务能力 -> AI工具</span>
+        </div>
+        <div class="box item-ai">
+            <span class="label">RAG 知识库</span>
+            <span class="sub-text">向量检索 / 文档</span>
+        </div>
+        <div class="box item-ai">
+            <span class="label">Eval & Monitor</span>
+            <span class="sub-text">评测 / 回放</span>
+        </div>
+    </div>
+
+    <!-- 
+       新的底部区域：分开为直接子元素
+       左侧：基础设施层 (合并了平台与数据) -> Grid Column 1
+       右侧：外部集成 -> Grid Column 2
+    -->
+    
+    <div class="layer-infrastructure">
+        <div class="infra-content">
+            <!-- 原平台底座内容 -->
+            <div class="infra-sub-group">
+                <div class="infra-sub-label">平台支撑 (Platform / PaaS)</div>
+                <div class="plat-items">
+                    <span class="tag">K8S 容器</span>
+                    <span class="tag">Nacos 注册中心</span>
+                    <span class="tag">Cron/Job 调度</span>
+                    <span class="tag">Observability (Log/Trace)</span>
+                    <span class="tag">CI/CD 流水线</span>
+                </div>
+            </div>
+            <!-- 原数据底座内容 -->
+            <div class="infra-sub-group">
+                <div class="infra-sub-label">数据存储 (Storage)</div>
+                <div class="plat-items">
+                    <span class="tag">MySQL/RDS</span>
+                    <span class="tag">Redis 缓存</span>
+                    <span class="tag">OSS 文件</span>
+                    <span class="tag">RocketMQ</span>
+                    <span class="tag">ElasticSearch</span>
+                    <span class="tag">Data Warehouse</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layer-external">
+        <div class="plat-items">
+            <span class="tag">钉钉/企微</span>
+            <span class="tag">IoT 设备</span>
+            <span class="tag">支付渠道</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
