@@ -343,7 +343,7 @@
         }
         .business-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 1fr;
             gap: 10px;
             height: auto;
         }
@@ -392,6 +392,53 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            line-height: 1.3;
+        }
+
+        /* === 校务平台展开区 === */
+        .biz-campus {
+            grid-column: 1 / -1;
+            background-color: white;
+            border: 1px solid #9fcaff;
+            border-top: 3px solid #0033cc;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .biz-campus .biz-header { margin-bottom: 8px; }
+        .campus-groups {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .campus-group {
+            background: #f8fafd;
+            border: 1px solid #e8eff8;
+            border-radius: 4px;
+            padding: 6px;
+        }
+        .campus-group-title {
+            font-size: 0.72em;
+            font-weight: 700;
+            color: #0033cc;
+            margin-bottom: 5px;
+            padding-bottom: 3px;
+            border-bottom: 1px dashed #d8e4f0;
+        }
+        .campus-group ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+        }
+        .campus-group li {
+            font-size: 11px;
+            color: #444;
+            background: #eef3fa;
+            padding: 2px 6px;
+            border-radius: 2px;
+            white-space: nowrap;
             line-height: 1.3;
         }
 
@@ -996,45 +1043,244 @@
         <!-- 业务中心 -->
         <div class="layer-business box">
             <div class="business-grid">
-                <div class="box item-business-card">
+                <!-- 教学线（展开） -->
+                <div class="box biz-campus">
                     <div class="biz-header">
-                        <div class="label">教学线</div>
-                        <div class="sub-text">学习中心</div>
+                        <div class="label">教学线 · 教学应用平台</div>
+                        <div class="sub-text">学习任务 / 精准教学 / 综合评价 / 全息画像 / 教育大脑</div>
                     </div>
-                    <div class="biz-list"><ul>
-                        <li>学习任务流</li><li>阅读打卡</li>
-                        <li>学生画像</li><li>大评价体系</li>
-                    </ul></div>
+                    <div class="campus-groups">
+                        <div class="campus-group">
+                            <div class="campus-group-title">学习任务流</div>
+                            <ul>
+                                <li>课前预习</li><li>课中互动</li>
+                                <li>课后作业</li><li>假期任务</li>
+                                <li>自主提交</li><li>作业批改</li>
+                                <li>评语反馈</li><li>优秀作业展</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">阅读打卡</div>
+                            <ul>
+                                <li>打卡任务</li><li>阅读记录</li>
+                                <li>阅读统计</li><li>阅读排行</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">精准教学平台</div>
+                            <ul>
+                                <li>在线组卷</li><li>在线考试</li>
+                                <li>智能阅卷</li><li>成绩分析</li>
+                                <li>错题本</li><li>知识图谱</li>
+                                <li>学情诊断</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">综合素质评价</div>
+                            <ul>
+                                <li>评价方案</li><li>指标维度</li>
+                                <li>教师评价</li><li>学生互评</li>
+                                <li>家长评价</li><li>评价报告</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">学生全息画像</div>
+                            <ul>
+                                <li>学业成绩</li><li>行为表现</li>
+                                <li>综合素质</li><li>成长档案</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">教师全息画像</div>
+                            <ul>
+                                <li>教学质量</li><li>工作量统计</li>
+                                <li>发展档案</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">教育大脑</div>
+                            <ul>
+                                <li>数据看板</li><li>预警分析</li>
+                                <li>决策支持</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="box item-business-card">
+
+                <!-- 育人线（展开） -->
+                <div class="box biz-campus">
                     <div class="biz-header">
-                        <div class="label">教务线</div>
-                        <div class="sub-text">教学管理</div>
+                        <div class="label">育人线 · 综合素质评价平台</div>
+                        <div class="sub-text">五维评价 / 写实记录 / 荣誉体系 / 成长档案</div>
                     </div>
-                    <div class="biz-list"><ul>
-                        <li>智能排课</li><li>课表展示</li>
-                        <li>日程管理</li><li>选课/调课</li>
-                    </ul></div>
+                    <div class="campus-groups">
+                        <div class="campus-group">
+                            <div class="campus-group-title">评价方案管理</div>
+                            <ul>
+                                <li>评价方案配置</li><li>评价维度/指标</li>
+                                <li>评价模板</li><li>评分规则</li>
+                                <li>评价周期</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">五维评价</div>
+                            <ul>
+                                <li>品德表现</li><li>学业水平</li>
+                                <li>运动健康</li><li>艺术素养</li>
+                                <li>创新实践</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">评价执行</div>
+                            <ul>
+                                <li>教师评价</li><li>学生互评</li>
+                                <li>家长评价</li><li>自我评价</li>
+                                <li>评价审核</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">写实记录</div>
+                            <ul>
+                                <li>社会实践</li><li>志愿服务</li>
+                                <li>研究性学习</li><li>活动记录</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">荣誉管理</div>
+                            <ul>
+                                <li>校级荣誉</li><li>区级荣誉</li>
+                                <li>市级及以上</li><li>奖项审批</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">德育管理</div>
+                            <ul>
+                                <li>行为规范</li><li>班级评比</li>
+                                <li>宿舍管理</li><li>德育学分</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">成长档案</div>
+                            <ul>
+                                <li>成长报告</li><li>学期评语</li>
+                                <li>档案导出</li><li>数据看板</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="box item-business-card">
+
+                <!-- 教务平台（展开） -->
+                <div class="box biz-campus">
                     <div class="biz-header">
-                        <div class="label">校务线</div>
-                        <div class="sub-text">行政运营</div>
+                        <div class="label">教务线 · 教务平台</div>
+                        <div class="sub-text">排课管理 / 选课平台 / 场地资源</div>
                     </div>
-                    <div class="biz-list"><ul>
-                        <li>缴费/周计划</li><li>考勤管理</li>
-                        <li>通用流程(请假)</li><li>健康体测</li>
-                    </ul></div>
+                    <div class="campus-groups">
+                        <div class="campus-group">
+                            <div class="campus-group-title">智能排课</div>
+                            <ul>
+                                <li>排课规则配置</li><li>自动排课引擎</li>
+                                <li>课表展示</li><li>调课/代课</li>
+                                <li>走班排课</li><li>课表发布</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">选课平台 · 课程类型</div>
+                            <ul>
+                                <li>课后托管</li><li>兴趣班</li>
+                                <li>校队</li><li>专业选修课</li>
+                                <li>7选3</li><li>周末营</li>
+                                <li>夏校</li><li>冬校</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">选课平台 · 选课能力</div>
+                            <ul>
+                                <li>多端选课(PC/H5/PAD)</li><li>志愿申报</li>
+                                <li>先到先得</li><li>即时缴费</li>
+                                <li>统一缴费单</li><li>课程进阶序列</li>
+                                <li>校内/校外选课</li><li>预选名单导入</li>
+                                <li>分批次选课</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">场地 & 日程</div>
+                            <ul>
+                                <li>场地资源管理</li><li>场地预约</li>
+                                <li>日程管理</li><li>校历配置</li>
+                                <li>节次/时段管理</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="box item-business-card">
+
+                <!-- 校务平台（展开） -->
+                <div class="box biz-campus">
                     <div class="biz-header">
-                        <div class="label">育人线</div>
-                        <div class="sub-text">德育成长</div>
+                        <div class="label">校务线 · 校务平台</div>
+                        <div class="sub-text">行政运营 / 人事财务 / 一卡通 / 招生学籍</div>
                     </div>
-                    <div class="biz-list"><ul>
-                        <li>行为记录</li><li>宿舍自评</li>
-                        <li>教师绩效</li><li>荣誉体系</li>
-                    </ul></div>
+                    <div class="campus-groups">
+                        <div class="campus-group">
+                            <div class="campus-group-title">行政 & IT 工作台</div>
+                            <ul>
+                                <li>会议室预订</li><li>会议支持</li>
+                                <li>资产管理</li><li>工牌挂失</li>
+                                <li>故障报修</li><li>物品领用</li>
+                                <li>健康管理平台</li><li>访客/访校</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">人事 & 财务工作台</div>
+                            <ul>
+                                <li>智能薪酬</li><li>外出/请假</li>
+                                <li>内部推荐</li><li>招聘系统</li>
+                                <li>党建系统</li><li>缴费平台</li>
+                                <li>教师档案</li><li>教师绩效</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">一卡通管理平台</div>
+                            <ul>
+                                <li>校园卡</li><li>人脸管理</li>
+                                <li>工牌管理及打印</li><li>学生卡管理</li>
+                                <li>门禁管理</li><li>宿舍管理</li>
+                                <li>校车管理</li><li>安保人员管理</li>
+                                <li>每周菜单</li><li>三方数据同步</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">每日常规 & 小工具</div>
+                            <ul>
+                                <li>人脸测温</li><li>入离校考勤</li>
+                                <li>公章&证明</li><li>校园顺风车</li>
+                                <li>校园导航</li><li>每周食谱</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">招生 & 学籍 & 校友</div>
+                            <ul>
+                                <li>招生平台</li><li>学籍管理</li>
+                                <li>校友会系统</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">学校官网</div>
+                            <ul>
+                                <li>学校特色</li><li>学校新闻</li>
+                                <li>招生发布</li><li>教师风采</li>
+                            </ul>
+                        </div>
+                        <div class="campus-group">
+                            <div class="campus-group-title">教师工作台</div>
+                            <ul>
+                                <li>校园资讯</li><li>政策制度</li>
+                                <li>重要通知</li><li>校园头条</li>
+                                <li>待办事项</li><li>应用大全</li>
+                                <li>团队祝福</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
