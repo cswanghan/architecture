@@ -55,17 +55,18 @@
         .label {
             font-weight: 700;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-align: center;
-            font-size: 1.05em;
+            font-size: 0.85em;
             color: #111;
+            line-height: 1.2;
         }
         .sub-text {
             display: block;
-            font-size: 0.85em;
+            font-size: 0.7em;
             color: #555;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         /* === 主容器 === */
@@ -94,7 +95,7 @@
         }
         .main-subtitle span {
             display: inline-block;
-            font-size: 0.8em;
+            font-size: 0.7em;
             color: #666;
             background: #f0f4f8;
             padding: 3px 14px;
@@ -110,7 +111,6 @@
             padding: 28px 10px 12px 10px;
             position: relative;
             border-radius: var(--radius);
-            grid-row: span 3;
         }
         .layer-access-traditional::before {
             content: "传统用户端";
@@ -126,10 +126,26 @@
         }
         .access-grid-traditional {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
             height: 100%;
-            align-content: center;
+            align-content: start;
+        }
+        .access-group-traditional {
+            background: #eafcf0 !important;
+            border-color: #b0dcb5 !important;
+        }
+        .access-group-traditional li {
+            background: #d4f0dc;
+            color: #2d5a2d;
+        }
+        .access-group-ai {
+            background: #e3f2fd !important;
+            border-color: #90caf9 !important;
+        }
+        .access-group-ai li {
+            background: #bbdefb;
+            color: #0d47a1;
         }
 
         /* === 第0层：访问入口（AI Agent）=== */
@@ -233,7 +249,7 @@
             border-radius: 4px;
             padding: 6px 15px;
             min-height: 42px;
-            font-size: 0.85em;
+            font-size: 0.7em;
             font-weight: 700;
             color: #1f7a1f;
             text-align: center;
@@ -244,80 +260,17 @@
             white-space: nowrap;
             transition: all 0.2s;
         }
-
-        /* === AI-OS 控制面 (右列) === */
-        .layer-aios {
-            grid-column: 2;
-            background: linear-gradient(135deg, #f3e8ff, #ede9fe);
-            border: 1px solid #c4b5fd;
-            border-left: 4px solid #7c3aed;
-            padding: 28px 15px 14px 15px;
-            position: relative;
-            border-radius: var(--radius);
+        .item-edge-ai {
+            background-color: #e3f2fd;
+            border-color: #90caf9;
+            color: #0d47a1;
         }
-        .layer-aios::before {
-            content: "AI-OS 控制面 (Control Plane)";
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: #fff;
-            padding: 0 8px;
-            color: #5b21b6;
-            font-weight: 700;
-            font-size: 0.9em;
-            border-radius: 4px;
-        }
-        .aios-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        .item-aios {
-            background: white;
-            border: 1px solid #d4c8f0;
-            border-radius: 4px;
-            padding: 8px 8px;
-            text-align: center;
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.05);
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 48px;
-        }
-        .item-aios:hover {
-            transform: translateY(-2px);
-            box-shadow: 4px 4px 8px rgba(0,0,0,0.08);
-            border-color: #7c3aed;
-        }
-        .item-aios .label {
-            font-size: 0.9em;
-            margin-bottom: 2px;
-            line-height: 1.2;
-        }
-        .item-aios .sub-text {
-            font-size: 0.72em;
-            line-height: 1.2;
-        }
-        .item-aios.cp-action { border-left: 3px solid #7c4dff; }
-        .item-aios.cp-action .label { color: #5b21b6; }
-        .item-aios.cp-action .sub-text { color: #7e57c2; }
-        .item-aios.cp-state { border-left: 3px solid #00bcd4; }
-        .item-aios.cp-state .label { color: #0e7490; }
-        .item-aios.cp-state .sub-text { color: #26a69a; }
-        .item-aios.cp-policy { border-left: 3px solid #ff9800; }
-        .item-aios.cp-policy .label { color: #c77700; }
-        .item-aios.cp-policy .sub-text { color: #e6a030; }
-        .item-aios.cp-audit { border-left: 3px solid #78909c; }
-        .item-aios.cp-audit .label { color: #455a64; }
-        .item-aios.cp-audit .sub-text { color: #78909c; }
 
         /* === 左侧主列 === */
         .main-column {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px;
             margin-top: 10px;
         }
 
@@ -365,12 +318,12 @@
         .biz-header .label {
             color: #0033cc;
             margin-bottom: 0px;
-            font-size: 0.95em;
+            font-size: 0.85em;
             line-height: 1.2;
         }
         .biz-header .sub-text {
             color: #666;
-            font-size: 0.75em;
+            font-size: 0.7em;
             margin-top: 2px;
         }
         .biz-list ul {
@@ -382,7 +335,7 @@
             gap: 4px;
         }
         .biz-list li {
-            font-size: 12px;
+            font-size: 0.7em;
             color: #444;
             background: #f4f7fa;
             padding: 3px 2px;
@@ -431,7 +384,7 @@
             padding: 6px;
         }
         .campus-group-title {
-            font-size: 0.72em;
+            font-size: 0.7em;
             font-weight: 700;
             color: #0033cc;
             margin-bottom: 5px;
@@ -447,7 +400,7 @@
             gap: 3px;
         }
         .campus-group li {
-            font-size: 11px;
+            font-size: 0.65em;
             color: #444;
             background: #eef3fa;
             padding: 2px 6px;
@@ -461,7 +414,7 @@
             background-color: #fffbfb;
             border: 1px solid #ffcccc;
             border-left: 4px solid #cc0000;
-            padding: 25px 10px 15px 10px;
+            padding: 20px 8px 8px 8px;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -487,7 +440,7 @@
             background-color: var(--c-cap);
             border: 1px solid #ffd6d6;
             border-radius: 4px;
-            padding: 8px 2px;
+            padding: 4px 2px;
             min-width: 0;
             text-align: center;
             box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
@@ -496,11 +449,11 @@
             justify-content: center;
             align-items: center;
             height: auto;
-            min-height: 50px;
+            min-height: 36px;
         }
         .item-cap .label {
             color: #990000;
-            font-size: 0.9em;
+            font-size: 0.75em;
             margin-bottom: 2px;
             line-height: 1.2;
             white-space: nowrap;
@@ -508,7 +461,7 @@
             width: 100%;
         }
         .item-cap .sub-text {
-            font-size: 0.7em;
+            font-size: 0.6em;
             color: #884444;
             line-height: 1.1;
             white-space: nowrap;
@@ -522,12 +475,12 @@
         .support-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 10px;
         }
         .layer-mdm {
             background: #faf8ff;
             border: 1px dashed #aa88dd;
-            padding: 25px 10px 15px 10px;
+            padding: 20px 8px 8px 8px;
             position: relative;
         }
         .layer-mdm::before {
@@ -544,7 +497,7 @@
         .layer-infra {
             background: #fff8f2;
             border: 1px dashed #ddaa88;
-            padding: 25px 10px 15px 10px;
+            padding: 20px 8px 8px 8px;
             position: relative;
         }
         .layer-infra::before {
@@ -561,11 +514,11 @@
         .mini-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
         }
         .item-mdm, .item-infra {
-            padding: 8px 5px;
-            min-height: 50px;
+            padding: 4px 4px;
+            min-height: 36px;
             border-radius: 4px;
             display: flex;
             flex-direction: column;
@@ -576,13 +529,13 @@
             transition: all 0.2s;
         }
         .item-mdm .label, .item-infra .label {
-            font-size: 0.9em;
+            font-size: 0.75em;
             margin-bottom: 2px;
             line-height: 1.2;
             white-space: nowrap;
         }
         .item-mdm .sub-text, .item-infra .sub-text {
-             font-size: 0.75em;
+             font-size: 0.6em;
              line-height: 1.1;
              white-space: nowrap;
              overflow: hidden;
@@ -602,22 +555,45 @@
         .ai-sidebar {
             background-color: white;
             border: 1px solid #bce0f0;
-            border-top: 3px solid #0077aa;
-            padding: 8px;
+            border-left: 4px solid #0077aa;
+            padding: 28px 8px 8px 8px;
             box-sizing: border-box;
             border-radius: var(--radius);
             margin-top: 10px;
+            position: relative;
         }
-        .ai-sidebar .biz-header {
-            margin-bottom: 8px;
-        }
-        .ai-sidebar .biz-header .label {
+        .ai-sidebar::before {
+            content: "AI 安全编排与治理层";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #fff;
+            padding: 0 8px;
             color: #0077aa;
+            font-weight: 700;
+            font-size: 0.9em;
         }
         .ai-sidebar .campus-groups {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+        }
+        /* 左列内容区 */
+        .ai-left-col {
             display: flex;
             flex-direction: column;
             gap: 8px;
+        }
+        /* 左列第一行：认证+流控并排 */
+        .ai-top-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        /* 右列审计贯穿 */
+        .ai-audit-col {
+            grid-row: 1 / 2;
+            grid-column: 2;
         }
         .ai-sidebar .campus-group {
             background: #f0fbff;
@@ -647,7 +623,7 @@
         }
         .planned-badge {
             display: inline-block;
-            font-size: 9px;
+            font-size: 0.6em;
             font-weight: 700;
             color: #fff;
             background: #b0bec5;
@@ -659,7 +635,7 @@
         }
         /* 沙箱三层子标题 */
         .sandbox-layer-label {
-            font-size: 10px;
+            font-size: 0.65em;
             font-weight: 700;
             color: #78909c;
             margin: 6px 0 3px 0;
@@ -681,7 +657,7 @@
             border-radius: 3px;
             padding: 4px 2px;
             text-align: center;
-            font-size: 0.66em;
+            font-size: 0.65em;
             font-weight: 700;
             color: #00695c;
         }
@@ -694,7 +670,7 @@
             padding: 5px;
             border-radius: 4px;
             text-align: center;
-            font-size: 0.72em;
+            font-size: 0.7em;
             font-weight: 700;
         }
         .gov-btn-yes { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
@@ -740,7 +716,7 @@
             gap: 8px;
         }
         .infra-sub-label {
-            font-size: 0.85em;
+            font-size: 0.7em;
             font-weight: bold;
             color: #666;
             margin-bottom: 5px;
@@ -755,9 +731,9 @@
         .tag {
             background: #ffffff;
             color: #444;
-            padding: 8px 5px;
+            padding: 6px 5px;
             border-radius: 4px;
-            font-size: 0.9em;
+            font-size: 0.7em;
             border: 1px solid #dcdfe6;
             font-weight: 600;
             text-align: center;
@@ -808,7 +784,7 @@
         }
         .flow-legend-hd {
             font-weight: 700;
-            font-size: 0.85em;
+            font-size: 0.7em;
             color: #0077aa;
             margin-bottom: 8px;
             display: flex;
@@ -833,7 +809,7 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.78em;
+            font-size: 0.7em;
             font-weight: 600;
             color: #444;
             background: white;
@@ -879,41 +855,15 @@
         .flow-arrow-ai .flow-arrow-line { background: #7c3aed; }
         .flow-arrow-ai .flow-arrow-head { border-top: 8px solid #7c3aed; }
 
-        /* === 横向连接桥 === */
-        .bridge-connector {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 6px 0;
-            position: relative;
-            margin: -4px 0;
-        }
-        .bridge-connector::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 5%;
-            right: 5%;
-            border-top: 2px dashed #c4b5fd;
-        }
-        .bridge-connector span {
-            position: relative;
-            background: var(--bg-color);
-            padding: 2px 14px;
-            font-size: 0.76em;
-            color: #7c3aed;
-            font-weight: 600;
-        }
-
         /* 响应式 */
         @media (max-width: 1024px) {
             .architecture-container { grid-template-columns: 1fr; }
             .layer-access-traditional, .layer-access-ai { grid-column: 1; }
             .access-grid-traditional { grid-template-columns: repeat(2, 1fr); }
-            .ai-sidebar { order: -1; border-top: 3px solid #0077aa; }
+            .ai-sidebar { order: -1; border-left: 4px solid #0077aa; }
             .layer-infrastructure { grid-column: 1; }
             .infra-content { grid-template-columns: 1fr; }
             .flow-arrow { display: none; }
-            .bridge-connector { display: none; }
         }
     </style>
 </head>
@@ -944,42 +894,62 @@
 
     <!-- ===== 原则描述：AI 决策流 ===== -->
     <div class="principle-strip principle-ai">
-        <div class="flow-legend-hd">AI 决策流: 先仿真再执行，人工审批确保安全</div>
+        <div class="flow-legend-hd">AI 决策流: 分层鉴权，按策略审批，全程审计</div>
         <div class="flow-steps">
-            <span class="f-step"><span class="f-num">1</span>发起任务</span>
+            <span class="f-step"><span class="f-num">1</span>发起请求</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">2</span>请求预演(只读)</span>
+            <span class="f-step"><span class="f-num">2</span>鉴权 &amp; 流控</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">3</span>生成变更集 &amp; 风险</span>
+            <span class="f-step"><span class="f-num">3</span>上下文构建</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">4</span>返回预演结果</span>
+            <span class="f-step"><span class="f-num">4</span>Tool 路由匹配</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">5</span>审查与批准</span>
+            <span class="f-step"><span class="f-num">5</span>审批判定</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">6</span>触发执行</span>
+            <span class="f-step"><span class="f-num">6</span>执行调用</span>
             <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">7</span>执行结果 &amp; 审计</span>
+            <span class="f-step"><span class="f-num">7</span>审计记录</span>
         </div>
     </div>
 
     <!-- ===== 0. 访问入口：传统用户端 ===== -->
     <div class="layer-access-traditional">
         <div class="access-grid-traditional">
-            <div class="box item-access item-access-traditional">
-                <span class="label">教师端 (Web/PC)</span>
-                <span class="sub-text">备课 / 作业 / 课堂</span>
+            <div class="campus-group access-group-traditional">
+                <div class="campus-group-title" style="color:#1f7a1f; border-bottom-color:#b0dcb5;">教师端 (Web/PC)</div>
+                <ul>
+                    <li>备课资源管理</li><li>作业布置与批改</li>
+                    <li>课堂互动</li><li>成绩录入</li>
+                    <li>评价填写</li><li>班级管理</li>
+                    <li>调课/代课申请</li><li>工作台看板</li>
+                </ul>
             </div>
-            <div class="box item-access item-access-traditional">
-                <span class="label">学生端 (H5/小程序)</span>
-                <span class="sub-text">任务 / 学习 / 评价</span>
+            <div class="campus-group access-group-traditional">
+                <div class="campus-group-title" style="color:#1f7a1f; border-bottom-color:#b0dcb5;">学生端 (H5/小程序)</div>
+                <ul>
+                    <li>学习任务提交</li><li>课前预习</li>
+                    <li>课后作业</li><li>阅读打卡</li>
+                    <li>选课报名</li><li>自我评价</li>
+                    <li>成绩查询</li><li>成长档案</li>
+                </ul>
             </div>
-            <div class="box item-access item-access-traditional">
-                <span class="label">家长端 (H5/小程序)</span>
-                <span class="sub-text">通知 / 缴费 / 画像</span>
+            <div class="campus-group access-group-traditional">
+                <div class="campus-group-title" style="color:#1f7a1f; border-bottom-color:#b0dcb5;">家长端 (H5/小程序)</div>
+                <ul>
+                    <li>通知公告</li><li>在线缴费</li>
+                    <li>学生画像</li><li>成绩报告</li>
+                    <li>请假审批</li><li>家长评价</li>
+                    <li>校车/考勤</li><li>访校预约</li>
+                </ul>
             </div>
-            <div class="box item-access item-access-traditional">
-                <span class="label">管理端 (Web)</span>
-                <span class="sub-text">教务 / 排课 / 运营</span>
+            <div class="campus-group access-group-traditional">
+                <div class="campus-group-title" style="color:#1f7a1f; border-bottom-color:#b0dcb5;">管理端 (Web)</div>
+                <ul>
+                    <li>教务排课</li><li>选课配置</li>
+                    <li>评价方案管理</li><li>人事组织架构</li>
+                    <li>招生学籍</li><li>数据看板</li>
+                    <li>审批工作台</li><li>系统配置</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -987,48 +957,23 @@
     <!-- ===== 0. 访问入口：AI Agent ===== -->
     <div class="layer-access-ai">
         <div class="access-grid-ai">
-            <div class="box item-access item-access-ai">
-                <span class="label">用户自有 Agent</span>
-                <span class="sub-text">自定义 AI 助手接入</span>
+            <div class="campus-group access-group-ai">
+                <div class="campus-group-title" style="color:#0d47a1; border-bottom-color:#90caf9;">用户自有 Agent</div>
+                <ul>
+                    <li>MCP Protocol 接入</li><li>REST API 调用</li>
+                    <li>API Key 认证</li><li>自定义 Prompt</li>
+                    <li>多模型适配</li><li>Webhook 回调</li>
+                </ul>
             </div>
-            <div class="box item-access item-access-ai">
-                <span class="label">教育 SaaS Agent</span>
-                <span class="sub-text">平台智能体 / 钉钉Bot</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 流向箭头（AI 通道） -->
-    <div class="flow-arrow flow-arrow-ai" style="grid-column: 2;">
-        <div class="flow-arrow-line"></div>
-        <div class="flow-arrow-head"></div>
-    </div>
-
-    <!-- ===== AI-OS 控制面 ===== -->
-    <div class="layer-aios">
-        <div class="aios-grid">
-            <div class="item-aios cp-action">
-                <span class="label">动作 (Action)</span>
-                <span class="sub-text">@AgentApi · 82工具 · 3层(查询/操作/编排)</span>
-            </div>
-            <div class="item-aios cp-state">
-                <span class="label">状态 (State)</span>
-                <span class="sub-text">请求上下文 · 进度锚点 · 观察压缩 · 错误上下文保留</span>
-            </div>
-            <div class="item-aios cp-policy">
-                <span class="label">策略 (Policy)</span>
-                <span class="sub-text">审批策略引擎 · YAML驱动 · 4级优先级</span>
-            </div>
-            <div class="item-aios cp-audit">
-                <span class="label">证据 (Audit)</span>
-                <span class="sub-text">4层审计: 调用/审批/编排/数据变更</span>
+            <div class="campus-group access-group-ai">
+                <div class="campus-group-title" style="color:#0d47a1; border-bottom-color:#90caf9;">教育 SaaS Agent</div>
+                <ul>
+                    <li>平台内置智能体</li><li>钉钉 Bot 集成</li>
+                    <li>企微 Bot 集成</li><li>JWT 代理认证</li>
+                    <li>场景化预置工具</li><li>多租户隔离</li>
+                </ul>
             </div>
         </div>
-    </div>
-
-    <!-- ===== 横向连接桥 ===== -->
-    <div class="bridge-connector">
-        <span>↕ AI Agent 通过 MCP / Tool Adapters 调用 SaaS 微服务能力</span>
     </div>
 
     <!-- ===== 网络接入层（全宽） ===== -->
@@ -1038,6 +983,10 @@
         <div class="box item-edge">SLB / 负载均衡</div>
         <div class="box item-edge">API Gateway (网关)</div>
         <div class="box item-edge">BFF / SSR 聚合层</div>
+        <div class="box item-edge item-edge-ai">MCP Protocol Gateway</div>
+        <div class="box item-edge item-edge-ai">Agent API 路由</div>
+        <div class="box item-edge item-edge-ai">Token / API Key 鉴权</div>
+        <div class="box item-edge item-edge-ai">AI 流量限流</div>
     </div>
 
     <!-- ===== 左侧：业务系统（生产环境） ===== -->
@@ -1358,104 +1307,116 @@
 
     <!-- ===== 右侧：AI 安全编排与治理层 ===== -->
     <div class="ai-sidebar">
-        <div class="biz-header">
-            <div class="label">AI 安全编排与治理层</div>
-            <div class="sub-text">认证鉴权 / 审批引擎 / MCP工具 / 上下文工程 / 流控韧性 / 审计追踪</div>
-        </div>
         <div class="campus-groups">
-            <div class="campus-group">
-                <div class="campus-group-title">认证鉴权 (gateway-auth)</div>
-                <ul>
-                    <li>API Key 认证</li><li>JWT Token 鉴权</li>
-                    <li>代理身份 (Proxy)</li><li>请求追踪 (TraceId)</li>
-                </ul>
-            </div>
-            <div class="campus-group">
-                <div class="campus-group-title">审批引擎 (gateway-audit/policy)</div>
-                <ul>
-                    <li>策略引擎 (4级优先级)</li><li>查询自动放行</li>
-                    <li>写操作需审批</li><li>72h 过期窗口</li>
-                </ul>
-                <div class="gov-btns" style="margin-top: 6px;">
-                    <div class="gov-btn gov-btn-yes">&#10003; 批准</div>
-                    <div class="gov-btn gov-btn-no">&#10007; 拒绝</div>
+            <!-- 左列 -->
+            <div class="ai-left-col">
+                <!-- 第一行：认证鉴权 + 流控与韧性 并排 -->
+                <div class="ai-top-row">
+                    <div class="campus-group">
+                        <div class="campus-group-title">认证鉴权 (gateway-auth)</div>
+                        <ul>
+                            <li>API Key 认证</li><li>JWT Token 鉴权</li>
+                            <li>代理身份 (Proxy)</li><li>请求追踪 (TraceId)</li>
+                        </ul>
+                    </div>
+                    <div class="campus-group planned">
+                        <div class="campus-group-title">流控与韧性 (gateway-rest) <span class="planned-badge">规划中</span></div>
+                        <div class="sandbox-layer-label">L1 · 流量控制</div>
+                        <ul>
+                            <li>4级限流 (全局/Key/层/API)</li><li>滑动窗口计数</li>
+                            <li>Token 用量配额</li><li>并发请求上限</li>
+                        </ul>
+                        <div class="sandbox-layer-label">L2 · 容错保护</div>
+                        <ul>
+                            <li>熔断器 (Circuit Breaker)</li><li>重试策略 (指数退避)</li>
+                            <li>超时控制</li><li>舱壁隔离</li>
+                        </ul>
+                        <div class="sandbox-layer-label">L3 · 降级兜底</div>
+                        <ul>
+                            <li>降级处理</li><li>缓存兜底 (Fallback)</li>
+                            <li>部分成功响应</li><li>优雅错误提示</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 上下文工程 -->
+                <div class="campus-group planned">
+                    <div class="campus-group-title">上下文工程 (Context Engineering) <span class="planned-badge">规划中</span></div>
+                    <div class="sandbox-layer-label">L1 · 信息裁剪 (Input Shaping)</div>
+                    <ul>
+                        <li>渐进式披露 (Progressive Disclosure)</li>
+                        <li>延迟Schema加载</li><li>工具描述摘要化</li>
+                        <li>40%容量阈值</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L2 · 反馈注入 (Feedback Loop)</div>
+                    <ul>
+                        <li>拒绝原因回注上下文</li><li>错误上下文保留</li>
+                        <li>审批结果附带建议</li><li>系统提醒注入</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L3 · 精简优化 (Subtraction)</div>
+                    <ul>
+                        <li>减法工程 (工具精简)</li><li>信噪比优化</li>
+                        <li>观察结果压缩</li><li>冗余工具合并</li>
+                    </ul>
+                </div>
+
+                <!-- Agent API & MCP -->
+                <div class="campus-group">
+                    <div class="campus-group-title">Agent API & MCP (gateway-mcp + service)</div>
+                    <div class="sandbox-layer-label">L1 · 查询层 (Query) — 自动放行</div>
+                    <ul>
+                        <li>MCP Server (82 Tools)</li><li>@AgentApi 自动注册</li>
+                        <li>JSON Schema 生成</li><li>只读数据获取</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L2 · 操作层 (Operation) — 需审批</div>
+                    <ul>
+                        <li>Tool Adapters (4系统适配)</li><li>写操作代理执行</li>
+                        <li>工具分组掩码</li><li>渐进式工具发现</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L3 · 编排层 (Orchestration) — Pipeline</div>
+                    <ul>
+                        <li>多步任务编排</li><li>跨域服务组合</li>
+                        <li>DAG 依赖管理</li><li>进度锚点 (TodoWrite)</li>
+                    </ul>
+                </div>
+
+                <!-- 审批引擎 -->
+                <div class="campus-group planned">
+                    <div class="campus-group-title">审批引擎 (gateway-audit/policy) <span class="planned-badge">规划中</span></div>
+                    <ul>
+                        <li>策略引擎 (4级优先级)</li><li>查询自动放行</li>
+                        <li>写操作需审批</li><li>72h 过期窗口</li>
+                    </ul>
+                    <div class="gov-btns" style="margin-top: 6px;">
+                        <div class="gov-btn gov-btn-yes">&#10003; 批准</div>
+                        <div class="gov-btn gov-btn-no">&#10007; 拒绝</div>
+                    </div>
+                </div>
+
+                <!-- 预演沙箱 -->
+                <div class="campus-group planned">
+                    <div class="campus-group-title">预演沙箱 (Simulation Sandbox) <span class="planned-badge">规划中</span></div>
+                    <div class="sandbox-layer-label">L1 · 变更预览 (Change Preview)</div>
+                    <ul>
+                        <li>影响范围统计</li><li>变更清单生成</li>
+                        <li>冲突检测</li><li>数据校验 (validate-only)</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L2 · Diff 对比 (Before/After)</div>
+                    <ul>
+                        <li>课表 Diff</li><li>组织架构 Diff</li>
+                        <li>收费金额 Diff</li><li>分班人数 Diff</li>
+                    </ul>
+                    <div class="sandbox-layer-label">L3 · Pipeline 模拟 (Dry-Run)</div>
+                    <ul>
+                        <li>多步骤预演</li><li>风险评分</li>
+                        <li>依赖检查</li><li>耗时预估</li>
+                    </ul>
                 </div>
             </div>
-            <div class="campus-group planned">
-                <div class="campus-group-title">预演沙箱 (Simulation Sandbox) <span class="planned-badge">规划中</span></div>
-                <div class="sandbox-layer-label">L1 · 变更预览 (Change Preview)</div>
-                <ul>
-                    <li>影响范围统计</li><li>变更清单生成</li>
-                    <li>冲突检测</li><li>数据校验 (validate-only)</li>
-                </ul>
-                <div class="sandbox-layer-label">L2 · Diff 对比 (Before/After)</div>
-                <ul>
-                    <li>课表 Diff</li><li>组织架构 Diff</li>
-                    <li>收费金额 Diff</li><li>分班人数 Diff</li>
-                </ul>
-                <div class="sandbox-layer-label">L3 · Pipeline 模拟 (Dry-Run)</div>
-                <ul>
-                    <li>多步骤预演</li><li>风险评分</li>
-                    <li>依赖检查</li><li>耗时预估</li>
-                </ul>
-            </div>
-            <div class="campus-group">
-                <div class="campus-group-title">Agent API & MCP (gateway-mcp + service)</div>
-                <div class="sandbox-layer-label">L1 · 查询层 (Query) — 自动放行</div>
-                <ul>
-                    <li>MCP Server (82 Tools)</li><li>@AgentApi 自动注册</li>
-                    <li>JSON Schema 生成</li><li>只读数据获取</li>
-                </ul>
-                <div class="sandbox-layer-label">L2 · 操作层 (Operation) — 需审批</div>
-                <ul>
-                    <li>Tool Adapters (4系统适配)</li><li>写操作代理执行</li>
-                    <li>工具分组掩码</li><li>渐进式工具发现</li>
-                </ul>
-                <div class="sandbox-layer-label">L3 · 编排层 (Orchestration) — Pipeline</div>
-                <ul>
-                    <li>多步任务编排</li><li>跨域服务组合</li>
-                    <li>DAG 依赖管理</li><li>进度锚点 (TodoWrite)</li>
-                </ul>
-            </div>
-            <div class="campus-group">
-                <div class="campus-group-title">上下文工程 (Context Engineering)</div>
-                <div class="sandbox-layer-label">L1 · 信息裁剪 (Input Shaping)</div>
-                <ul>
-                    <li>渐进式披露 (Progressive Disclosure)</li>
-                    <li>延迟Schema加载</li><li>工具描述摘要化</li>
-                    <li>40%容量阈值</li>
-                </ul>
-                <div class="sandbox-layer-label">L2 · 反馈注入 (Feedback Loop)</div>
-                <ul>
-                    <li>拒绝原因回注上下文</li><li>错误上下文保留</li>
-                    <li>审批结果附带建议</li><li>系统提醒注入</li>
-                </ul>
-                <div class="sandbox-layer-label">L3 · 精简优化 (Subtraction)</div>
-                <ul>
-                    <li>减法工程 (工具精简)</li><li>信噪比优化</li>
-                    <li>观察结果压缩</li><li>冗余工具合并</li>
-                </ul>
-            </div>
-            <div class="campus-group">
-                <div class="campus-group-title">流控与韧性 (gateway-rest + adapter)</div>
-                <div class="sandbox-layer-label">L1 · 流量控制 (Rate Limiting)</div>
-                <ul>
-                    <li>4级限流 (全局/Key/层/API)</li><li>滑动窗口计数</li>
-                    <li>Token 用量配额</li><li>并发请求上限</li>
-                </ul>
-                <div class="sandbox-layer-label">L2 · 容错保护 (Fault Tolerance)</div>
-                <ul>
-                    <li>熔断器 (Circuit Breaker)</li><li>重试策略 (指数退避)</li>
-                    <li>超时控制</li><li>舱壁隔离</li>
-                </ul>
-                <div class="sandbox-layer-label">L3 · 降级兜底 (Degradation)</div>
-                <ul>
-                    <li>降级处理</li><li>缓存兜底 (Fallback)</li>
-                    <li>部分成功响应</li><li>优雅错误提示</li>
-                </ul>
-            </div>
-            <div class="campus-group">
-                <div class="campus-group-title">四层审计 (gateway-audit)</div>
+
+            <!-- 右列：四层审计贯穿 -->
+            <div class="campus-group planned ai-audit-col">
+                <div class="campus-group-title">四层审计 (gateway-audit) <span class="planned-badge">规划中</span></div>
                 <div class="sandbox-layer-label">L1 · 调用层 (Call Audit)</div>
                 <ul>
                     <li>API 调用日志</li><li>请求/响应快照</li>
