@@ -222,14 +222,19 @@
         .layer-edge {
             grid-column: 1 / -1;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+            flex-direction: column;
+            gap: 8px;
             padding: 28px 10px 12px 10px;
             background: rgba(230, 255, 237, 0.2);
             border: 1px dashed #1f7a1f;
             border-radius: var(--radius);
             position: relative;
+        }
+        .edge-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
         .layer-edge::before {
             content: "网络接入层";
@@ -268,11 +273,16 @@
 
         /* === 左侧主列 === */
         .main-column {
-            display: flex;
-            flex-direction: column;
+            display: contents;
+        }
+        .biz-ai-grid {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-top: 10px;
         }
+        /* biz-bottom-area removed — capability & support rows are now full-width siblings */
 
         /* === 业务中心 === */
         .layer-business {
@@ -295,7 +305,7 @@
         }
         .business-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             height: auto;
         }
@@ -358,15 +368,29 @@
         .biz-campus .biz-header { margin-bottom: 8px; }
         /* 三列并排的业务线：内部子分组纵向排列 */
         .biz-vertical .campus-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 6px;
+        }
+        .biz-vertical .campus-group {
+            padding: 4px 2px;
+            min-height: 36px;
+            text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+        .biz-vertical .campus-group-title {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+            text-align: center;
+            line-height: 1.3;
         }
         /* 校务线横向支撑：全宽 + 子分组4列 */
         .biz-support {
-            grid-column: 1 / -1;
             border-top-color: #0066aa;
-            border-left: 3px solid #0066aa;
         }
         .biz-support .biz-header .label { color: #0066aa; }
         .biz-support .campus-group-title { color: #0066aa; }
@@ -417,6 +441,7 @@
 
         /* === 微服务中心 === */
         .layer-capability {
+            grid-column: 1 / -1;
             background-color: #fffbfb;
             border: 1px solid #ffcccc;
             border-left: 4px solid #cc0000;
@@ -485,6 +510,7 @@
 
         /* === 支撑层 === */
         .support-row {
+            grid-column: 1 / -1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
@@ -528,6 +554,9 @@
             grid-template-columns: 1fr 1fr;
             gap: 6px;
         }
+        .layer-infra .mini-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
         .item-mdm, .item-infra {
             padding: 4px 4px;
             min-height: 36px;
@@ -568,6 +597,9 @@
         /* ===================================== */
         /* 右侧 AI 安全编排与治理层              */
         /* ===================================== */
+        .ai-column {
+            display: contents;
+        }
         .ai-sidebar {
             background-color: white;
             border: 1px solid #bce0f0;
@@ -575,11 +607,10 @@
             padding: 28px 8px 8px 8px;
             box-sizing: border-box;
             border-radius: var(--radius);
-            margin-top: 10px;
             position: relative;
         }
-        .ai-sidebar::before {
-            content: "AI 安全编排与治理层";
+        .ai-sidebar-business::before {
+            content: "AI 业务模块";
             position: absolute;
             top: -10px;
             left: 20px;
@@ -589,6 +620,7 @@
             font-weight: 700;
             font-size: 0.9em;
         }
+        /* ai-sidebar-infra removed — items merged into 公共支撑服务 */
         .ai-sidebar .campus-groups {
             display: grid;
             grid-template-columns: 1fr auto;
@@ -886,11 +918,12 @@
         /* 响应式 */
         @media (max-width: 1024px) {
             .architecture-container { grid-template-columns: 1fr; }
+            .biz-ai-grid { grid-template-columns: 1fr; }
             .layer-access-traditional, .layer-access-ai { grid-column: 1; }
             .access-grid-traditional { grid-template-columns: repeat(2, 1fr); }
-            .ai-sidebar { order: -1; border-left: 4px solid #0077aa; }
             .layer-infrastructure { grid-column: 1; }
             .infra-content { grid-template-columns: 1fr; }
+            .business-grid { grid-template-columns: repeat(2, 1fr); }
             .flow-arrow { display: none; }
         }
     </style>
@@ -902,42 +935,6 @@
     <div class="main-title">技术架构图</div>
     <div class="main-subtitle">
         <span>AI-Ready &middot; Simulate-before-Commit &middot; Human-in-the-Loop</span>
-    </div>
-
-    <!-- ===== 原则描述：传统 SaaS ===== -->
-    <div class="principle-strip principle-traditional">
-        <div class="flow-legend-hd">SaaS 服务流: 统一认证，权限隔离，多端协同</div>
-        <div class="flow-steps">
-            <span class="f-step"><span class="f-num">1</span>登录认证</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">2</span>权限校验</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">3</span>业务操作</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">4</span>数据存储</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">5</span>消息触达</span>
-        </div>
-    </div>
-
-    <!-- ===== 原则描述：AI 决策流 ===== -->
-    <div class="principle-strip principle-ai">
-        <div class="flow-legend-hd">AI 决策流: 分层鉴权，按策略审批，全程审计</div>
-        <div class="flow-steps">
-            <span class="f-step"><span class="f-num">1</span>发起请求</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">2</span>鉴权 &amp; 流控</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">3</span>上下文构建</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">4</span>Tool 路由匹配</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">5</span>审批判定</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">6</span>执行调用</span>
-            <span class="f-arrow">&rarr;</span>
-            <span class="f-step"><span class="f-num">7</span>审计记录</span>
-        </div>
     </div>
 
     <!-- ===== 0. 访问入口：传统用户端 ===== -->
@@ -1006,83 +1003,59 @@
 
     <!-- ===== 网络接入层（全宽） ===== -->
     <div class="layer-edge">
-        <div class="box item-edge">CDN / 静态加速</div>
-        <div class="box item-edge">WAF / 安全防护</div>
-        <div class="box item-edge">SLB / 负载均衡</div>
-        <div class="box item-edge">API Gateway (网关)</div>
-        <div class="box item-edge">BFF / SSR 聚合层</div>
-        <div class="box item-edge item-edge-ai">MCP Protocol Gateway</div>
-        <div class="box item-edge item-edge-ai">Agent API 路由</div>
-        <div class="box item-edge item-edge-ai">Token / API Key 鉴权</div>
-        <div class="box item-edge item-edge-ai">AI 流量限流</div>
+        <div class="edge-row">
+            <div class="box item-edge">CDN / 静态加速</div>
+            <div class="box item-edge">WAF / 安全防护</div>
+            <div class="box item-edge">SLB / 负载均衡</div>
+            <div class="box item-edge">API Gateway (网关)</div>
+            <div class="box item-edge">BFF / SSR 聚合层</div>
+        </div>
+        <div class="edge-row">
+            <div class="box item-edge item-edge-ai">MCP Protocol Gateway</div>
+            <div class="box item-edge item-edge-ai">Agent API 路由</div>
+            <div class="box item-edge item-edge-ai">认证鉴权 (Auth)</div>
+            <div class="box item-edge item-edge-ai">流控与韧性 (Rate Limit)</div>
+            <div class="box item-edge item-edge-ai">Token / API Key 鉴权</div>
+            <div class="box item-edge item-edge-ai">AI 流量限流</div>
+        </div>
     </div>
 
-    <!-- ===== 左侧：业务系统（生产环境） ===== -->
-    <div class="main-column">
+    <!-- ===== 业务系统 + AI 模块 对齐网格 ===== -->
+    <div class="biz-ai-grid">
 
-        <!-- 业务中心 -->
-        <div class="layer-business box">
+        <!-- Row 1：OpenAPI 网关 + Agent API & MCP 并排 -->
+        <div class="box item-edge">OpenAPI 网关</div>
+        <div class="box item-edge item-edge-ai">Agent API & MCP</div>
+
+        <!-- Row 2：业务中心 (全宽) -->
+        <div class="layer-business box" style="grid-column: 1 / -1;">
             <div class="business-grid">
                 <!-- 教学线（展开） -->
                 <div class="box biz-campus biz-vertical">
                     <div class="biz-header">
                         <div class="label">教学线 · 教学应用平台</div>
-                        <div class="sub-text">学习任务 / 精准教学 / 综合评价 / 全息画像 / 教育大脑</div>
                     </div>
                     <div class="campus-groups">
                         <div class="campus-group">
                             <div class="campus-group-title">学习任务流</div>
-                            <ul>
-                                <li>课前预习</li><li>课中互动</li>
-                                <li>课后作业</li><li>假期任务</li>
-                                <li>自主提交</li><li>作业批改</li>
-                                <li>评语反馈</li><li>优秀作业展</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">阅读打卡</div>
-                            <ul>
-                                <li>打卡任务</li><li>阅读记录</li>
-                                <li>阅读统计</li><li>阅读排行</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">精准教学平台</div>
-                            <ul>
-                                <li>在线组卷</li><li>在线考试</li>
-                                <li>智能阅卷</li><li>成绩分析</li>
-                                <li>错题本</li><li>知识图谱</li>
-                                <li>学情诊断</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">综合素质评价</div>
-                            <ul>
-                                <li>评价方案</li><li>指标维度</li>
-                                <li>教师评价</li><li>学生互评</li>
-                                <li>家长评价</li><li>评价报告</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">学生全息画像</div>
-                            <ul>
-                                <li>学业成绩</li><li>行为表现</li>
-                                <li>综合素质</li><li>成长档案</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">教师全息画像</div>
-                            <ul>
-                                <li>教学质量</li><li>工作量统计</li>
-                                <li>发展档案</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">教育大脑</div>
-                            <ul>
-                                <li>数据看板</li><li>预警分析</li>
-                                <li>决策支持</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -1091,60 +1064,28 @@
                 <div class="box biz-campus biz-vertical">
                     <div class="biz-header">
                         <div class="label">育人线 · 综合素质评价平台</div>
-                        <div class="sub-text">五维评价 / 写实记录 / 荣誉体系 / 成长档案</div>
                     </div>
                     <div class="campus-groups">
                         <div class="campus-group">
                             <div class="campus-group-title">评价方案管理</div>
-                            <ul>
-                                <li>评价方案配置</li><li>评价维度/指标</li>
-                                <li>评价模板</li><li>评分规则</li>
-                                <li>评价周期</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">五维评价</div>
-                            <ul>
-                                <li>品德表现</li><li>学业水平</li>
-                                <li>运动健康</li><li>艺术素养</li>
-                                <li>创新实践</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">评价执行</div>
-                            <ul>
-                                <li>教师评价</li><li>学生互评</li>
-                                <li>家长评价</li><li>自我评价</li>
-                                <li>评价审核</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">写实记录</div>
-                            <ul>
-                                <li>社会实践</li><li>志愿服务</li>
-                                <li>研究性学习</li><li>活动记录</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">荣誉管理</div>
-                            <ul>
-                                <li>校级荣誉</li><li>区级荣誉</li>
-                                <li>市级及以上</li><li>奖项审批</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">德育管理</div>
-                            <ul>
-                                <li>行为规范</li><li>班级评比</li>
-                                <li>宿舍管理</li><li>德育学分</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">成长档案</div>
-                            <ul>
-                                <li>成长报告</li><li>学期评语</li>
-                                <li>档案导出</li><li>数据看板</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -1153,321 +1094,115 @@
                 <div class="box biz-campus biz-vertical">
                     <div class="biz-header">
                         <div class="label">教务线 · 教务平台</div>
-                        <div class="sub-text">排课管理 / 选课平台 / 场地资源</div>
                     </div>
                     <div class="campus-groups">
                         <div class="campus-group">
                             <div class="campus-group-title">智能排课</div>
-                            <ul>
-                                <li>排课规则配置</li><li>自动排课引擎</li>
-                                <li>课表展示</li><li>调课/代课</li>
-                                <li>走班排课</li><li>课表发布</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
-                            <div class="campus-group-title">选课平台 · 课程类型</div>
-                            <ul>
-                                <li>课后托管</li><li>兴趣班</li>
-                                <li>校队</li><li>专业选修课</li>
-                                <li>7选3</li><li>周末营</li>
-                                <li>夏校</li><li>冬校</li>
-                            </ul>
-                        </div>
-                        <div class="campus-group">
-                            <div class="campus-group-title">选课平台 · 选课能力</div>
-                            <ul>
-                                <li>多端选课(PC/H5/PAD)</li><li>志愿申报</li>
-                                <li>先到先得</li><li>即时缴费</li>
-                                <li>统一缴费单</li><li>课程进阶序列</li>
-                                <li>校内/校外选课</li><li>预选名单导入</li>
-                                <li>分批次选课</li>
-                            </ul>
+                            <div class="campus-group-title">选课平台</div>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">场地 & 日程</div>
-                            <ul>
-                                <li>场地资源管理</li><li>场地预约</li>
-                                <li>日程管理</li><li>校历配置</li>
-                                <li>节次/时段管理</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- 校务平台（横向支撑） -->
-                <div class="box biz-campus biz-support">
+                <!-- 校务平台（平行并列） -->
+                <div class="box biz-campus biz-vertical biz-support">
                     <div class="biz-header">
                         <div class="label">校务线 · 校务平台</div>
-                        <div class="sub-text">行政运营 / 人事财务 / 一卡通 / 招生学籍</div>
                     </div>
                     <div class="campus-groups">
                         <div class="campus-group">
                             <div class="campus-group-title">行政 & IT 工作台</div>
-                            <ul>
-                                <li>会议室预订</li><li>会议支持</li>
-                                <li>资产管理</li><li>工牌挂失</li>
-                                <li>故障报修</li><li>物品领用</li>
-                                <li>健康管理平台</li><li>访客/访校</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">人事 & 财务工作台</div>
-                            <ul>
-                                <li>智能薪酬</li><li>外出/请假</li>
-                                <li>内部推荐</li><li>招聘系统</li>
-                                <li>党建系统</li><li>缴费平台</li>
-                                <li>教师档案</li><li>教师绩效</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">一卡通管理平台</div>
-                            <ul>
-                                <li>校园卡</li><li>人脸管理</li>
-                                <li>工牌管理及打印</li><li>学生卡管理</li>
-                                <li>门禁管理</li><li>宿舍管理</li>
-                                <li>校车管理</li><li>安保人员管理</li>
-                                <li>每周菜单</li><li>三方数据同步</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">每日常规 & 小工具</div>
-                            <ul>
-                                <li>人脸测温</li><li>入离校考勤</li>
-                                <li>公章&证明</li><li>校园顺风车</li>
-                                <li>校园导航</li><li>每周食谱</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">招生 & 学籍 & 校友</div>
-                            <ul>
-                                <li>招生平台</li><li>学籍管理</li>
-                                <li>校友会系统</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">学校官网</div>
-                            <ul>
-                                <li>学校特色</li><li>学校新闻</li>
-                                <li>招生发布</li><li>教师风采</li>
-                            </ul>
                         </div>
                         <div class="campus-group">
                             <div class="campus-group-title">教师工作台</div>
-                            <ul>
-                                <li>校园资讯</li><li>政策制度</li>
-                                <li>重要通知</li><li>校园头条</li>
-                                <li>待办事项</li><li>应用大全</li>
-                                <li>团队祝福</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 微服务中心 -->
-        <div class="layer-capability box">
-            <div class="cap-grid">
-                <div class="box item-cap">
-                    <span class="label">调度中心</span>
-                    <span class="sub-text">Scheduling</span>
+    </div><!-- End biz-ai-grid -->
+
+    <!-- ===== 微服务中心 (全宽) ===== -->
+    <div class="layer-capability box">
+        <div class="cap-grid">
+            <div class="box item-cap">
+                <span class="label">课程中心</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">评价中心</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">任务中心</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">日程中心</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">通用应用</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">健康服务</span>
+            </div>
+            <div class="box item-cap">
+                <span class="label">人员管理</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 数据中台 + 公共支撑 (全宽) ===== -->
+    <div class="support-row">
+        <div class="layer-mdm">
+            <div class="mini-grid">
+                <div class="box item-mdm">
+                    <span class="label">组织架构</span>
+                    <span class="sub-text">集团-学校多级</span>
                 </div>
-                <div class="box item-cap">
-                    <span class="label">评价中心</span>
-                    <span class="sub-text">Evaluation</span>
+                <div class="box item-mdm">
+                    <span class="label">时间维度</span>
+                    <span class="sub-text">学年/学期管理</span>
                 </div>
-                <div class="box item-cap">
-                    <span class="label">任务中心</span>
-                    <span class="sub-text">Task</span>
+                <div class="box item-mdm">
+                    <span class="label">教学元数据</span>
+                    <span class="sub-text">科目/课程库/节次</span>
                 </div>
-                <div class="box item-cap">
-                    <span class="label">日程中心</span>
-                    <span class="sub-text">Calendar</span>
-                </div>
-                <div class="box item-cap">
-                    <span class="label">通用应用</span>
-                    <span class="sub-text">Common App</span>
-                </div>
-                <div class="box item-cap">
-                    <span class="label">健康服务</span>
-                    <span class="sub-text">Health</span>
-                </div>
-                <div class="box item-cap">
-                    <span class="label">教师绩效</span>
-                    <span class="sub-text">Teacher Time</span>
+                <div class="box item-mdm">
+                    <span class="label">人员档案</span>
+                    <span class="sub-text">钉钉同步/学籍</span>
                 </div>
             </div>
         </div>
-
-        <!-- 数据中台 + 公共支撑 -->
-        <div class="support-row">
-            <div class="layer-mdm">
-                <div class="mini-grid">
-                    <div class="box item-mdm">
-                        <span class="label">组织架构</span>
-                        <span class="sub-text">集团-学校多级</span>
-                    </div>
-                    <div class="box item-mdm">
-                        <span class="label">时间维度</span>
-                        <span class="sub-text">学年/学期管理</span>
-                    </div>
-                    <div class="box item-mdm">
-                        <span class="label">教学元数据</span>
-                        <span class="sub-text">科目/课程库/节次</span>
-                    </div>
-                    <div class="box item-mdm">
-                        <span class="label">人员档案</span>
-                        <span class="sub-text">钉钉同步/学籍</span>
-                    </div>
-                </div>
-            </div>
-            <div class="layer-infra">
-                <div class="mini-grid">
-                    <div class="box item-infra"><span class="label">安全鉴权</span><span class="sub-text">SSO / ACL</span></div>
-                    <div class="box item-infra"><span class="label">交互触达</span><span class="sub-text">Message Center</span></div>
-                    <div class="box item-infra"><span class="label">聚合展示</span><span class="sub-text">Student Profile</span></div>
-                    <div class="box item-infra"><span class="label">文件运维</span><span class="sub-text">OSS / Card</span></div>
-                </div>
+        <div class="layer-infra">
+            <div class="mini-grid">
+                <div class="box item-infra"><span class="label">安全鉴权</span></div>
+                <div class="box item-infra"><span class="label">交互触达</span></div>
+                <div class="box item-infra"><span class="label">聚合展示</span></div>
+                <div class="box item-infra"><span class="label">文件运维</span></div>
+                <div class="box item-infra"><span class="label">访问审计</span><span class="planned-badge">规划中</span></div>
+                <div class="box item-infra"><span class="label">上下文工程</span><span class="planned-badge">规划中</span></div>
+                <div class="box item-infra"><span class="label">预演沙箱</span><span class="planned-badge">规划中</span></div>
             </div>
         </div>
-
-    </div><!-- End Main Column -->
-
-    <!-- ===== 右侧：AI 安全编排与治理层 ===== -->
-    <div class="ai-sidebar">
-        <div class="campus-groups">
-            <!-- 左列 -->
-            <div class="ai-left-col">
-                <!-- 第一行：认证鉴权 + 流控与韧性 并排 -->
-                <div class="ai-top-row">
-                    <div class="campus-group">
-                        <div class="campus-group-title">认证鉴权 (gateway-auth)</div>
-                        <ul>
-                            <li>API Key 认证</li><li>JWT Token 鉴权</li>
-                            <li>代理身份 (Proxy)</li><li>请求追踪 (TraceId)</li>
-                        </ul>
-                    </div>
-                    <div class="campus-group planned">
-                        <div class="campus-group-title">流控与韧性 (gateway-rest) <span class="planned-badge">规划中</span></div>
-                        <div class="sandbox-layer-label">L1 · 流量控制</div>
-                        <ul>
-                            <li>4级限流 (全局/Key/层/API)</li><li>滑动窗口计数</li>
-                            <li>Token 用量配额</li><li>并发请求上限</li>
-                        </ul>
-                        <div class="sandbox-layer-label">L2 · 容错保护</div>
-                        <ul>
-                            <li>熔断器 (Circuit Breaker)</li><li>重试策略 (指数退避)</li>
-                            <li>超时控制</li><li>舱壁隔离</li>
-                        </ul>
-                        <div class="sandbox-layer-label">L3 · 降级兜底</div>
-                        <ul>
-                            <li>降级处理</li><li>缓存兜底 (Fallback)</li>
-                            <li>部分成功响应</li><li>优雅错误提示</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 上下文工程 -->
-                <div class="campus-group planned">
-                    <div class="campus-group-title">上下文工程 (Context Engineering) <span class="planned-badge">规划中</span></div>
-                    <div class="sandbox-layer-label">L1 · 信息裁剪 (Input Shaping)</div>
-                    <ul>
-                        <li>渐进式披露 (Progressive Disclosure)</li>
-                        <li>延迟Schema加载</li><li>工具描述摘要化</li>
-                        <li>40%容量阈值</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L2 · 反馈注入 (Feedback Loop)</div>
-                    <ul>
-                        <li>拒绝原因回注上下文</li><li>错误上下文保留</li>
-                        <li>审批结果附带建议</li><li>系统提醒注入</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L3 · 精简优化 (Subtraction)</div>
-                    <ul>
-                        <li>减法工程 (工具精简)</li><li>信噪比优化</li>
-                        <li>观察结果压缩</li><li>冗余工具合并</li>
-                    </ul>
-                </div>
-
-                <!-- Agent API & MCP -->
-                <div class="campus-group">
-                    <div class="campus-group-title">Agent API & MCP (gateway-mcp + service)</div>
-                    <div class="sandbox-layer-label">L1 · 查询层 (Query) — 自动放行</div>
-                    <ul>
-                        <li>MCP Server (82 Tools)</li><li>@AgentApi 自动注册</li>
-                        <li>JSON Schema 生成</li><li>只读数据获取</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L2 · 操作层 (Operation) — 需审批</div>
-                    <ul>
-                        <li>Tool Adapters (4系统适配)</li><li>写操作代理执行</li>
-                        <li>工具分组掩码</li><li>渐进式工具发现</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L3 · 编排层 (Orchestration) — Pipeline</div>
-                    <ul>
-                        <li>多步任务编排</li><li>跨域服务组合</li>
-                        <li>DAG 依赖管理</li><li>进度锚点 (TodoWrite)</li>
-                    </ul>
-                </div>
-
-                <!-- 审批引擎 -->
-                <div class="campus-group planned">
-                    <div class="campus-group-title">审批引擎 (gateway-audit/policy) <span class="planned-badge">规划中</span></div>
-                    <ul>
-                        <li>策略引擎 (4级优先级)</li><li>查询自动放行</li>
-                        <li>写操作需审批</li><li>72h 过期窗口</li>
-                    </ul>
-                    <div class="gov-btns" style="margin-top: 6px;">
-                        <div class="gov-btn gov-btn-yes">&#10003; 批准</div>
-                        <div class="gov-btn gov-btn-no">&#10007; 拒绝</div>
-                    </div>
-                </div>
-
-                <!-- 预演沙箱 -->
-                <div class="campus-group planned">
-                    <div class="campus-group-title">预演沙箱 (Simulation Sandbox) <span class="planned-badge">规划中</span></div>
-                    <div class="sandbox-layer-label">L1 · 变更预览 (Change Preview)</div>
-                    <ul>
-                        <li>影响范围统计</li><li>变更清单生成</li>
-                        <li>冲突检测</li><li>数据校验 (validate-only)</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L2 · Diff 对比 (Before/After)</div>
-                    <ul>
-                        <li>课表 Diff</li><li>组织架构 Diff</li>
-                        <li>收费金额 Diff</li><li>分班人数 Diff</li>
-                    </ul>
-                    <div class="sandbox-layer-label">L3 · Pipeline 模拟 (Dry-Run)</div>
-                    <ul>
-                        <li>多步骤预演</li><li>风险评分</li>
-                        <li>依赖检查</li><li>耗时预估</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- 右列：四层审计贯穿 -->
-            <div class="campus-group planned ai-audit-col">
-                <div class="campus-group-title">四层审计 (gateway-audit) <span class="planned-badge">规划中</span></div>
-                <div class="sandbox-layer-label">L1 · 调用层 (Call Audit)</div>
-                <ul>
-                    <li>API 调用日志</li><li>请求/响应快照</li>
-                    <li>耗时统计</li><li>异常标记</li>
-                </ul>
-                <div class="sandbox-layer-label">L2 · 决策层 (Decision Audit)</div>
-                <ul>
-                    <li>审批记录</li><li>策略命中日志</li>
-                    <li>审批人/审批时间</li><li>拒绝原因归档</li>
-                </ul>
-                <div class="sandbox-layer-label">L3 · 编排层 (Orchestration Audit)</div>
-                <ul>
-                    <li>编排链路追踪</li><li>步骤级耗时</li>
-                    <li>跨域调用拓扑</li><li>失败步骤定位</li>
-                </ul>
-                <div class="sandbox-layer-label">L4 · 数据层 (Data Change Audit)</div>
-                <ul>
-                    <li>数据变更 (Before/After)</li><li>变更可回滚标记</li>
-                    <li>72h 回滚窗口</li><li>变更影响范围</li>
-                </ul>
-            </div>
-        </div>
-    </div><!-- End AI Sidebar -->
+    </div>
 
     <!-- ===== 基础设施层 ===== -->
     <div class="layer-infrastructure">

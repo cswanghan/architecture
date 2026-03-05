@@ -1,69 +1,35 @@
-# 智慧校园技术架构图
+# 云谷智慧校园 · 技术架构图
 
-这是一个展示智慧校园端到端技术架构的单页应用。
+云谷教育 SaaS 系统的端到端技术架构可视化，以单页 HTML 形式呈现完整的系统分层设计。
 
-## 功能特点
-
-- 📊 完整的技术架构可视化
-- 🎨 响应式设计，支持多端访问
-- 🔄 交互式组件，悬停效果
-- 🎯 清晰的分层架构展示
-
-## 部署到 Vercel
-
-### 方法一：通过 Vercel CLI 部署
-
-1. 安装 Vercel CLI
-```bash
-npm install -g vercel
-```
-
-2. 在项目目录中运行
-```bash
-vercel
-```
-
-3. 按照提示完成部署
-
-### 方法二：通过 Git 部署
-
-1. 将代码推送到 GitHub/GitLab/Bitbucket
-2. 在 [Vercel](https://vercel.com) 网站上导入项目
-3. 自动部署完成
-
-### 方法三：拖拽部署
-
-1. 访问 [Vercel](https://vercel.com)
-2. 将整个项目文件夹拖拽到部署区域
-3. 等待部署完成
-
-## 项目结构
+## 架构分层
 
 ```
-.
-├── index.html          # 主页面文件
-├── vercel.json         # Vercel 配置文件
-└── README.md           # 项目说明文档
+访问入口层     传统用户端 (教师/学生/家长/管理员) + AI Agent 端 (MCP Client)
+网络接入层     CDN · WAF · SLB · API Gateway · BFF | MCP Gateway · Agent API 路由 · 鉴权 · 限流
+业务网关层     OpenAPI 网关 | Agent API & MCP
+业务中心       教学线 · 育人线 · 教务线 · 校务线
+微服务中心     课程 · 评价 · 任务 · 日程 · 通用 · 健康 · 人员
+支撑层         基础数据中台 (MDM) | 公共支撑服务
+基础设施层     K8S · Nacos · MySQL · Redis · OSS · RocketMQ · ES
 ```
+
+## 文件说明
+
+| 文件 | 说明 |
+|------|------|
+| `index.html` | 主架构图 — 云谷智慧校园端到端技术架构 |
+| `cloud.html` | 云架构图 — 阿里云基础设施视角 |
+| `requirements.md` | 系统需求文档 |
+| `architecture-analysis.md` | 架构分析报告 |
+| `cloud-architecture-analysis.md` | 云架构分析报告 |
 
 ## 本地预览
 
-在本地预览应用，只需用浏览器打开 `index.html` 文件即可。
+浏览器直接打开 `index.html` 即可。
 
 ## 技术栈
 
-- HTML5
-- CSS3 (Grid/Flexbox)
-- JavaScript (原生)
-- Vercel 静态托管
-
-## 浏览器支持
-
-- Chrome (最新版本)
-- Firefox (最新版本)
-- Safari (最新版本)
-- Edge (最新版本)
-
-## 许可证
-
-MIT
+- HTML5 + CSS3 (Grid / Flexbox)
+- 纯静态，无构建依赖
+- 阿里巴巴普惠体 (CDN)
