@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云谷教育云 · AI 原生架构 — 脑手分离</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-alibaba-puhuiti@2.0.3/css/2.0/3500.css">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --radius: 6px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.10);
+
+            /* 层级色 */
+            --c-app: #f0fdf4;
+            --c-app-border: #86efac;
+            --c-app-accent: #16a34a;
+
+            --c-brain: #fff7ed;
+            --c-brain-border: #fdba74;
+            --c-brain-accent: #c2410c;
+
+            --c-orchestrator: #fdf4ff;
+            --c-orchestrator-border: #e879f9;
+            --c-orchestrator-accent: #a21caf;
+
+            --c-council: #ecfeff;
+            --c-council-border: #67e8f9;
+            --c-council-accent: #0e7490;
+
+            --c-sovereignty: #fef2f2;
+            --c-sovereignty-border: #fca5a5;
+            --c-sovereignty-accent: #b91c1c;
+
+            --c-platform: #eff6ff;
+            --c-platform-border: #93c5fd;
+            --c-platform-accent: #2563eb;
+
+            --c-storage: #faf5ff;
+            --c-storage-border: #d8b4fe;
+            --c-storage-accent: #7c3aed;
+
+            --c-compute: #fff1f2;
+            --c-compute-border: #fda4af;
+            --c-compute-accent: #e11d48;
+
+            --c-network: #f0fdfa;
+            --c-network-border: #5eead4;
+            --c-network-accent: #0d9488;
+
+            --c-security: #fefce8;
+            --c-security-border: #fde047;
+            --c-security-accent: #ca8a04;
+
+            --c-infra: #f1f5f9;
+            --c-infra-border: #cbd5e1;
+            --c-infra-accent: #475569;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            font-family: "Alibaba PuHuiTi 2.0", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 28px 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ===================== 主容器 ===================== */
+        .cloud-arch {
+            width: 100%;
+            max-width: 1320px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* ===================== 标题 ===================== */
+        .title-block {
+            text-align: center;
+            padding-bottom: 8px;
+        }
+        .title-block h1 {
+            font-size: 1.9em;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .title-block .en-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+        .title-block .tagline {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.72em;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 3px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* ===================== 通用层容器 ===================== */
+        .layer {
+            border-radius: var(--radius);
+            position: relative;
+            padding: 32px 16px 16px 16px;
+        }
+        .layer-label {
+            position: absolute;
+            top: -11px;
+            left: 20px;
+            padding: 0 10px;
+            font-weight: 700;
+            font-size: 0.82em;
+            border-radius: 4px;
+            background: white;
+            line-height: 22px;
+            z-index: 2;
+        }
+        .layer-label .en {
+            font-weight: 500;
+            color: #94a3b8;
+            margin-left: 6px;
+            font-size: 0.88em;
+        }
+        .layer-label .brain-icon {
+            margin-right: 4px;
+        }
+
+        /* ===================== 通用卡片 ===================== */
+        .card {
+            background: white;
+            border-radius: 5px;
+            padding: 10px 8px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 52px;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            z-index: 5;
+        }
+        .card .name {
+            font-weight: 700;
+            font-size: 0.8em;
+            line-height: 1.25;
+            margin-bottom: 2px;
+        }
+        .card .desc {
+            font-size: 0.65em;
+            color: #64748b;
+            line-height: 1.2;
+        }
+        .card .tag-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            margin-top: 4px;
+        }
+        .card .tag-list li {
+            font-size: 0.6em;
+            padding: 1px 6px;
+            border-radius: 2px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        /* ===================== 流程条 ===================== */
+        .flow-bar {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 10px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .flow-bar-title {
+            font-weight: 700;
+            font-size: 0.72em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .flow-bar-title::before {
+            content: '';
+            width: 4px;
+            height: 14px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+        .flow-bar .steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+        .flow-bar .step {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.68em;
+            font-weight: 600;
+            color: #475569;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 3px 10px 3px 3px;
+            transition: all 0.15s;
+        }
+        .step:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .step .num {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .arrow { color: #cbd5e1; font-weight: 700; font-size: 0.85em; }
+        .arrow-loop { color: var(--c-brain-accent); font-weight: 700; font-size: 0.85em; }
+
+        /* --- 流程条：认知闭环 --- */
+        .flow-cognitive .flow-bar-title { color: var(--c-brain-accent); }
+        .flow-cognitive .flow-bar-title::before { background: var(--c-brain-accent); }
+        .flow-cognitive .num { background: var(--c-brain-accent); }
+        .flow-cognitive { border-left: 3px solid var(--c-brain-accent); }
+
+        /* --- 流程条：API 调用链 --- */
+        .flow-api .flow-bar-title { color: var(--c-platform-accent); }
+        .flow-api .flow-bar-title::before { background: var(--c-platform-accent); }
+        .flow-api .num { background: var(--c-platform-accent); }
+        .flow-api { border-left: 3px solid var(--c-platform-accent); }
+
+        /* --- 流程条：Agent 调用链 --- */
+        .flow-agent .flow-bar-title { color: var(--c-network-accent); }
+        .flow-agent .flow-bar-title::before { background: var(--c-network-accent); }
+        .flow-agent .num { background: var(--c-network-accent); }
+        .flow-agent { border-left: 3px solid var(--c-network-accent); }
+
+        /* ===================== 应用层 ===================== */
+        .layer-app {
+            background: var(--c-app);
+            border: 1px solid var(--c-app-border);
+        }
+        .layer-app .layer-label { color: var(--c-app-accent); }
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        .app-card {
+            border: 1px solid var(--c-app-border);
+            border-top: 3px solid var(--c-app-accent);
+            padding: 12px 10px;
+            min-height: 80px;
+        }
+        .app-card .name { color: var(--c-app-accent); font-size: 0.85em; }
+        .app-card .desc { margin-bottom: 4px; }
+        .app-card .tag-list li {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* ===================== 认知引擎层 (脑) ===================== */
+        .layer-brain {
+            background: var(--c-brain);
+            border: 2px solid var(--c-brain-border);
+            box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.08);
+        }
+        .layer-brain .layer-label {
+            color: var(--c-brain-accent);
+            font-size: 0.88em;
+        }
+
+        /* --- 双栏: 学生侧 + 教师侧 --- */
+        .brain-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 10px;
+            align-items: stretch;
+        }
+        .brain-side {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .brain-side-title {
+            font-size: 0.72em;
+            font-weight: 700;
+            text-align: center;
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .brain-side-title.student {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .brain-side-title.teacher {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .brain-side-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+            flex: 1;
+        }
+
+        /* --- 横向双螺旋连接条 --- */
+        .brain-helix-bar {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 0;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 6px 0;
+        }
+        .helix-flow {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.62em;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        .helix-flow.student-to {
+            background: #dbeafe;
+            color: #1e40af;
+            justify-self: end;
+        }
+        .helix-flow.teacher-to {
+            background: #d1fae5;
+            color: #065f46;
+            justify-self: start;
+        }
+        .helix-center-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 14px;
+            background: white;
+            border: 2px solid var(--c-brain-border);
+            border-radius: 8px;
+            min-width: 100px;
+        }
+        .helix-center-icon .helix-label {
+            font-size: 0.68em;
+            font-weight: 800;
+            color: var(--c-brain-accent);
+        }
+        .helix-center-icon .helix-sub {
+            font-size: 0.55em;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* --- 共享核心行 --- */
+        .brain-shared {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* --- 卡片样式 --- */
+        .brain-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .brain-card {
+            border: 1px solid var(--c-brain-border);
+            border-top: 3px solid var(--c-brain-accent);
+            padding: 10px 8px;
+        }
+        .brain-card .name { color: var(--c-brain-accent); font-size: 0.82em; }
+        .brain-card .tag-list li {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+        .brain-card.student-card {
+            border-top-color: #2563eb;
+        }
+        .brain-card.student-card .name { color: #1e40af; }
+        .brain-card.student-card .tag-list li {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .brain-card.teacher-card {
+            border-top-color: #059669;
+        }
+        .brain-card.teacher-card .name { color: #065f46; }
+        .brain-card.teacher-card .tag-list li {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .brain-card.shared-card {
+            border-top-color: var(--c-brain-accent);
+        }
+        .brain-principle {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-top: 8px;
+            border-top: 1px dashed var(--c-brain-border);
+        }
+        .brain-principle .principle {
+            font-size: 0.65em;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid var(--c-brain-border);
+            color: var(--c-brain-accent);
+        }
+
+        /* --- 流程条：教师闭环 --- */
+        .flow-teacher .flow-bar-title { color: #059669; }
+        .flow-teacher .flow-bar-title::before { background: #059669; }
+        .flow-teacher .num { background: #059669; }
+        .flow-teacher { border-left: 3px solid #059669; }
+
+        /* ===================== 任务图编排器 (神经传导) ===================== */
+        .layer-orchestrator {
+            background: var(--c-orchestrator);
+            border: 2px solid var(--c-orchestrator-border);
+        }
+        .layer-orchestrator .layer-label { color: var(--c-orchestrator-accent); }
+        .orchestrator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .orchestrator-card {
+            border: 1px solid var(--c-orchestrator-border);
+            border-top: 3px solid var(--c-orchestrator-accent);
+            padding: 10px 8px;
+        }
+        .orchestrator-card .name { color: var(--c-orchestrator-accent); font-size: 0.82em; }
+        .orchestrator-card .tag-list li {
+            background: #fae8ff;
+            color: #86198f;
+        }
+
+        /* ===================== 模型委员会 (智能路由) ===================== */
+        .layer-council {
+            background: var(--c-council);
+            border: 2px solid var(--c-council-border);
+        }
+        .layer-council .layer-label { color: var(--c-council-accent); }
+        .council-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .council-top {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+        .council-cap {
+            background: white;
+            border: 1px solid var(--c-council-border);
+            border-top: 3px solid var(--c-council-accent);
+            border-radius: 5px;
+            padding: 10px 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 52px;
+            transition: all 0.2s ease;
+        }
+        .council-cap:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            z-index: 5;
+        }
+        .council-cap .name {
+            font-weight: 700;
+            font-size: 0.78em;
+            color: var(--c-council-accent);
+            line-height: 1.25;
+            margin-bottom: 2px;
+        }
+        .council-cap .desc {
+            font-size: 0.62em;
+            color: #64748b;
+            line-height: 1.2;
+        }
+        .council-table {
+            background: white;
+            border: 1px solid var(--c-council-border);
+            border-radius: 5px;
+            padding: 12px 16px;
+            overflow: hidden;
+        }
+        .council-table-title {
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--c-council-accent);
+            margin-bottom: 8px;
+        }
+        .council-row {
+            display: grid;
+            grid-template-columns: 1.3fr 2fr 0.8fr;
+            gap: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0fdfa;
+            font-size: 0.68em;
+            align-items: center;
+        }
+        .council-row:last-child { border-bottom: none; }
+        .council-row.header {
+            font-weight: 700;
+            color: #475569;
+            font-size: 0.68em;
+            border-bottom: 2px solid var(--c-council-border);
+            padding-bottom: 8px;
+            margin-bottom: 2px;
+        }
+        .council-cell { padding: 2px 4px; }
+        .council-level {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+        .council-level.l1 { background: #fee2e2; color: #991b1b; }
+        .council-level.l2 { background: #fef9c3; color: #854d0e; }
+
+        /* ===================== 数据主权网关 ===================== */
+        .layer-sovereignty {
+            background: var(--c-sovereignty);
+            border: 2px solid var(--c-sovereignty-border);
+        }
+        .layer-sovereignty .layer-label { color: var(--c-sovereignty-accent); }
+        .sovereignty-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .sovereignty-card {
+            border: 1px solid var(--c-sovereignty-border);
+            padding: 12px 10px;
+        }
+        .sovereignty-card .name { font-size: 0.82em; }
+        .sovereignty-card .tag-list li {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .sovereignty-card.level-red { border-top: 3px solid #dc2626; }
+        .sovereignty-card.level-red .name { color: #dc2626; }
+        .sovereignty-card.level-yellow { border-top: 3px solid #ca8a04; }
+        .sovereignty-card.level-yellow .name { color: #ca8a04; }
+        .sovereignty-card.level-black { border-top: 3px solid #1e293b; }
+        .sovereignty-card.level-black .name { color: #1e293b; }
+
+        /* ===================== 开放平台层 ===================== */
+        .layer-platform {
+            background: var(--c-platform);
+            border: 1px solid var(--c-platform-border);
+        }
+        .layer-platform .layer-label { color: var(--c-platform-accent); }
+
+        .platform-tools {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .platform-tools .ptool {
+            background: white;
+            border: 1px solid var(--c-platform-border);
+            border-radius: 5px;
+            padding: 10px 8px;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--c-platform-accent);
+            transition: all 0.15s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .ptool .ptool-desc {
+            font-size: 0.85em;
+            font-weight: 500;
+            color: #64748b;
+        }
+        .ptool:hover { background: var(--c-platform-accent); color: white; transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+        .ptool:hover .ptool-desc { color: rgba(255,255,255,0.8); }
+
+        .api-layers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .api-layer-section {
+            background: white;
+            border: 1px solid var(--c-platform-border);
+            border-radius: 5px;
+            padding: 10px 14px;
+        }
+        .api-layer-header {
+            font-weight: 700;
+            font-size: 0.78em;
+            color: var(--c-platform-accent);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .api-layer-header .badge {
+            font-size: 0.78em;
+            font-weight: 600;
+            background: var(--c-platform);
+            color: var(--c-platform-accent);
+            padding: 1px 8px;
+            border-radius: 3px;
+            border: 1px solid var(--c-platform-border);
+        }
+        .api-grid {
+            display: grid;
+            gap: 6px;
+        }
+        .api-grid-domain {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .api-grid-resource {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .api-item {
+            font-size: 0.68em;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            transition: all 0.15s;
+        }
+        .api-item:hover { background: #eff6ff; border-color: var(--c-platform-border); transform: translateY(-1px); }
+        .api-method {
+            font-family: "SF Mono", "Fira Code", monospace;
+            font-weight: 700;
+            font-size: 0.9em;
+            padding: 1px 4px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .api-method.get { color: #16a34a; background: #f0fdf4; }
+        .api-method.post { color: #2563eb; background: #eff6ff; }
+        .api-method.put { color: #ca8a04; background: #fefce8; }
+        .api-method.delete { color: #e11d48; background: #fff1f2; }
+        .api-path {
+            font-family: "SF Mono", "Fira Code", monospace;
+            color: #475569;
+        }
+        .api-label {
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+        .api-methods {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        /* ===================== 底座四列 ===================== */
+        .infra-core {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* --- Storage --- */
+        .layer-storage {
+            background: var(--c-storage);
+            border: 1px solid var(--c-storage-border);
+        }
+        .layer-storage .layer-label { color: var(--c-storage-accent); }
+        .store-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .store-card {
+            border: 1px solid var(--c-storage-border);
+        }
+        .store-card .name { color: var(--c-storage-accent); }
+        .store-card .tag-list li {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        /* --- Compute --- */
+        .layer-compute {
+            background: var(--c-compute);
+            border: 1px solid var(--c-compute-border);
+        }
+        .layer-compute .layer-label { color: var(--c-compute-accent); }
+        .compute-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .compute-card {
+            border: 1px solid var(--c-compute-border);
+        }
+        .compute-card .name { color: var(--c-compute-accent); }
+        .compute-card .tag-list li {
+            background: #ffe4e6;
+            color: #9f1239;
+        }
+
+        /* --- Network --- */
+        .layer-network {
+            background: var(--c-network);
+            border: 1px solid var(--c-network-border);
+        }
+        .layer-network .layer-label { color: var(--c-network-accent); }
+        .network-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .network-card {
+            border: 1px solid var(--c-network-border);
+        }
+        .network-card .name { color: var(--c-network-accent); }
+        .network-card .tag-list li {
+            background: #ccfbf1;
+            color: #115e59;
+        }
+
+        /* --- Security --- */
+        .layer-security {
+            background: var(--c-security);
+            border: 1px solid var(--c-security-border);
+        }
+        .layer-security .layer-label { color: var(--c-security-accent); }
+        .security-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .security-card {
+            border: 1px solid var(--c-security-border);
+        }
+        .security-card .name { color: var(--c-security-accent); }
+        .security-card .tag-list li {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        /* ===================== 基础设施层 ===================== */
+        .layer-infra {
+            background: var(--c-infra);
+            border: 1px solid var(--c-infra-border);
+        }
+        .layer-infra .layer-label { color: var(--c-infra-accent); }
+        .infra-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .infra-group-title {
+            font-size: 0.7em;
+            font-weight: 700;
+            color: var(--c-infra-accent);
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--c-infra-border);
+        }
+        .infra-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .infra-tag {
+            background: white;
+            color: #475569;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+        .infra-tag:hover {
+            background: #e0f2fe;
+            border-color: #7dd3fc;
+            color: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        /* ===================== 分隔指示 ===================== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 4px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+        .divider span {
+            font-size: 0.68em;
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .divider-brain {
+            gap: 10px;
+            padding: 0 4px;
+        }
+        .divider-brain::before, .divider-brain::after {
+            background: var(--c-brain-border);
+        }
+        .divider-brain span {
+            color: var(--c-brain-accent);
+        }
+
+        /* ===================== 状态标记 ===================== */
+        .status-badge {
+            display: inline-block;
+            font-size: 0.6em;
+            font-weight: 700;
+            padding: 0 5px;
+            border-radius: 2px;
+            line-height: 1.6;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .status-live {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-building {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .status-planned {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .status-mvp {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+        /* ===================== 场景案例 ===================== */
+        .scenario-box {
+            background: white;
+            border: 1px solid var(--c-brain-border);
+            border-left: 4px solid var(--c-brain-accent);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+        }
+        .scenario-title {
+            font-size: 0.78em;
+            font-weight: 700;
+            color: var(--c-brain-accent);
+            margin-bottom: 8px;
+        }
+        .scenario-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .scenario-step {
+            font-size: 0.66em;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .scenario-step.s-hand {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .scenario-step.s-brain {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fdba74;
+        }
+        .scenario-step.s-human {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+        .scenario-step.s-loop {
+            background: #faf5ff;
+            color: #7c3aed;
+            border: 1px solid #d8b4fe;
+        }
+        .scenario-step.s-parallel {
+            background: #fdf4ff;
+            color: #a21caf;
+            border: 1px solid #e879f9;
+        }
+        .scenario-parallel-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            padding: 4px 6px;
+            border: 1px dashed #e879f9;
+            border-radius: 4px;
+            background: rgba(253,244,255,0.5);
+        }
+        .scenario-parallel-label {
+            font-size: 0.55em;
+            font-weight: 700;
+            color: #a21caf;
+            text-align: center;
+        }
+        .scenario-arrow {
+            color: #94a3b8;
+            font-weight: 700;
+            font-size: 0.8em;
+        }
+        .scenario-legend {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px dashed #e2e8f0;
+        }
+        .legend-item {
+            font-size: 0.6em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        /* ===================== 响应式 ===================== */
+        @media (max-width: 1024px) {
+            .infra-core { grid-template-columns: 1fr 1fr; }
+            .app-grid { grid-template-columns: 1fr; }
+            .api-layers { grid-template-columns: 1fr; }
+            .brain-grid { grid-template-columns: repeat(3, 1fr); }
+            .brain-columns { grid-template-columns: 1fr; }
+            .brain-shared { grid-template-columns: 1fr; }
+            .brain-side-cards { grid-template-columns: 1fr 1fr; }
+            .brain-helix-bar { grid-template-columns: 1fr; gap: 6px; }
+            .orchestrator-grid { grid-template-columns: repeat(2, 1fr); }
+            .council-content { grid-template-columns: 1fr; }
+            .council-top { grid-template-columns: repeat(3, 1fr); }
+            .sovereignty-grid { grid-template-columns: 1fr; }
+            .platform-tools { grid-template-columns: repeat(4, 1fr); }
+            .api-grid-domain { grid-template-columns: repeat(3, 1fr); }
+            .infra-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .infra-core { grid-template-columns: 1fr; }
+            .infra-grid { grid-template-columns: 1fr; }
+            .brain-grid { grid-template-columns: repeat(2, 1fr); }
+            .brain-side-cards { grid-template-columns: 1fr; }
+            .orchestrator-grid { grid-template-columns: 1fr; }
+            .council-top { grid-template-columns: repeat(2, 1fr); }
+            .platform-tools { grid-template-columns: repeat(2, 1fr); }
+            .api-grid-domain { grid-template-columns: repeat(2, 1fr); }
+            .api-grid-resource { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cloud-arch">
+
+    <!-- ==================== 标题 ==================== -->
+    <div class="title-block">
+        <h1>云谷教育云 · AI 原生架构</h1>
+        <div class="en-title">Yungu Education Cloud · AI-Native Architecture</div>
+        <div class="tagline">Data-Driven Double Helix: Student (Passive Data) &#x21C4; Teacher (Active AI) + Cognitive Engine + World Model + Data Sovereignty</div>
+    </div>
+
+    <!-- ==================== 三条流程条 ==================== -->
+    <div class="flow-bar flow-cognitive">
+        <div class="flow-bar-title">学生数据螺旋 (被动) — 正常学习行为 &rarr; 被动数据采集 &rarr; 模型持续更新 &rarr; 画像越来越准</div>
+        <div class="steps">
+            <span class="step"><span class="num">1</span>学生正常学习 (作业/考试/课堂活动)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">2</span>被动数据采集 (正确率/耗时/错误模式)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">3</span>认知引擎自动诊断 &amp; 画像更新</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">4</span>学生世界模型迭代 (数字孪生更准确)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">5</span>老师获得更精准的学情洞察</span>
+            <span class="arrow" style="color:#059669;">&uarr;</span>
+            <span class="step" style="border-color:#059669;"><span class="num" style="background:#059669;">&#x21C5;</span>交叉: 学情数据 &rarr; 喂入教师 AI 工具</span>
+        </div>
+    </div>
+
+    <div class="flow-bar flow-teacher">
+        <div class="flow-bar-title">教师 AI 螺旋 (主动) — 两大方向: 内容制作提效 + 教学质量提升</div>
+        <div class="steps">
+            <span class="step"><span class="num">A</span>内容制作: AI 辅助备课/教案/课件/习题</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">B</span>质量提升: 学情分析/分组建议/策略模拟</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">3</span>课堂实施 &amp; 数据产生</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">4</span>教学效果分析 (学生数据汇聚)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">5</span>教师画像更新 &amp; 策略调优</span>
+            <span class="arrow" style="color:#2563eb;">&uarr;</span>
+            <span class="step" style="border-color:#2563eb;"><span class="num" style="background:#2563eb;">&#x21C5;</span>交叉: 教学决策基于学生世界模型输出</span>
+        </div>
+    </div>
+
+    <div class="flow-bar flow-api">
+        <div class="flow-bar-title">Open API 调用链 — 开发者 / 第三方应用</div>
+        <div class="steps">
+            <span class="step"><span class="num">1</span>API Key 认证</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">2</span>IAM 权限校验</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">3</span>API 路由 (Domain/Resource)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">4</span>Storage / Compute 调用</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">5</span>EventBus 事件发布</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">6</span>Webhook / 消息触达</span>
+        </div>
+    </div>
+
+    <div class="flow-bar flow-agent">
+        <div class="flow-bar-title">Agent 调用链 — AI Agent (MCP/REST)</div>
+        <div class="steps">
+            <span class="step"><span class="num">1</span>MCP 连接 / Tool Discovery</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">2</span>Token 鉴权 &amp; 流控</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">3</span>上下文构建 &amp; Tool 路由</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">4</span>策略审批判定 (读放行/写审批)</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">5</span>Storage / Compute 执行</span>
+            <span class="arrow">&rarr;</span>
+            <span class="step"><span class="num">6</span>四层审计记录</span>
+        </div>
+    </div>
+
+    <!-- ==================== 应用层 ==================== -->
+    <div class="layer layer-app">
+        <div class="layer-label">应用层 <span class="en">Applications</span></div>
+        <div class="app-grid">
+            <div class="card app-card">
+                <div class="name">官方应用套件 <span class="status-badge status-live">运行中</span></div>
+                <div class="desc">与第三方同等地位，全部走 Open API</div>
+                <ul class="tag-list">
+                    <li>教学应用</li><li>育人应用</li>
+                    <li>教务应用</li><li>校务应用</li>
+                    <li>学生端</li><li>家长端</li>
+                    <li>教师端</li><li>管理端</li>
+                </ul>
+            </div>
+            <div class="card app-card">
+                <div class="name">第三方应用 / 学校自建 <span class="status-badge status-planned">开放中</span></div>
+                <div class="desc">基于 Open API 构建自有业务系统</div>
+                <ul class="tag-list">
+                    <li>ISV 应用</li><li>学校 IT 自建</li>
+                    <li>定制报表</li><li>家校沟通</li>
+                    <li>第三方排课</li><li>数据对接</li>
+                </ul>
+            </div>
+            <div class="card app-card">
+                <div class="name">AI Agents <span class="status-badge status-live">运行中</span></div>
+                <div class="desc">教师 AI 工具 + 管理智能体 (MCP/REST)</div>
+                <ul class="tag-list">
+                    <li>备课助手</li><li>学情分析</li>
+                    <li>教务智能体</li><li>内容生成</li>
+                    <li>MCP Protocol</li><li>REST API</li>
+                    <li>Skills 编排</li><li>Plugin 分发</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 分隔线: 脑 ==================== -->
+    <div class="divider divider-brain">
+        <span>认知决策层 · Cognitive Brain (内部私有，自主可控)</span>
+    </div>
+
+    <!-- ==================== 认知引擎层 (脑) ==================== -->
+    <div class="layer layer-brain">
+        <div class="layer-label"><span class="brain-icon">&#x1F9E0;</span> 认知引擎 <span class="en">Cognitive Engine &mdash; The Brain (Double Helix)</span></div>
+
+        <!-- 第一行: 学生侧 + 教师侧 左右对称 -->
+        <div class="brain-columns">
+            <div class="brain-side">
+                <div class="brain-side-title student">&#x1F393; 学生数据螺旋 (被动采集)</div>
+                <div class="brain-side-cards">
+                    <div class="card brain-card student-card">
+                        <div class="name">StudentProfile <span class="status-badge status-mvp">MVP</span></div>
+                        <div class="desc">学生数字画像 (被动数据沉淀)</div>
+                        <ul class="tag-list">
+                            <li>知识图谱</li><li>能力模型</li>
+                            <li>行为数据</li><li>成长轨迹</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card student-card">
+                        <div class="name">CognitiveDiagnostics <span class="status-badge status-mvp">MVP</span></div>
+                        <div class="desc">自动认知诊断 (学生无感知)</div>
+                        <ul class="tag-list">
+                            <li>错题自动归因</li><li>盲区发现</li>
+                            <li>知识追踪(BKT)</li><li>学情报告</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card student-card">
+                        <div class="name">LearningPathPlanner <span class="status-badge status-planned">规划中</span></div>
+                        <div class="desc">路径规划 (输出给老师参考)</div>
+                        <ul class="tag-list">
+                            <li>薄弱环节定位</li><li>练习推荐</li>
+                            <li>难度自适应</li><li>补强建议</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card student-card">
+                        <div class="name">StudentWorldModel <span class="status-badge status-planned">规划中</span></div>
+                        <div class="desc">学生数字孪生 (模拟预测)</div>
+                        <ul class="tag-list">
+                            <li>答题预测</li><li>卡点预判</li>
+                            <li>效果预估</li><li>越用越准</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="brain-side">
+                <div class="brain-side-title teacher">&#x1F9D1;&#x200D;&#x1F3EB; 教师 AI 螺旋 (主动使用)</div>
+                <div class="brain-side-cards">
+                    <div class="card brain-card teacher-card">
+                        <div class="name">TeacherProfile <span class="status-badge status-mvp">MVP</span></div>
+                        <div class="desc">教师数字画像</div>
+                        <ul class="tag-list">
+                            <li>教学风格</li><li>学科专长</li>
+                            <li>带班历史</li><li>策略偏好</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card teacher-card">
+                        <div class="name">ContentFactory <span class="status-badge status-mvp">MVP</span></div>
+                        <div class="desc">方向A: 内容制作提效</div>
+                        <ul class="tag-list">
+                            <li>AI辅助备课</li><li>教案生成</li>
+                            <li>课件制作</li><li>习题编排</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card teacher-card">
+                        <div class="name">TeachingDiagnostics <span class="status-badge status-mvp">MVP</span></div>
+                        <div class="desc">方向B: 教学质量提升</div>
+                        <ul class="tag-list">
+                            <li>学情分析</li><li>掉队预警</li>
+                            <li>盲区热力图</li><li>达成率分析</li>
+                        </ul>
+                    </div>
+                    <div class="card brain-card teacher-card">
+                        <div class="name">ClassroomWorldModel <span class="status-badge status-planned">规划中</span></div>
+                        <div class="desc">方向B+: 课堂模拟预测</div>
+                        <ul class="tag-list">
+                            <li>全班模拟</li><li>分组建议</li>
+                            <li>策略对比</li><li>效果预估</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二行: 横向双螺旋连接条 -->
+        <div class="brain-helix-bar">
+            <div class="helix-flow student-to">学生行为数据 (被动) &rarr; 模型持续更新 &rarr;</div>
+            <div class="helix-center-icon">
+                <div class="helix-label">&#x1F300; 数据驱动交叉</div>
+                <div class="helix-sub">被动数据 &middot; 主动决策 &middot; 螺旋上升</div>
+            </div>
+            <div class="helix-flow teacher-to">&larr; 老师消费模型输出 &rarr; 内容制作 + 质量提升</div>
+        </div>
+
+        <!-- 第三行: 共享核心 -->
+        <div class="brain-shared">
+            <div class="card brain-card shared-card">
+                <div class="name">EduRuleEngine <span class="status-badge status-mvp">MVP</span></div>
+                <div class="desc">教育规则与策略库 (学生+教师共享)</div>
+                <ul class="tag-list">
+                    <li>云谷教育理念</li><li>全人教育标准</li>
+                    <li>评价规则</li><li>干预策略</li>
+                </ul>
+            </div>
+            <div class="card brain-card shared-card">
+                <div class="name">FeedbackLoop <span class="status-badge status-mvp">MVP</span></div>
+                <div class="desc">双向反馈闭环控制器</div>
+                <ul class="tag-list">
+                    <li>学生效果追踪</li><li>教师效果追踪</li>
+                    <li>双画像更新</li><li>策略校准</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="brain-principle">
+            <span class="principle">学生被动产生数据 &#x21C4; 教师主动使用 AI = 数据驱动螺旋上升</span>
+            <span class="principle">核心判断力不外包</span>
+            <span class="principle">老师两大方向: 内容制作提效 + 教学质量提升</span>
+            <span class="principle">规则引擎 + 知识图谱 + 私有小模型</span>
+            <span class="principle">外部 LLM 仅做内容生成辅助</span>
+            <span class="principle">所有决策可审计可解释</span>
+        </div>
+    </div>
+
+    <!-- ==================== 任务图编排器 (神经传导) ==================== -->
+    <div class="layer layer-orchestrator">
+        <div class="layer-label">&#x26A1; TaskGraph Orchestrator <span class="en">任务图编排器 &mdash; 神经传导</span></div>
+        <div class="orchestrator-grid">
+            <div class="card orchestrator-card">
+                <div class="name">DAG Decomposer <span class="status-badge status-planned">规划中</span></div>
+                <div class="desc">目标 &rarr; 结构化任务图</div>
+                <ul class="tag-list">
+                    <li>目标拆解</li><li>依赖分析</li>
+                    <li>并行识别</li><li>优先级排序</li>
+                </ul>
+            </div>
+            <div class="card orchestrator-card">
+                <div class="name">Parallel Scheduler <span class="status-badge status-planned">规划中</span></div>
+                <div class="desc">多沙箱并行调度</div>
+                <ul class="tag-list">
+                    <li>并行分发</li><li>异步协调</li>
+                    <li>汇聚点控制</li><li>超时熔断</li>
+                </ul>
+            </div>
+            <div class="card orchestrator-card">
+                <div class="name">Human Checkpoint <span class="status-badge status-mvp">MVP</span></div>
+                <div class="desc">分级人类审核点</div>
+                <ul class="tag-list">
+                    <li>自动放行 (读)</li><li>异步通知 (低风险写)</li>
+                    <li>同步审核 (多人影响)</li><li>双重审核 (不可逆)</li>
+                </ul>
+            </div>
+            <div class="card orchestrator-card">
+                <div class="name">Simulation Sandbox <span class="status-badge status-planned">规划中</span></div>
+                <div class="desc">按需快照预演</div>
+                <ul class="tag-list">
+                    <li>受影响数据快照</li><li>沙箱内模拟执行</li>
+                    <li>Diff 报告生成</li><li>审核后提交</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 模型委员会 (智能路由) ==================== -->
+    <div class="layer layer-council">
+        <div class="layer-label">&#x1F916; Model Council <span class="en">模型委员会 &mdash; 安全等级感知路由</span></div>
+        <div class="council-content">
+            <div class="council-top">
+                <div class="council-cap">
+                    <div class="name">Meta Router</div>
+                    <div class="desc">安全等级感知路由</div>
+                </div>
+                <div class="council-cap">
+                    <div class="name">Auto Anonymizer</div>
+                    <div class="desc">自动脱敏触发</div>
+                </div>
+                <div class="council-cap">
+                    <div class="name">Egress Blocker</div>
+                    <div class="desc">出境拦截</div>
+                </div>
+                <div class="council-cap">
+                    <div class="name">Fallback Chain</div>
+                    <div class="desc">降级兜底</div>
+                </div>
+                <div class="council-cap">
+                    <div class="name">Token Budget</div>
+                    <div class="desc">Token 预算控制</div>
+                </div>
+                <div class="council-cap">
+                    <div class="name">Profile Injector</div>
+                    <div class="desc">跨模型画像注入</div>
+                </div>
+            </div>
+            <div class="council-table">
+                <div class="council-table-title">路由策略矩阵 &mdash; 让专业的模型做专业的事</div>
+                <div class="council-row header">
+                    <div class="council-cell">任务类型</div>
+                    <div class="council-cell">路由模型</div>
+                    <div class="council-cell">安全等级</div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">认知诊断 / 画像建模</div>
+                    <div class="council-cell">校内私有模型 (Qwen-14B fine-tuned)</div>
+                    <div class="council-cell"><span class="council-level l1">L1 不出校</span></div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">错题归因分析</div>
+                    <div class="council-cell">校内私有模型</div>
+                    <div class="council-cell"><span class="council-level l1">L1 不出校</span></div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">启发式对话引导</div>
+                    <div class="council-cell">校内私有模型 (需画像上下文)</div>
+                    <div class="council-cell"><span class="council-level l1">L1 不出校</span></div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">练习题 / 教案生成</div>
+                    <div class="council-cell">通义千问 API (脱敏后)</div>
+                    <div class="council-cell"><span class="council-level l2">L2 脱敏出境</span></div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">知识点解释 / 素材</div>
+                    <div class="council-cell">通义千问 / DeepSeek</div>
+                    <div class="council-cell"><span class="council-level l2">L2 脱敏出境</span></div>
+                </div>
+                <div class="council-row">
+                    <div class="council-cell">数据分析 / 报告</div>
+                    <div class="council-cell">校内私有模型 + AnalyticsEngine</div>
+                    <div class="council-cell"><span class="council-level l1">L1 不出校</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 分隔线: 手 ==================== -->
+    <div class="divider">
+        <span>执行操作层 · Execution Hands (开放平台 + 底座能力)</span>
+    </div>
+
+    <!-- ==================== 开放平台层 ==================== -->
+    <div class="layer layer-platform">
+        <div class="layer-label">开放平台 <span class="en">Open Platform &mdash; The Hands</span></div>
+
+        <div class="platform-tools">
+            <span class="ptool"><span class="ptool-name">Portal</span><span class="ptool-desc">开发者门户</span></span>
+            <span class="ptool"><span class="ptool-name">API Docs</span><span class="ptool-desc">接口文档</span></span>
+            <span class="ptool"><span class="ptool-name">SDK</span><span class="ptool-desc">开发工具包</span></span>
+            <span class="ptool"><span class="ptool-name">Playground</span><span class="ptool-desc">在线调试</span></span>
+            <span class="ptool"><span class="ptool-name">MCP Explorer</span><span class="ptool-desc">Tool 浏览器</span></span>
+            <span class="ptool"><span class="ptool-name">Skill Market</span><span class="ptool-desc">排课/评价/招生</span></span>
+            <span class="ptool"><span class="ptool-name">Webhook</span><span class="ptool-desc">事件回调</span></span>
+        </div>
+
+        <div class="api-layers">
+            <div class="api-layer-section">
+                <div class="api-layer-header">
+                    Domain API · 业务语义接口
+                    <span class="badge">高级抽象</span>
+                </div>
+                <div class="api-grid api-grid-domain">
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">student.enroll()</span>
+                        <span class="api-label">入学登记</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">schedule.solve()</span>
+                        <span class="api-label">智能排课</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">selection.open()</span>
+                        <span class="api-label">开放选课</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">evaluation.submit()</span>
+                        <span class="api-label">提交评价</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">cognitive.diagnose()</span>
+                        <span class="api-label">认知诊断</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">profile.query()</span>
+                        <span class="api-label">画像查询</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">learning.recommend()</span>
+                        <span class="api-label">学习推荐</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-method post">POST</span>
+                        <span class="api-path">analytics.query()</span>
+                        <span class="api-label">数据分析</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-layer-section">
+                <div class="api-layer-header">
+                    Resource API · 资源 CRUD 接口
+                    <span class="badge">基础原语</span>
+                </div>
+                <div class="api-grid api-grid-resource">
+                    <div class="api-item">
+                        <span class="api-path">/v1/students</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                            <span class="api-method post">POST</span>
+                            <span class="api-method put">PUT</span>
+                            <span class="api-method delete">DEL</span>
+                        </div>
+                        <span class="api-label">学生数据</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/courses</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                            <span class="api-method post">POST</span>
+                            <span class="api-method put">PUT</span>
+                        </div>
+                        <span class="api-label">课程数据</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/evaluations</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                            <span class="api-method post">POST</span>
+                        </div>
+                        <span class="api-label">评价数据</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/profiles</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                        </div>
+                        <span class="api-label">认知画像</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/schedules</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                            <span class="api-method post">POST</span>
+                            <span class="api-method put">PUT</span>
+                        </div>
+                        <span class="api-label">课表数据</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/orgs</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                        </div>
+                        <span class="api-label">组织架构</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/assets</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                            <span class="api-method post">POST</span>
+                            <span class="api-method delete">DEL</span>
+                        </div>
+                        <span class="api-label">文件资源</span>
+                    </div>
+                    <div class="api-item">
+                        <span class="api-path">/v1/events</span>
+                        <div class="api-methods">
+                            <span class="api-method get">GET</span>
+                        </div>
+                        <span class="api-label">事件流</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 分隔线 ==================== -->
+    <div class="divider">
+        <span>底座能力层 · Infrastructure Primitives</span>
+    </div>
+
+    <!-- ==================== 四列底座 ==================== -->
+    <div class="infra-core">
+
+        <!-- Storage -->
+        <div class="layer layer-storage">
+            <div class="layer-label">Storage <span class="en">教育数据服务</span></div>
+            <div class="store-grid">
+                <div class="card store-card">
+                    <div class="name">StudentStore</div>
+                    <div class="desc">学生档案 &amp; 学籍</div>
+                    <ul class="tag-list">
+                        <li>人员信息</li><li>学籍</li><li>成长档案</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">ProfileStore <span class="status-badge status-mvp">MVP</span></div>
+                    <div class="desc">认知画像 (双层: 热模型 + 温证据链)</div>
+                    <ul class="tag-list">
+                        <li>学生能力向量</li><li>学生知识掌握度</li>
+                        <li>教师教学画像</li><li>证据链</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">CourseStore</div>
+                    <div class="desc">课程库 &amp; 教学元数据</div>
+                    <ul class="tag-list">
+                        <li>科目</li><li>课程</li><li>节次</li><li>教材</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">EvaluationStore</div>
+                    <div class="desc">评价方案 &amp; 评价记录</div>
+                    <ul class="tag-list">
+                        <li>方案</li><li>维度</li><li>评价记录</li><li>报告</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">ScheduleStore</div>
+                    <div class="desc">课表 &amp; 日程 &amp; 校历</div>
+                    <ul class="tag-list">
+                        <li>课表</li><li>日程</li><li>校历</li><li>调课</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">OrgStore</div>
+                    <div class="desc">组织架构 (集团&rarr;学校&rarr;班级)</div>
+                    <ul class="tag-list">
+                        <li>集团</li><li>学校</li><li>年级</li><li>班级</li>
+                    </ul>
+                </div>
+                <div class="card store-card">
+                    <div class="name">EventStore</div>
+                    <div class="desc">业务事件流 (不可变日志)</div>
+                    <ul class="tag-list">
+                        <li>变更事件</li><li>审计日志</li><li>Cursor 消费</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compute -->
+        <div class="layer layer-compute">
+            <div class="layer-label">Compute <span class="en">教育计算引擎</span></div>
+            <div class="compute-grid">
+                <div class="card compute-card">
+                    <div class="name">SchedulingEngine</div>
+                    <div class="desc">智能排课求解</div>
+                    <ul class="tag-list">
+                        <li>自动排课</li><li>走班排课</li><li>冲突检测</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">SelectionEngine</div>
+                    <div class="desc">选课撮合引擎</div>
+                    <ul class="tag-list">
+                        <li>先到先得</li><li>志愿申报</li><li>容量控制</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">EvaluationEngine</div>
+                    <div class="desc">评价聚合计算</div>
+                    <ul class="tag-list">
+                        <li>评分计算</li><li>维度聚合</li><li>报告生成</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">InferenceEngine <span class="status-badge status-mvp">MVP</span></div>
+                    <div class="desc">私有模型推理</div>
+                    <ul class="tag-list">
+                        <li>Qwen-14B</li><li>教育微调</li><li>RAG</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">WorkflowEngine</div>
+                    <div class="desc">审批流编排</div>
+                    <ul class="tag-list">
+                        <li>流程定义</li><li>审批路由</li><li>条件分支</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">NotifyEngine</div>
+                    <div class="desc">消息触达引擎</div>
+                    <ul class="tag-list">
+                        <li>钉钉</li><li>短信</li><li>站内信</li><li>邮件</li>
+                    </ul>
+                </div>
+                <div class="card compute-card">
+                    <div class="name">AnalyticsEngine</div>
+                    <div class="desc">数据分析 &amp; 看板</div>
+                    <ul class="tag-list">
+                        <li>学情分析</li><li>数据看板</li><li>预警</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network -->
+        <div class="layer layer-network">
+            <div class="layer-label">Network <span class="en">教育连接网络</span></div>
+            <div class="network-grid">
+                <div class="card network-card">
+                    <div class="name">API Gateway</div>
+                    <div class="desc">REST 统一入口</div>
+                    <ul class="tag-list">
+                        <li>路由</li><li>限流</li><li>熔断</li><li>降级</li>
+                    </ul>
+                </div>
+                <div class="card network-card">
+                    <div class="name">MCP Gateway</div>
+                    <div class="desc">Agent 协议入口</div>
+                    <ul class="tag-list">
+                        <li>Tool Discovery</li><li>Tool Call</li><li>SSE 流</li>
+                    </ul>
+                </div>
+                <div class="card network-card">
+                    <div class="name">LLM Gateway <span class="status-badge status-mvp">MVP</span></div>
+                    <div class="desc">外部模型出口 (受 Model Council 管控)</div>
+                    <ul class="tag-list">
+                        <li>千问/DeepSeek</li><li>脱敏代理</li><li>降级兜底</li><li>出境审计</li>
+                    </ul>
+                </div>
+                <div class="card network-card">
+                    <div class="name">EventBus</div>
+                    <div class="desc">异步事件分发</div>
+                    <ul class="tag-list">
+                        <li>发布/订阅</li><li>事件路由</li><li>重试</li>
+                    </ul>
+                </div>
+                <div class="card network-card">
+                    <div class="name">ConnectorHub</div>
+                    <div class="desc">三方系统适配</div>
+                    <ul class="tag-list">
+                        <li>钉钉</li><li>企微</li><li>飞书</li><li>IoT</li>
+                    </ul>
+                </div>
+                <div class="card network-card">
+                    <div class="name">ServiceMesh</div>
+                    <div class="desc">内部服务治理</div>
+                    <ul class="tag-list">
+                        <li>服务发现</li><li>负载均衡</li><li>链路追踪</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security + Data Sovereignty -->
+        <div class="layer layer-security">
+            <div class="layer-label">Security <span class="en">教育安全底座 + 数据主权</span></div>
+            <div class="security-grid">
+                <div class="card security-card">
+                    <div class="name">IAM</div>
+                    <div class="desc">身份 &amp; 访问管理</div>
+                    <ul class="tag-list">
+                        <li>API Key</li><li>JWT</li><li>角色</li><li>策略</li>
+                    </ul>
+                </div>
+                <div class="card security-card">
+                    <div class="name">TenantIsolation</div>
+                    <div class="desc">多租户数据隔离</div>
+                    <ul class="tag-list">
+                        <li>学校隔离</li><li>数据分区</li><li>资源配额</li>
+                    </ul>
+                </div>
+                <div class="card security-card">
+                    <div class="name">PolicyEngine</div>
+                    <div class="desc">细粒度访问策略</div>
+                    <ul class="tag-list">
+                        <li>4级策略</li><li>读放行</li><li>写审批</li>
+                    </ul>
+                </div>
+                <div class="card security-card">
+                    <div class="name">AuditTrail</div>
+                    <div class="desc">四层全链路审计</div>
+                    <ul class="tag-list">
+                        <li>调用层</li><li>决策层</li><li>编排层</li><li>数据层</li>
+                    </ul>
+                </div>
+                <div class="card security-card">
+                    <div class="name">RateLimiter</div>
+                    <div class="desc">流控 &amp; 熔断 &amp; 降级</div>
+                    <ul class="tag-list">
+                        <li>全局限流</li><li>Key限流</li><li>熔断器</li>
+                    </ul>
+                </div>
+                <div class="card security-card" style="border-top:3px solid #dc2626;">
+                    <div class="name" style="color:#dc2626;">L1 不出校 <span class="status-badge status-mvp">MVP</span></div>
+                    <div class="desc">高隐私数据仅校内处理</div>
+                    <ul class="tag-list">
+                        <li style="background:#fee2e2;color:#991b1b;">姓名/学号</li>
+                        <li style="background:#fee2e2;color:#991b1b;">认知画像</li>
+                        <li style="background:#fee2e2;color:#991b1b;">成绩明细</li>
+                    </ul>
+                </div>
+                <div class="card security-card" style="border-top:3px solid #ca8a04;">
+                    <div class="name" style="color:#ca8a04;">L2 脱敏出境 <span class="status-badge status-mvp">MVP</span></div>
+                    <div class="desc">去标识化后调用境内模型</div>
+                    <ul class="tag-list">
+                        <li style="background:#fef9c3;color:#854d0e;">教案辅助</li>
+                        <li style="background:#fef9c3;color:#854d0e;">题目生成</li>
+                        <li style="background:#fef9c3;color:#854d0e;">知识解释</li>
+                    </ul>
+                </div>
+                <div class="card security-card" style="border-top:3px solid #1e293b;">
+                    <div class="name" style="color:#1e293b;">L3 禁止出境</div>
+                    <div class="desc">绝对禁止流向境外模型</div>
+                    <ul class="tag-list">
+                        <li style="background:#e2e8f0;color:#1e293b;">身份信息</li>
+                        <li style="background:#e2e8f0;color:#1e293b;">照片/视频</li>
+                        <li style="background:#e2e8f0;color:#1e293b;">医疗/心理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- End infra-core -->
+
+    <!-- ==================== 基础设施层 ==================== -->
+    <div class="layer layer-infra">
+        <div class="layer-label">基础设施 <span class="en">Infrastructure</span></div>
+        <div class="infra-grid">
+            <div>
+                <div class="infra-group-title">平台支撑 (PaaS)</div>
+                <div class="infra-tags">
+                    <span class="infra-tag">K8S 容器 (ACK)</span>
+                    <span class="infra-tag">Nacos 注册中心</span>
+                    <span class="infra-tag">CI/CD (Jenkins)</span>
+                    <span class="infra-tag">Observability</span>
+                    <span class="infra-tag">Cron/Job 调度</span>
+                    <span class="infra-tag">Sandbox (Firecracker)</span>
+                </div>
+            </div>
+            <div>
+                <div class="infra-group-title">数据存储 (Storage)</div>
+                <div class="infra-tags">
+                    <span class="infra-tag">MySQL / RDS</span>
+                    <span class="infra-tag">Redis</span>
+                    <span class="infra-tag">OSS 文件</span>
+                    <span class="infra-tag">RocketMQ</span>
+                    <span class="infra-tag">ElasticSearch</span>
+                </div>
+            </div>
+            <div>
+                <div class="infra-group-title">AI 推理 (Inference)</div>
+                <div class="infra-tags">
+                    <span class="infra-tag">GPU 节点 / PAI</span>
+                    <span class="infra-tag">模型仓库 (私有)</span>
+                    <span class="infra-tag">向量数据库</span>
+                    <span class="infra-tag">图数据库</span>
+                </div>
+            </div>
+            <div>
+                <div class="infra-group-title">外部集成 (External)</div>
+                <div class="infra-tags">
+                    <span class="infra-tag">钉钉 / 企微</span>
+                    <span class="infra-tag">IoT 设备</span>
+                    <span class="infra-tag">通义千问 API</span>
+                    <span class="infra-tag">CAS 认证</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MVP 场景: 双螺旋 ==================== -->
+    <div class="scenario-box">
+        <div class="scenario-title">MVP 场景: 学生被动数据 &#x21C4; 教师主动 AI &mdash; 数据驱动螺旋上升</div>
+        <div class="scenario-steps">
+            <span class="scenario-step s-hand" style="border-color:#2563eb;color:#1e40af;background:#eff6ff;">&#x1F393; 学生正常提交数学作业 (无感知)</span>
+            <span class="scenario-arrow">&rarr;</span>
+            <div class="scenario-parallel-group">
+                <span class="scenario-parallel-label">// 被动数据 &rarr; 自动诊断</span>
+                <span class="scenario-step s-brain">认知引擎: 自动错题归因 (L1)</span>
+                <span class="scenario-step s-brain">知识追踪: 定位"空间几何辅助线"盲区</span>
+                <span class="scenario-step s-brain">学生世界模型自动更新</span>
+            </div>
+            <span class="scenario-arrow" style="color:#059669;font-size:1.2em;">&#x21C5;</span>
+            <span class="scenario-step s-parallel" style="border-color:#c2410c;background:#fff7ed;color:#c2410c;">交叉点: 学情数据 &rarr; 喂入教师 AI 工具</span>
+            <span class="scenario-arrow" style="color:#059669;font-size:1.2em;">&#x21C5;</span>
+            <div class="scenario-parallel-group" style="border-color:#059669;background:rgba(209,250,229,0.3);">
+                <span class="scenario-parallel-label" style="color:#059669;">// 教师主动使用 AI (两大方向)</span>
+                <span class="scenario-step s-hand" style="border-color:#059669;color:#065f46;background:#d1fae5;">方向A: AI生成差异化教案 + 分层练习</span>
+                <span class="scenario-step s-hand" style="border-color:#059669;color:#065f46;background:#d1fae5;">方向B: 学情分析 — 8人掉队 (共性盲区)</span>
+                <span class="scenario-step s-hand" style="border-color:#059669;color:#065f46;background:#d1fae5;">方向B+: 课堂世界模型模拟分三组效果</span>
+            </div>
+            <span class="scenario-arrow">&rarr;</span>
+            <span class="scenario-step s-human">教师审核: 选择分组方案 + 确认教案</span>
+            <span class="scenario-arrow">&rarr;</span>
+            <div class="scenario-parallel-group">
+                <span class="scenario-parallel-label">// 课堂实施 &rarr; 新一轮数据</span>
+                <span class="scenario-step s-hand" style="border-color:#2563eb;color:#1e40af;background:#dbeafe;">学生侧: 完成老师布置的分层练习 (被动)</span>
+                <span class="scenario-step s-hand" style="border-color:#059669;color:#065f46;background:#d1fae5;">教师侧: 差异化课堂实施 (主动)</span>
+            </div>
+            <span class="scenario-arrow">&rarr;</span>
+            <span class="scenario-step s-loop">数据回流 &rarr; 模型更准 &rarr; 下一轮螺旋上升</span>
+        </div>
+        <div class="scenario-legend">
+            <span class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> 学生 (被动数据)</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#059669"></span> 教师 (主动 AI)</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#fdba74"></span> 脑 (认知引擎)</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#e879f9"></span> 交叉点</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#86efac"></span> Human Checkpoint</span>
+            <span class="legend-item"><span class="legend-dot" style="background:#d8b4fe"></span> 闭环上升</span>
+        </div>
+    </div>
+
+</div><!-- End cloud-arch -->
+
+</body>
+</html>

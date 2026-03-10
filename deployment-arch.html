@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云谷智慧校园 · 部署架构</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-alibaba-puhuiti@2.0.3/css/2.0/3500.css">
+    <style>
+        :root {
+            --bg: #f8f9fc;
+            --radius: 6px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.10);
+
+            /* 层级色 */
+            --c-edge: #fef3c7;
+            --c-edge-border: #fbbf24;
+            --c-edge-accent: #b45309;
+
+            --c-gateway: #dbeafe;
+            --c-gateway-border: #60a5fa;
+            --c-gateway-accent: #1d4ed8;
+
+            --c-service: #f0fdf4;
+            --c-service-border: #86efac;
+            --c-service-accent: #16a34a;
+
+            --c-ai: #fdf4ff;
+            --c-ai-border: #e879f9;
+            --c-ai-accent: #a21caf;
+
+            --c-gpu: #fff1f2;
+            --c-gpu-border: #fda4af;
+            --c-gpu-accent: #e11d48;
+
+            --c-data: #faf5ff;
+            --c-data-border: #d8b4fe;
+            --c-data-accent: #7c3aed;
+
+            --c-external: #f0fdfa;
+            --c-external-border: #5eead4;
+            --c-external-accent: #0d9488;
+
+            --c-security: #fef2f2;
+            --c-security-border: #fca5a5;
+            --c-security-accent: #b91c1c;
+
+            --c-k8s: #eff6ff;
+            --c-k8s-border: #93c5fd;
+            --c-k8s-accent: #2563eb;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            font-family: "Alibaba PuHuiTi 2.0", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 28px 24px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ===================== 主容器 ===================== */
+        .deploy-arch {
+            width: 100%;
+            max-width: 1320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* ===================== 标题 ===================== */
+        .title-block {
+            text-align: center;
+            padding-bottom: 6px;
+        }
+        .title-block h1 {
+            font-size: 1.9em;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .title-block .en-title {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+        .title-block .tagline {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.72em;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 3px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* ===================== 通用层容器 ===================== */
+        .layer {
+            border-radius: var(--radius);
+            position: relative;
+            padding: 32px 16px 16px 16px;
+        }
+        .layer-label {
+            position: absolute;
+            top: -11px;
+            left: 20px;
+            padding: 0 10px;
+            font-weight: 700;
+            font-size: 0.82em;
+            border-radius: 4px;
+            background: white;
+            line-height: 22px;
+            z-index: 2;
+        }
+        .layer-label .en {
+            font-weight: 500;
+            color: #94a3b8;
+            margin-left: 6px;
+            font-size: 0.88em;
+        }
+
+        /* ===================== 通用卡片 ===================== */
+        .card {
+            background: white;
+            border-radius: 5px;
+            padding: 10px 8px;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 52px;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            z-index: 5;
+        }
+        .card .name {
+            font-weight: 700;
+            font-size: 0.8em;
+            line-height: 1.25;
+            margin-bottom: 2px;
+        }
+        .card .desc {
+            font-size: 0.65em;
+            color: #64748b;
+            line-height: 1.2;
+        }
+        .card .tag-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            justify-content: center;
+            margin-top: 4px;
+        }
+        .card .tag-list li {
+            font-size: 0.6em;
+            padding: 1px 6px;
+            border-radius: 2px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        /* ===================== 分割线 ===================== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 4px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e2e8f0;
+        }
+        .divider span {
+            font-size: 0.68em;
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* ===================== 状态标记 ===================== */
+        .status {
+            display: inline-block;
+            font-size: 0.55em;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        .status-live {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-plan {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ===================== 连接箭头 ===================== */
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 2px 0;
+        }
+        .flow-connector .arrow-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #94a3b8;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+        .flow-connector .arrow-down::after {
+            content: '▼';
+            font-size: 1em;
+        }
+        .flow-connector .label {
+            font-size: 0.62em;
+            color: #64748b;
+            background: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        /* ===================== Internet Edge ===================== */
+        .layer-edge {
+            background: var(--c-edge);
+            border: 1px solid var(--c-edge-border);
+        }
+        .layer-edge .layer-label { color: var(--c-edge-accent); }
+        .edge-grid {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .edge-card {
+            border: 1px solid var(--c-edge-border);
+            border-top: 3px solid var(--c-edge-accent);
+            min-width: 140px;
+        }
+        .edge-card .name { color: var(--c-edge-accent); }
+        .edge-card .tag-list li { background: #fef9c3; color: #854d0e; }
+        .edge-arrow {
+            color: var(--c-edge-accent);
+            font-weight: 800;
+            font-size: 1.1em;
+        }
+
+        /* ===================== VPC 大容器 ===================== */
+        .vpc-container {
+            border: 2px dashed #93c5fd;
+            border-radius: 8px;
+            padding: 20px 14px 14px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .vpc-label {
+            position: absolute;
+            top: -11px;
+            right: 20px;
+            padding: 0 10px;
+            font-weight: 700;
+            font-size: 0.72em;
+            border-radius: 4px;
+            background: white;
+            line-height: 22px;
+            color: var(--c-k8s-accent);
+            border: 1px solid var(--c-k8s-border);
+        }
+
+        /* ===================== Gateway Tier ===================== */
+        .layer-gateway {
+            background: var(--c-gateway);
+            border: 1px solid var(--c-gateway-border);
+        }
+        .layer-gateway .layer-label { color: var(--c-gateway-accent); }
+        .gateway-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .gateway-card {
+            border: 1px solid var(--c-gateway-border);
+            border-top: 3px solid var(--c-gateway-accent);
+        }
+        .gateway-card .name { color: var(--c-gateway-accent); }
+        .gateway-card .tag-list li { background: #dbeafe; color: #1e40af; }
+
+        /* ===================== K8S 容器 ===================== */
+        .k8s-container {
+            border: 2px solid var(--c-k8s-border);
+            border-radius: 8px;
+            padding: 22px 14px 14px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            background: rgba(239,246,255,0.3);
+        }
+        .k8s-label {
+            position: absolute;
+            top: -11px;
+            left: 20px;
+            padding: 0 10px;
+            font-weight: 700;
+            font-size: 0.78em;
+            border-radius: 4px;
+            background: white;
+            line-height: 22px;
+            color: var(--c-k8s-accent);
+            border: 1px solid var(--c-k8s-border);
+        }
+        .k8s-label img {
+            height: 14px;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+
+        /* ===================== Service Tier ===================== */
+        .layer-service {
+            background: var(--c-service);
+            border: 1px solid var(--c-service-border);
+        }
+        .layer-service .layer-label { color: var(--c-service-accent); }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .service-card {
+            border: 1px solid var(--c-service-border);
+            border-top: 3px solid var(--c-service-accent);
+        }
+        .service-card .name { color: var(--c-service-accent); font-size: 0.78em; }
+        .service-card .tag-list li { background: #dcfce7; color: #166534; }
+        .service-card.agent-card {
+            border-top-color: var(--c-ai-accent);
+            grid-column: span 2;
+        }
+        .service-card.agent-card .name { color: var(--c-ai-accent); }
+        .service-card.agent-card .tag-list li { background: #fae8ff; color: #86198f; }
+
+        /* --- 服务治理行 --- */
+        .service-infra-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .service-infra-card {
+            border: 1px solid var(--c-service-border);
+            background: #f0fdf4;
+        }
+        .service-infra-card .name { color: var(--c-service-accent); font-size: 0.78em; }
+        .service-infra-card .tag-list li { background: #dcfce7; color: #166534; }
+
+        /* ===================== AI Tier ===================== */
+        .layer-ai {
+            background: var(--c-ai);
+            border: 2px dashed var(--c-ai-border);
+        }
+        .layer-ai .layer-label { color: var(--c-ai-accent); }
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .ai-card {
+            border: 1px dashed var(--c-ai-border);
+            border-top: 3px dashed var(--c-ai-accent);
+        }
+        .ai-card .name { color: var(--c-ai-accent); }
+        .ai-card .tag-list li { background: #fae8ff; color: #86198f; }
+
+        /* ===================== GPU Tier ===================== */
+        .layer-gpu {
+            background: var(--c-gpu);
+            border: 2px dashed var(--c-gpu-border);
+        }
+        .layer-gpu .layer-label { color: var(--c-gpu-accent); }
+        .gpu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .gpu-card {
+            border: 1px dashed var(--c-gpu-border);
+            border-top: 3px dashed var(--c-gpu-accent);
+        }
+        .gpu-card .name { color: var(--c-gpu-accent); }
+        .gpu-card .tag-list li { background: #ffe4e6; color: #9f1239; }
+
+        /* ===================== Data Tier ===================== */
+        .layer-data {
+            background: var(--c-data);
+            border: 1px solid var(--c-data-border);
+        }
+        .layer-data .layer-label { color: var(--c-data-accent); }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .data-card {
+            border: 1px solid var(--c-data-border);
+            border-top: 3px solid var(--c-data-accent);
+        }
+        .data-card .name { color: var(--c-data-accent); }
+        .data-card .tag-list li { background: #f3e8ff; color: #6b21a8; }
+        .data-ai-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .data-ai-card {
+            border: 1px dashed var(--c-data-border);
+            border-top: 3px dashed var(--c-data-accent);
+        }
+        .data-ai-card .name { color: var(--c-data-accent); }
+        .data-ai-card .tag-list li { background: #f3e8ff; color: #6b21a8; }
+
+        /* ===================== External ===================== */
+        .layer-external {
+            background: var(--c-external);
+            border: 1px solid var(--c-external-border);
+        }
+        .layer-external .layer-label { color: var(--c-external-accent); }
+        .external-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .external-card {
+            border: 1px solid var(--c-external-border);
+            border-top: 3px solid var(--c-external-accent);
+        }
+        .external-card .name { color: var(--c-external-accent); }
+        .external-card .tag-list li { background: #ccfbf1; color: #115e59; }
+
+        /* ===================== 数据主权边界 ===================== */
+        .sovereignty-box {
+            border: 2px solid var(--c-security-border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            background: var(--c-security);
+        }
+        .sovereignty-title {
+            font-weight: 700;
+            font-size: 0.78em;
+            color: var(--c-security-accent);
+            margin-bottom: 8px;
+        }
+        .sovereignty-levels {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .sovereignty-level {
+            background: white;
+            border-radius: 5px;
+            padding: 10px;
+            border: 1px solid var(--c-security-border);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+        .sovereignty-level:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        .sovereignty-level .level-tag {
+            font-size: 0.7em;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 3px;
+            display: inline-block;
+            width: fit-content;
+        }
+        .sovereignty-level .level-name {
+            font-size: 0.75em;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .sovereignty-level .level-data {
+            font-size: 0.62em;
+            color: #64748b;
+            line-height: 1.3;
+        }
+        .sovereignty-level .level-rule {
+            font-size: 0.6em;
+            font-weight: 600;
+            color: var(--c-security-accent);
+            background: #fef2f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .l1-tag { background: #dcfce7; color: #166534; }
+        .l2-tag { background: #fef9c3; color: #854d0e; }
+        .l3-tag { background: #fecaca; color: #991b1b; }
+
+        /* ===================== 网络通信 ===================== */
+        .network-box {
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            background: white;
+        }
+        .network-title {
+            font-weight: 700;
+            font-size: 0.78em;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .protocol-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.68em;
+            padding: 6px 10px;
+            border-radius: 4px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+        .protocol-badge {
+            font-size: 0.85em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        .protocol-desc {
+            color: #64748b;
+        }
+        .badge-dubbo { background: #dbeafe; color: #1d4ed8; }
+        .badge-http { background: #dcfce7; color: #166534; }
+        .badge-mcp { background: #fae8ff; color: #86198f; }
+        .badge-grpc { background: #fef3c7; color: #92400e; }
+
+        /* ===================== CI/CD ===================== */
+        .cicd-box {
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            background: white;
+        }
+        .cicd-title {
+            font-weight: 700;
+            font-size: 0.78em;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .cicd-flow {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .cicd-step {
+            font-size: 0.68em;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            transition: all 0.15s;
+        }
+        .cicd-step:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+        .cicd-arrow {
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="deploy-arch">
+
+    <!-- ===== 标题 ===== -->
+    <div class="title-block">
+        <h1>云谷智慧校园 · 部署架构</h1>
+        <div class="en-title">Yungu Smart Campus · Deployment Architecture</div>
+        <div class="tagline">Current State (实线) + Target State (虚线) &nbsp;|&nbsp; 阿里云 cn-hangzhou</div>
+    </div>
+
+    <!-- ===== Internet Edge ===== -->
+    <div class="layer layer-edge">
+        <div class="layer-label">Internet Edge <span class="en">公网接入</span></div>
+        <div class="edge-grid">
+            <div class="card edge-card">
+                <div class="name">CDN</div>
+                <div class="desc">China Acceleration</div>
+                <ul class="tag-list"><li>Static Assets</li><li>China CDN</li></ul>
+            </div>
+            <span class="edge-arrow">&rarr;</span>
+            <div class="card edge-card">
+                <div class="name">WAF</div>
+                <div class="desc">Web Application Firewall</div>
+                <ul class="tag-list"><li>DDoS</li><li>SQL Injection</li><li>XSS</li></ul>
+            </div>
+            <span class="edge-arrow">&rarr;</span>
+            <div class="card edge-card">
+                <div class="name">SLB</div>
+                <div class="desc">Server Load Balancer (L4/L7)</div>
+                <ul class="tag-list"><li>HTTPS Termination</li><li>Public IP</li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== VPC ===== -->
+    <div class="vpc-container">
+        <div class="vpc-label">Alibaba Cloud VPC &nbsp;|&nbsp; cn-hangzhou &nbsp;|&nbsp; 172.16.0.0/12</div>
+
+        <!-- ===== Gateway Tier ===== -->
+        <div class="layer layer-gateway">
+            <div class="layer-label">Gateway Tier <span class="en">网关层</span></div>
+            <div class="gateway-grid">
+                <div class="card gateway-card">
+                    <div class="name">NLB (Internal) <span class="status status-live">LIVE</span></div>
+                    <div class="desc">TCP Layer 4 Load Balancer</div>
+                    <ul class="tag-list"><li>Internal Only</li><li>TCP 8080</li></ul>
+                </div>
+                <div class="card gateway-card">
+                    <div class="name">Nginx Ingress <span class="status status-live">LIVE</span></div>
+                    <div class="desc">K8S Ingress Controller</div>
+                    <ul class="tag-list"><li>Path Routing</li><li>TLS</li></ul>
+                </div>
+                <div class="card gateway-card">
+                    <div class="name">BFF / Frontend <span class="status status-live">LIVE</span></div>
+                    <div class="desc">React SPA + BFF Layer</div>
+                    <ul class="tag-list"><li>React 16</li><li>dva</li><li>antd 3.x</li></ul>
+                </div>
+                <div class="card gateway-card" style="border-top-color:#92400e; border-style: dashed;">
+                    <div class="name" style="color:#92400e;">API Gateway <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">Alibaba Cloud API Gateway</div>
+                    <ul class="tag-list"><li>Rate Limit</li><li>API Key</li><li>OpenAPI</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== K8S Cluster ===== -->
+        <div class="k8s-container">
+            <div class="k8s-label">ACK Kubernetes Cluster &nbsp;|&nbsp; namespace: default</div>
+
+            <!-- Service Tier -->
+            <div class="layer layer-service">
+                <div class="layer-label">Service Tier <span class="en">微服务层 (Dubbo + Spring Boot)</span></div>
+                <div class="service-grid">
+                    <div class="card service-card">
+                        <div class="name">smart-scheduling <span class="status status-live">LIVE</span></div>
+                        <div class="desc">排课 / 选课 / 分班 (主服务)</div>
+                        <ul class="tag-list"><li>Java 8</li><li>Dubbo</li><li>14 Modules</li></ul>
+                    </div>
+                    <div class="card service-card">
+                        <div class="name">yungu-calendar <span class="status status-live">LIVE</span></div>
+                        <div class="desc">日历 / 场地 / 课表发布</div>
+                        <ul class="tag-list"><li>Java 8</li><li>Dubbo</li></ul>
+                    </div>
+                    <div class="card service-card">
+                        <div class="name">yungu-teacher-time <span class="status status-live">LIVE</span></div>
+                        <div class="desc">教师工作时间管理</div>
+                        <ul class="tag-list"><li>Java 8</li><li>Dubbo</li></ul>
+                    </div>
+                    <div class="card service-card">
+                        <div class="name">yungu-common-app <span class="status status-live">LIVE</span></div>
+                        <div class="desc">审批流 / 通用功能</div>
+                        <ul class="tag-list"><li>Java 8</li><li>Dubbo</li></ul>
+                    </div>
+                    <div class="card service-card">
+                        <div class="name">yungu-evaluation <span class="status status-live">LIVE</span></div>
+                        <div class="desc">评价系统</div>
+                        <ul class="tag-list"><li>Java 8</li><li>Dubbo</li></ul>
+                    </div>
+                    <div class="card service-card">
+                        <div class="name">yungu-login <span class="status status-live">LIVE</span></div>
+                        <div class="desc">CAS SSO / 登录认证</div>
+                        <ul class="tag-list"><li>Java 8</li><li>CAS 5.x</li></ul>
+                    </div>
+                    <div class="card service-card agent-card">
+                        <div class="name">agent-api-gateway <span class="status status-live">LIVE</span></div>
+                        <div class="desc">Agent API + MCP Server</div>
+                        <ul class="tag-list"><li>Java 17</li><li>Spring Boot 3.5</li><li>82 API</li><li>46 MCP Tools</li></ul>
+                    </div>
+                </div>
+                <div class="service-infra-row">
+                    <div class="card service-infra-card">
+                        <div class="name">Nacos <span class="status status-live">LIVE</span></div>
+                        <div class="desc">Service Registry + Config Center</div>
+                        <ul class="tag-list"><li>Service Discovery</li><li>Dynamic Config</li></ul>
+                    </div>
+                    <div class="card service-infra-card">
+                        <div class="name">Jenkins <span class="status status-live">LIVE</span></div>
+                        <div class="desc">CI/CD Pipeline</div>
+                        <ul class="tag-list"><li>Docker Build</li><li>ACR Push</li><li>kubectl deploy</li></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tier (Planned) -->
+            <div class="layer layer-ai">
+                <div class="layer-label">AI Tier <span class="en">认知引擎服务 (规划中)</span> <span class="status status-plan">PLAN</span></div>
+                <div class="ai-grid">
+                    <div class="card ai-card">
+                        <div class="name">Cognitive Engine</div>
+                        <div class="desc">StudentProfile / TeacherProfile / WorldModels</div>
+                        <ul class="tag-list"><li>Profile Service</li><li>Diagnostics</li><li>Path Planner</li></ul>
+                    </div>
+                    <div class="card ai-card">
+                        <div class="name">TaskGraph Orchestrator</div>
+                        <div class="desc">DAG Decomposer / Scheduler / Sandbox</div>
+                        <ul class="tag-list"><li>DAG Engine</li><li>Human Checkpoint</li><li>Simulation</li></ul>
+                    </div>
+                    <div class="card ai-card">
+                        <div class="name">Model Council</div>
+                        <div class="desc">Security-aware LLM Router / Token Budget</div>
+                        <ul class="tag-list"><li>LLM Router</li><li>Auto Anonymize</li><li>Egress Block</li></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GPU Tier (Planned) -->
+            <div class="layer layer-gpu">
+                <div class="layer-label">GPU / AI Inference <span class="en">推理节点池 (规划中)</span> <span class="status status-plan">PLAN</span></div>
+                <div class="gpu-grid">
+                    <div class="card gpu-card">
+                        <div class="name">Private Model</div>
+                        <div class="desc">Qwen-14B Fine-tuned (L1 数据)</div>
+                        <ul class="tag-list"><li>PAI-EAS</li><li>教育领域微调</li></ul>
+                    </div>
+                    <div class="card gpu-card">
+                        <div class="name">Inference Engine</div>
+                        <div class="desc">vLLM / TensorRT-LLM</div>
+                        <ul class="tag-list"><li>gn6i-c8g1</li><li>T4 GPU</li></ul>
+                    </div>
+                    <div class="card gpu-card">
+                        <div class="name">Embedding Service</div>
+                        <div class="desc">Text / Image Embedding</div>
+                        <ul class="tag-list"><li>RAG Pipeline</li><li>Vector Index</li></ul>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- End K8S -->
+
+        <!-- ===== Data Tier ===== -->
+        <div class="layer layer-data">
+            <div class="layer-label">Data Tier <span class="en">数据层</span></div>
+            <div class="data-grid">
+                <div class="card data-card">
+                    <div class="name">MySQL / RDS <span class="status status-live">LIVE</span></div>
+                    <div class="desc">3 Instances / Primary-Replica</div>
+                    <ul class="tag-list"><li>Business Data</li><li>HA</li></ul>
+                </div>
+                <div class="card data-card">
+                    <div class="name">Redis <span class="status status-live">LIVE</span></div>
+                    <div class="desc">Cluster Mode</div>
+                    <ul class="tag-list"><li>Cache</li><li>Session</li></ul>
+                </div>
+                <div class="card data-card">
+                    <div class="name">OSS <span class="status status-live">LIVE</span></div>
+                    <div class="desc">Object Storage Service</div>
+                    <ul class="tag-list"><li>Files</li><li>Images</li></ul>
+                </div>
+                <div class="card data-card">
+                    <div class="name">RocketMQ <span class="status status-live">LIVE</span></div>
+                    <div class="desc">Message Queue</div>
+                    <ul class="tag-list"><li>Async</li><li>EventBus</li></ul>
+                </div>
+                <div class="card data-card">
+                    <div class="name">ElasticSearch <span class="status status-live">LIVE</span></div>
+                    <div class="desc">Search + Logging</div>
+                    <ul class="tag-list"><li>Full-text</li><li>Logs</li></ul>
+                </div>
+            </div>
+            <div class="data-ai-row">
+                <div class="card data-card data-ai-card">
+                    <div class="name">Vector DB <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">Milvus / DashVector</div>
+                    <ul class="tag-list"><li>Embedding</li><li>RAG</li><li>Similarity</li></ul>
+                </div>
+                <div class="card data-card data-ai-card">
+                    <div class="name">Graph DB <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">NebulaGraph</div>
+                    <ul class="tag-list"><li>Knowledge Graph</li><li>Relation</li></ul>
+                </div>
+                <div class="card data-card data-ai-card">
+                    <div class="name">ProfileStore <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">Student + Teacher Cognitive Profiles</div>
+                    <ul class="tag-list"><li>Time Series</li><li>L1 Protected</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== External Integrations ===== -->
+        <div class="layer layer-external">
+            <div class="layer-label">External Integrations <span class="en">外部集成</span></div>
+            <div class="external-grid">
+                <div class="card external-card">
+                    <div class="name">DingTalk</div>
+                    <div class="desc">Notification + Approval</div>
+                    <ul class="tag-list"><li>Webhook</li><li>Bot API</li></ul>
+                </div>
+                <div class="card external-card" style="border-top-color: var(--c-ai-accent);">
+                    <div class="name" style="color: var(--c-ai-accent);">Tongyi Qwen API <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">L2 Anonymized Call</div>
+                    <ul class="tag-list"><li>Content Gen</li><li>L2 Only</li></ul>
+                </div>
+                <div class="card external-card" style="border-top-color: var(--c-ai-accent);">
+                    <div class="name" style="color: var(--c-ai-accent);">DeepSeek API <span class="status status-plan">PLAN</span></div>
+                    <div class="desc">L2 Anonymized Call</div>
+                    <ul class="tag-list"><li>Reasoning</li><li>L2 Only</li></ul>
+                </div>
+                <div class="card external-card">
+                    <div class="name">Alipay</div>
+                    <div class="desc">Campus Payment</div>
+                    <ul class="tag-list"><li>Pay API</li></ul>
+                </div>
+                <div class="card external-card">
+                    <div class="name">IoT Devices</div>
+                    <div class="desc">Access Control / Attendance HW</div>
+                    <ul class="tag-list"><li>Gate</li><li>Face ID</li></ul>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- End VPC -->
+
+    <!-- ===== 数据主权边界 ===== -->
+    <div class="sovereignty-box">
+        <div class="sovereignty-title">Data Sovereignty Boundary &nbsp;|&nbsp; 数据主权三道防线</div>
+        <div class="sovereignty-levels">
+            <div class="sovereignty-level">
+                <span class="level-tag l1-tag">L1</span>
+                <div class="level-name">不出校 Private Only</div>
+                <div class="level-data">StudentProfile, Grades, Evaluation Raw Data, Health Records</div>
+                <div class="level-rule">Only Private Model (VPC Internal) Can Access</div>
+            </div>
+            <div class="sovereignty-level">
+                <span class="level-tag l2-tag">L2</span>
+                <div class="level-name">脱敏出境 Anonymized</div>
+                <div class="level-data">Course Structure, Teaching Patterns, Anonymous Statistics</div>
+                <div class="level-rule">Model Council Auto-Anonymize &rarr; External LLM API</div>
+            </div>
+            <div class="sovereignty-level">
+                <span class="level-tag l3-tag">L3</span>
+                <div class="level-name">禁止出境 Blocked</div>
+                <div class="level-data">National ID, Home Address, Medical Records</div>
+                <div class="level-rule">Never Leave VPC &bull; Never Send to LLM &bull; No Logging</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 网络通信协议 ===== -->
+    <div class="network-box">
+        <div class="network-title">Network Protocols &nbsp;|&nbsp; 内部通信协议</div>
+        <div class="protocol-grid">
+            <div class="protocol-item">
+                <span class="protocol-badge badge-dubbo">Dubbo RPC</span>
+                <span class="protocol-desc">微服务间 — smart-scheduling &harr; calendar &harr; evaluation ...</span>
+            </div>
+            <div class="protocol-item">
+                <span class="protocol-badge badge-http">HTTP/REST</span>
+                <span class="protocol-desc">agent-api-gateway &rarr; downstream microservices</span>
+            </div>
+            <div class="protocol-item">
+                <span class="protocol-badge badge-mcp">MCP/SSE</span>
+                <span class="protocol-desc">AI Agent &harr; agent-api-gateway (46 MCP Tools)</span>
+            </div>
+            <div class="protocol-item">
+                <span class="protocol-badge badge-grpc">gRPC</span>
+                <span class="protocol-desc" style="color:#92400e;">AI Tier &rarr; GPU Inference Nodes (规划中)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CI/CD Pipeline ===== -->
+    <div class="cicd-box">
+        <div class="cicd-title">CI/CD Pipeline &nbsp;|&nbsp; 构建部署流水线</div>
+        <div class="cicd-flow">
+            <span class="cicd-step">Local Build (mvn/gradle)</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step">build-tar-and-push.sh</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step">git push</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step" style="background:#dbeafe; border-color:#93c5fd; color:#1d4ed8;">Jenkins: docker load + push ACR</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step" style="background:#dbeafe; border-color:#93c5fd; color:#1d4ed8;">ACR: registry-vpc.cn-hangzhou</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step" style="background:#dcfce7; border-color:#86efac; color:#166534;">kubectl set image</span>
+            <span class="cicd-arrow">&rarr;</span>
+            <span class="cicd-step" style="background:#dcfce7; border-color:#86efac; color:#166534;">ACK Rolling Update</span>
+        </div>
+    </div>
+
+</div><!-- End deploy-arch -->
+
+</body>
+</html>
