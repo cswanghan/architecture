@@ -1,0 +1,3011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI时代智慧校园基座-端/云一体的教育OS — 产品·业务·功能架构</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f4f6f9;
+    min-width: 1280px;
+  }
+
+  /* ===== 顶部导航 ===== */
+  .top-bar {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #3949ab 100%);
+    color: #fff;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .top-bar .subtitle {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-top: 2px;
+  }
+
+  /* Tab 导航 */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    padding: 8px 22px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.5); }
+  .tab-btn.active {
+    background: #fff;
+    color: #1a237e;
+    border-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  /* 全屏按钮 */
+  .fullscreen-btn {
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all 0.2s;
+    margin-left: 16px;
+  }
+  .fullscreen-btn:hover { background: rgba(255,255,255,0.25); }
+  .fullscreen-btn svg { width: 18px; height: 18px; }
+
+  /* ===== Tab 内容区 ===== */
+  .tab-content { display: none; padding: 20px 28px 40px; }
+  .tab-content.active { display: block; }
+
+  /* ===== 通用层样式 ===== */
+  .arch-layer {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .arch-layer .layer-label {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-layer .layer-label .badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* 层间箭头 */
+  .layer-arrow {
+    text-align: center;
+    color: #bbb;
+    font-size: 16px;
+    line-height: 1;
+    margin: 4px 0;
+    letter-spacing: 40px;
+  }
+  .layer-arrow.blue { color: #1565c0; }
+  .layer-arrow.green { color: #2e7d32; }
+  .layer-arrow.red { color: #c62828; }
+  .layer-arrow.purple { color: #6a1b9a; }
+  .layer-arrow.orange { color: #e65100; }
+  .layer-arrow.teal { color: #00796b; }
+
+  /* ===== 卡片网格 ===== */
+  .card-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card-grid.stretch { justify-content: stretch; }
+
+  .arch-card {
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 140px;
+    flex: 1;
+    max-width: 300px;
+  }
+  .arch-card .card-icon {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .arch-card .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .arch-card .card-desc {
+    font-size: 10px;
+    line-height: 1.4;
+    opacity: 0.8;
+  }
+  .arch-card .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 5px;
+  }
+  .arch-card .tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  /* ===== 子项列表 ===== */
+  .sub-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .sub-item {
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+    min-width: 80px;
+  }
+  .sub-item .sub-desc {
+    font-size: 9px;
+    font-weight: 400;
+    opacity: 0.7;
+    margin-top: 1px;
+  }
+
+  /* ===== 色系定义 ===== */
+  /* 蓝色系 - 用户/入口 */
+  .bg-blue { background: #e3f2fd; border: 2px solid #1565c0; }
+  .bg-blue .layer-label { color: #0d47a1; }
+  .bg-blue .arch-card { background: #bbdefb; border: 1.5px solid #1976d2; color: #0d47a1; }
+
+  /* 绿色系 - 设备/终端 */
+  .bg-green { background: #e8f5e9; border: 2px solid #2e7d32; }
+  .bg-green .layer-label { color: #1b5e20; }
+  .bg-green .arch-card { background: #c8e6c9; border: 1.5px solid #388e3c; color: #1b5e20; }
+
+  /* 橙色系 - 数据采集 */
+  .bg-orange { background: #fff3e0; border: 2px solid #e65100; }
+  .bg-orange .layer-label { color: #bf360c; }
+  .bg-orange .arch-card { background: #ffe0b2; border: 1.5px solid #ef6c00; color: #bf360c; }
+  .bg-orange .tag { background: #fff8e1; border: 1px solid #ffb300; color: #e65100; }
+
+  /* 红色系 - 核心业务 */
+  .bg-red { background: #fce4ec; border: 2px solid #c62828; }
+  .bg-red .layer-label { color: #b71c1c; }
+  .bg-red .arch-card { background: #ffcdd2; border: 1.5px solid #e53935; color: #b71c1c; }
+
+  /* 紫色系 - 数据分析 */
+  .bg-purple { background: #f3e5f5; border: 2px solid #6a1b9a; }
+  .bg-purple .layer-label { color: #4a148c; }
+  .bg-purple .arch-card { background: #e1bee7; border: 1.5px solid #8e24aa; color: #4a148c; }
+
+  /* 青色系 - 平台能力 */
+  .bg-teal { background: #e0f2f1; border: 2px solid #00796b; }
+  .bg-teal .layer-label { color: #004d40; }
+  .bg-teal .arch-card { background: #b2dfdb; border: 1.5px solid #00897b; color: #004d40; }
+
+  /* 灰色系 - 基础设施 */
+  .bg-gray { background: #f5f5f5; border: 2px solid #757575; }
+  .bg-gray .layer-label { color: #424242; }
+  .bg-gray .arch-card { background: #e0e0e0; border: 1.5px solid #9e9e9e; color: #424242; }
+
+  /* 深蓝系 - 中台 */
+  .bg-indigo { background: #e8eaf6; border: 2px solid #283593; }
+  .bg-indigo .layer-label { color: #1a237e; }
+  .bg-indigo .arch-card { background: #c5cae9; border: 1.5px solid #3949ab; color: #1a237e; }
+
+  /* 琥珀色 - 教师成长 */
+  .bg-amber { background: #fff8e1; border: 2px solid #f9a825; }
+  .bg-amber .layer-label { color: #f57f17; }
+  .bg-amber .arch-card { background: #ffecb3; border: 1.5px solid #fbc02d; color: #e65100; }
+
+  /* ============================================
+     产品架构图 专用样式
+     ============================================ */
+  .product-arch .layer-arrow { letter-spacing: 60px; }
+
+  /* ============================================
+     业务架构图 专用样式
+     ============================================ */
+  .biz-arch-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .biz-domain {
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+  .biz-domain .domain-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+  }
+  .biz-domain .biz-item {
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+  .biz-domain .biz-item .biz-name {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+  .biz-domain .biz-item .biz-desc {
+    font-size: 10px;
+    opacity: 0.7;
+  }
+
+  /* 横向全宽层 */
+  .biz-full-layer {
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+  }
+  .biz-full-layer .layer-label {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  /* ============================================
+     功能模块架构图 专用样式
+     ============================================ */
+  .func-module {
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+  .func-modules-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .func-modules-row .func-module {
+    margin-bottom: 0;
+  }
+  .func-modules-row .func-module .module-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .func-modules-row .func-module .module-icon {
+    font-size: 22px;
+  }
+  .func-modules-row .func-module .module-title {
+    font-size: 14px;
+  }
+  .func-modules-row .func-module .module-subtitle {
+    font-size: 10px;
+  }
+  .func-modules-row .func-grid {
+    flex-direction: column;
+  }
+  .func-modules-row .func-card {
+    min-width: unset;
+  }
+  .func-module .module-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(0,0,0,0.08);
+  }
+  .func-module .module-icon {
+    font-size: 28px;
+  }
+  .func-module .module-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .func-module .module-subtitle {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  .func-section {
+    margin-bottom: 8px;
+  }
+  .func-section .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .func-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .func-card {
+    border-radius: 8px;
+    padding: 8px 12px;
+    min-width: 120px;
+    flex: 1;
+  }
+  .func-card .fc-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .func-card .fc-desc {
+    font-size: 10px;
+    opacity: 0.75;
+    line-height: 1.3;
+  }
+  .func-card .fc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-top: 4px;
+  }
+  .func-card .fc-tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 8px;
+    white-space: nowrap;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.12);
+  }
+
+  /* 数据源标签 */
+  .source-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .source-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 16px;
+    white-space: nowrap;
+  }
+  .source-badge.hikvision { background: #e3f2fd; border: 1.5px solid #1565c0; color: #0d47a1; }
+  .source-badge.dahua { background: #e8f5e9; border: 1.5px solid #2e7d32; color: #1b5e20; }
+  .source-badge.yilian { background: #fff3e0; border: 1.5px solid #e65100; color: #bf360c; }
+  .source-badge.lifang { background: #fce4ec; border: 1.5px solid #c62828; color: #b71c1c; }
+  .source-badge.dingtalk { background: #e3f2fd; border: 1.5px solid #0277bd; color: #01579b; }
+  .source-badge.scanner { background: #f3e5f5; border: 1.5px solid #6a1b9a; color: #4a148c; }
+  .source-badge.dotpen { background: #e0f2f1; border: 1.5px solid #00796b; color: #004d40; }
+  .source-badge.aiphoto { background: #fff8e1; border: 1.5px solid #f9a825; color: #e65100; }
+  .source-badge.upload { background: #f5f5f5; border: 1.5px solid #757575; color: #424242; }
+  .source-badge.seevo { background: #e8eaf6; border: 1.5px solid #283593; color: #1a237e; }
+
+  .source-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .source-arrow {
+    font-size: 14px;
+    color: #999;
+    margin: 0 2px;
+  }
+
+  /* 两列布局 */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* 左侧竖向公共服务条 */
+  .main-with-sidebar {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+  }
+  .sidebar-infra {
+    width: 130px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fff3e0;
+    border: 2px solid #e65100;
+  }
+  .sidebar-infra .sidebar-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #bf360c;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid #ffcc80;
+  }
+  .sidebar-infra .sidebar-item {
+    background: #ffe0b2;
+    border: 1px solid #ef6c00;
+    border-radius: 6px;
+    padding: 5px 6px;
+    text-align: center;
+  }
+  .sidebar-infra .sidebar-item .si-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #bf360c;
+  }
+  .sidebar-infra .sidebar-item .si-desc {
+    font-size: 9px;
+    color: #e65100;
+    margin-top: 1px;
+  }
+  .sidebar-infra .sidebar-hint {
+    text-align: center;
+    font-size: 10px;
+    color: #e65100;
+    font-weight: 600;
+    margin-top: auto;
+  }
+
+  .main-content { flex: 1; }
+
+  /* ===== 产品架构图 特有 ===== */
+  .product-grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .product-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .product-grid-7 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+
+  /* 虚线包裹框 */
+  .dashed-wrapper {
+    border: 2.5px dashed;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .dashed-wrapper .wrapper-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* 图例 */
+  .legend-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #555;
+  }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid;
+  }
+  .legend-dot.l-blue { background: #bbdefb; border-color: #1565c0; }
+  .legend-dot.l-green { background: #c8e6c9; border-color: #2e7d32; }
+  .legend-dot.l-orange { background: #ffe0b2; border-color: #ef6c00; }
+  .legend-dot.l-red { background: #ffcdd2; border-color: #e53935; }
+  .legend-dot.l-purple { background: #e1bee7; border-color: #8e24aa; }
+  .legend-dot.l-teal { background: #b2dfdb; border-color: #00897b; }
+  .legend-dot.l-gray { background: #e0e0e0; border-color: #9e9e9e; }
+  .legend-dot.l-indigo { background: #c5cae9; border-color: #3949ab; }
+  .legend-dot.l-amber { background: #ffecb3; border-color: #fbc02d; }
+
+  /* Tab 描述行（描述 + 图例合并） */
+  .tab-desc-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 6px;
+    margin-bottom: 8px;
+    border-bottom: 1.5px solid #e0e0e0;
+    flex-wrap: wrap;
+  }
+  .tab-desc-row .tab-desc-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #1a237e;
+    white-space: nowrap;
+  }
+  .tab-desc-row .tab-desc-en {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5c6bc0;
+    white-space: nowrap;
+  }
+  .tab-desc-row .tab-desc-divider {
+    width: 2px;
+    height: 18px;
+    background: #c5cae9;
+    flex-shrink: 0;
+  }
+  .tab-desc-row .tab-desc-purpose {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+    white-space: nowrap;
+  }
+  .tab-desc-row .tab-desc-legends {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+
+  /* 浮动连接线提示 */
+  .connect-hint {
+    text-align: center;
+    font-size: 10px;
+    color: #999;
+    font-style: italic;
+    margin: 2px 0;
+  }
+
+  /* ============================================
+     技术架构图 专用样式 (源自 ai-campus-arch)
+     ============================================ */
+  #tab-tech .tech-layout {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+  #tab-tech .tech-left-infra {
+    width: 160px;
+    flex-shrink: 0;
+    background: #fffaf0;
+    border: 2px solid #cc6600;
+    border-radius: 10px;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  #tab-tech .tech-left-infra .tl-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #884400;
+    text-align: center;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  #tab-tech .tech-left-infra .tl-subtitle {
+    font-size: 10px;
+    color: #aa7733;
+    text-align: center;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  #tab-tech .tech-left-infra .tl-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+  }
+  #tab-tech .t-infra-card {
+    background: #ffe8cc;
+    border: 1.5px solid #cc8800;
+    border-radius: 6px;
+    padding: 5px 6px;
+    color: #663300;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #tab-tech .t-infra-card .t-icon { font-size: 16px; flex-shrink: 0; }
+  #tab-tech .t-infra-card .t-info { text-align: left; }
+  #tab-tech .t-infra-card .t-name { font-weight: 700; font-size: 12px; line-height: 1.2; }
+  #tab-tech .t-infra-card .t-desc { font-size: 9px; color: #886633; line-height: 1.3; }
+  #tab-tech .tech-left-infra .tl-hint {
+    text-align: center;
+    color: #cc6600;
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: 600;
+  }
+
+  #tab-tech .tech-right-layers {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* 技术架构层 */
+  #tab-tech .t-layer {
+    border-radius: 10px;
+    padding: 8px 14px;
+    position: relative;
+  }
+  #tab-tech .t-layer-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  #tab-tech .t-layer-items {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  #tab-tech .t-card {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    min-width: 120px;
+    flex: 1;
+    max-width: 260px;
+  }
+  #tab-tech .t-card .t-card-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 2px;
+  }
+  #tab-tech .t-card .t-card-icon { font-size: 15px; flex-shrink: 0; }
+  #tab-tech .t-card .t-card-name { font-weight: 700; font-size: 13px; white-space: nowrap; }
+  #tab-tech .t-card .t-card-desc { font-size: 10px; color: #666; line-height: 1.3; }
+  #tab-tech .t-sub-cards {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  #tab-tech .t-sub-card {
+    flex: 1;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 4px;
+    padding: 3px 6px;
+    text-align: center;
+  }
+  #tab-tech .t-sub-card .t-sub-name { font-size: 11px; font-weight: 700; }
+  #tab-tech .t-sub-card .t-sub-desc { font-size: 9px; color: #888; line-height: 1.2; }
+
+  /* 层色系 */
+  #tab-tech .tl-1 { background: #f0fff4; border: 2px solid #339966; }
+  #tab-tech .tl-1 .t-layer-title { color: #206040; }
+  #tab-tech .tl-1 .t-card { background: #d8f5e3; border: 1.5px solid #339966; color: #1a5035; }
+  #tab-tech .tl-2 { background: #e6f7ff; border: 2px solid #0066cc; }
+  #tab-tech .tl-2 .t-layer-title { color: #003366; }
+  #tab-tech .tl-2 .t-card { background: #d4edff; border: 1.5px solid #0066cc; color: #003366; }
+  #tab-tech .tl-3 { background: #f5f5f5; border: 1px solid #999; }
+  #tab-tech .tl-3 .t-layer-title { color: #333; }
+  #tab-tech .tl-3 .t-card { background: #fff; border: 1px solid #bbb; color: #333; }
+  #tab-tech .tl-4 { background: #fff5f5; border: 2px dashed #cc0000; }
+  #tab-tech .tl-4 .t-layer-title { color: #cc0000; }
+  #tab-tech .tl-4 .t-card { background: #ffe8e8; border: 1.5px solid #cc4444; color: #660000; }
+  #tab-tech .tl-4 .t-card .t-card-desc { color: #993333; }
+  #tab-tech .tl-5 { background: #f0fdfa; border: 2px solid #14b8a6; }
+  #tab-tech .tl-5 .t-layer-title { color: #115e59; }
+  #tab-tech .tl-5 .t-card { background: #ccfbf1; border: 1.5px solid #14b8a6; color: #115e59; }
+  #tab-tech .tl-6 { background: #f5f5f5; border: 1px solid #999; }
+  #tab-tech .tl-6 .t-layer-title { color: #333; }
+  #tab-tech .tl-6 .t-card { background: #fff; border: 1px solid #bbb; color: #333; }
+  #tab-tech .tl-7 { background: #fff5f5; border: 2px dashed #cc0000; }
+  #tab-tech .tl-7 .t-layer-title { color: #cc0000; }
+  #tab-tech .tl-7 .t-card { background: #ffe0e0; border: 2px solid #cc0000; color: #660000; }
+  #tab-tech .tl-7 .t-card .t-card-desc { color: #993333; }
+  #tab-tech .tl-8 { background: #f9f2ff; border: 2px solid #6600cc; }
+  #tab-tech .tl-8 .t-layer-title { color: #6600cc; }
+  #tab-tech .tl-8 .t-card { background: #e8d5ff; border: 1.5px solid #8833cc; color: #440088; }
+
+  #tab-tech .t-arrow-row {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 2px 0;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1;
+  }
+  #tab-tech .t-dep-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 2px 0 1px;
+    flex-wrap: wrap;
+  }
+  #tab-tech .t-dep-tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  #tab-tech .t-dep-tag.solid { background: #e0e0e0; color: #333; }
+  #tab-tech .t-dep-tag.dashed { background: #f0f0f0; color: #888; border: 1px dashed #bbb; }
+  #tab-tech .t-dep-tag.red-dashed { background: #fff0f0; color: #cc0000; border: 1px dashed #cc6666; }
+
+  #tab-tech .t-reuse-wrapper {
+    border: 2.5px dashed #339966;
+    border-radius: 12px;
+    padding: 6px 8px 8px;
+    margin-top: 2px;
+  }
+  #tab-tech .t-reuse-wrapper .t-reuse-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #339966;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  #tab-tech .tech-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  #tab-tech .tech-legend span {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  #tab-tech .tech-legend .tleg-green { background: #d8f5e3; color: #206040; border: 1px solid #339966; }
+  #tab-tech .tech-legend .tleg-blue { background: #d4edff; color: #0033cc; border: 1px solid #0066cc; }
+  #tab-tech .tech-legend .tleg-white { background: #fff; color: #333; border: 1px solid #999; }
+  #tab-tech .tech-legend .tleg-red { background: #fff5f5; color: #cc0000; border: 1px solid #cc0000; }
+  #tab-tech .tech-legend .tleg-red-dark { background: #ffe0e0; color: #cc0000; border: 1px solid #cc0000; }
+  #tab-tech .tech-legend .tleg-purple { background: #e8d5ff; color: #6600cc; border: 1px solid #6600cc; }
+  #tab-tech .tech-legend .tleg-orange { background: #ffe8cc; color: #996600; border: 1px solid #cc6600; }
+
+  /* ============================================
+     开放的云端架构图 专用样式
+     ============================================ */
+  #tab-platform { font-size: 12px; }
+  #tab-platform .pf-badges { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  #tab-platform .pf-badge { padding:3px 12px; border-radius:12px; font-size:11px; font-weight:600; }
+  #tab-platform .pf-layer {
+    border-radius:10px;
+    padding:10px 14px;
+    margin-bottom:8px;
+  }
+  #tab-platform .pf-layer-title {
+    font-size:13px; font-weight:700; margin-bottom:8px;
+  }
+  #tab-platform .pf-row {
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  #tab-platform .pf-chip {
+    padding:5px 10px; border-radius:6px; font-size:11px; flex:1; min-width:110px; text-align:center;
+  }
+  #tab-platform .pf-chip .pf-chip-title { font-weight:700; font-size:11px; }
+  #tab-platform .pf-chip .pf-chip-desc { font-size:9px; opacity:0.75; margin-top:1px; }
+  #tab-platform .pf-biz-grid {
+    display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:8px;
+  }
+  #tab-platform .pf-biz-card {
+    border-radius:8px; padding:8px 10px; border:1.5px solid #ddd; background:#fff;
+  }
+  #tab-platform .pf-biz-card .pf-biz-title { font-size:12px; font-weight:700; color:#333; margin-bottom:4px; }
+  #tab-platform .pf-biz-card .pf-biz-desc { font-size:9px; color:#666; line-height:1.4; }
+  #tab-platform .pf-open-row {
+    display:flex; gap:8px; margin-bottom:8px;
+  }
+  #tab-platform .pf-open-card {
+    flex:1; border-radius:8px; padding:6px 10px; text-align:center; border:1.5px solid #ccc; background:#fafafa;
+  }
+  #tab-platform .pf-open-card .pf-open-title { font-size:12px; font-weight:700; color:#333; }
+  #tab-platform .pf-open-card .pf-open-desc { font-size:9px; color:#888; }
+  #tab-platform .pf-api-section { margin-bottom:8px; }
+  #tab-platform .pf-api-title { font-size:12px; font-weight:700; margin-bottom:6px; }
+  #tab-platform .pf-api-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:6px;
+  }
+  #tab-platform .pf-api-item {
+    font-family: 'SF Mono','Menlo',monospace; font-size:11px; padding:4px 8px;
+    border-radius:4px; display:flex; align-items:center; gap:6px;
+  }
+  #tab-platform .pf-api-item .pf-method {
+    font-size:9px; font-weight:700; padding:1px 5px; border-radius:3px; white-space:nowrap;
+  }
+  #tab-platform .pf-api-item .pf-path { font-weight:600; }
+  #tab-platform .pf-api-item .pf-api-desc { font-size:9px; color:#888; margin-left:auto; font-family:inherit; }
+  #tab-platform .pf-rest-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+  }
+  #tab-platform .pf-rest-item {
+    font-family:'SF Mono','Menlo',monospace; font-size:11px; padding:5px 8px;
+    border-radius:4px; background:#f5f5f5; border:1px solid #ddd;
+  }
+  #tab-platform .pf-rest-item .pf-rest-path { font-weight:700; color:#333; font-size:11px; }
+  #tab-platform .pf-rest-item .pf-rest-methods { font-size:9px; margin-top:2px; }
+  #tab-platform .pf-rest-item .pf-rest-methods span {
+    padding:1px 4px; border-radius:3px; margin-right:3px; font-weight:600;
+  }
+  #tab-platform .pf-infra-grid {
+    display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:8px;
+  }
+  #tab-platform .pf-infra-col {
+    border-radius:10px; padding:10px;
+  }
+  #tab-platform .pf-infra-col .pf-infra-title { font-size:12px; font-weight:700; margin-bottom:6px; text-align:center; }
+  #tab-platform .pf-infra-item {
+    border-radius:6px; padding:5px 8px; margin-bottom:5px;
+  }
+  #tab-platform .pf-infra-item .pf-inf-name { font-size:11px; font-weight:700; }
+  #tab-platform .pf-infra-item .pf-inf-desc { font-size:9px; opacity:0.7; }
+  #tab-platform .pf-paas {
+    border-radius:10px; padding:10px 14px; background:#f5f5f5; border:1.5px solid #999;
+  }
+  #tab-platform .pf-paas-title { font-size:12px; font-weight:700; color:#333; margin-bottom:6px; }
+  #tab-platform .pf-paas-row { display:flex; gap:6px; flex-wrap:wrap; }
+  #tab-platform .pf-paas-chip {
+    padding:4px 10px; border-radius:6px; font-size:11px; background:#e0e0e0; border:1px solid #bbb; color:#333;
+  }
+  #tab-platform .pf-paas-chip .pf-paas-name { font-weight:700; }
+  #tab-platform .pf-paas-chip .pf-paas-desc { font-size:9px; color:#666; }
+
+  /* ============================================
+     领域模型 专用样式
+     ============================================ */
+  .dm-toolbar {
+    display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:10px;
+  }
+  .dm-toolbar .dm-zoom-group {
+    display:flex; gap:4px; align-items:center; margin-right:12px;
+  }
+  .dm-toolbar .dm-zoom-btn {
+    width:32px; height:32px; border:1.5px solid #bbb; border-radius:6px;
+    background:#fff; cursor:pointer; font-size:16px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; color:#333;
+    transition:all 0.15s;
+  }
+  .dm-toolbar .dm-zoom-btn:hover { background:#e3f2fd; border-color:#1565c0; color:#1565c0; }
+  .dm-toolbar .dm-zoom-level {
+    font-size:12px; font-weight:600; color:#666; min-width:44px; text-align:center;
+  }
+  .dm-toolbar .dm-domain-btn {
+    padding:4px 12px; border-radius:14px; font-size:11px; font-weight:600;
+    border:1.5px solid #ccc; background:#fafafa; color:#555; cursor:pointer;
+    transition:all 0.15s; white-space:nowrap;
+  }
+  .dm-toolbar .dm-domain-btn:hover { background:#e8f5e9; border-color:#2e7d32; color:#2e7d32; }
+  .dm-toolbar .dm-domain-btn.active { background:#1565c0; border-color:#1565c0; color:#fff; }
+
+  .dm-viewer {
+    width:100%; height:72vh; overflow:hidden; position:relative;
+    background:#fefefe; border-radius:12px; border:1.5px solid #e0e0e0;
+    cursor:grab; user-select:none;
+  }
+  .dm-viewer:active { cursor:grabbing; }
+  .dm-viewer img {
+    position:absolute; top:0; left:0;
+    transform-origin:0 0;
+    transition:transform 0.3s ease;
+    pointer-events:none;
+  }
+  .dm-viewer img.dragging { transition:none; }
+  .dm-hint {
+    position:absolute; bottom:10px; right:14px;
+    font-size:11px; color:#999; pointer-events:none;
+    background:rgba(255,255,255,0.85); padding:3px 10px; border-radius:8px;
+  }
+  .dm-section {
+    margin-bottom:24px;
+  }
+  .dm-section-title {
+    font-size:16px; font-weight:700; color:#1a237e; margin-bottom:8px;
+    padding-left:4px; border-left:4px solid #1a237e; padding-bottom:2px;
+  }
+
+  /* 技术架构 - 关键问题区 */
+  .tech-qa-section {
+    margin-top: 20px;
+    border-top: 2px solid #c5cae9;
+    padding-top: 16px;
+  }
+  .tech-qa-section .qa-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a237e;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .tech-qa-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .qa-card {
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  .qa-card .qa-num {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: 6px;
+  }
+  .qa-card .qa-question {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .qa-card .qa-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #c62828 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .qa-card .qa-status {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+  }
+  .qa-card .qa-label-solution {
+    font-size: 12px;
+    font-weight: 800;
+    color: #c62828 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .qa-card .qa-solution {
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 8px 10px;
+    border-radius: 6px;
+    flex: 1;
+  }
+  .qa-card .qa-solution ol,
+  .qa-card .qa-solution ul {
+    padding-left: 18px;
+    margin: 0;
+  }
+  .qa-card .qa-solution li {
+    margin-bottom: 3px;
+  }
+  .qa-card .qa-solution-item {
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== 顶部导航栏 ===== -->
+<div class="top-bar">
+  <div>
+    <h1>AI时代智慧校园基座-端/云一体的教育OS</h1>
+    <div class="subtitle">业务架构 · 产品架构 · 功能模块架构 · 技术架构 — 全景视图</div>
+  </div>
+  <div style="display:flex; align-items:center;">
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('business')">业务架构</button>
+      <button class="tab-btn" onclick="switchTab('product')">产品架构</button>
+      <button class="tab-btn" onclick="switchTab('functional')">功能模块架构</button>
+      <button class="tab-btn" onclick="switchTab('tech')">技术架构</button>
+      <button class="tab-btn" onclick="switchTab('platform')">开放的云端架构</button>
+      <button class="tab-btn" onclick="switchTab('domain')">领域模型</button>
+    </div>
+    <button class="fullscreen-btn" id="fsBtn" title="全屏">
+      <svg id="fsIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ========================================================================
+     TAB 1: 产品架构图
+     ======================================================================== -->
+<div class="tab-content" id="tab-product">
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">产品架构</div>
+    <div class="tab-desc-en">Product Architecture</div>
+    <div class="tab-desc-divider"></div>
+    <div class="tab-desc-purpose">解决"做什么" — 定义平台的产品线、功能模块与用户触达路径</div>
+    <div class="tab-desc-legends">
+      <div class="legend-item"><div class="legend-dot l-blue"></div>用户角色</div>
+      <div class="legend-item"><div class="legend-dot l-green"></div>接入终端</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00838f;"></div>学生终端</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00acc1;"></div>AI应用</div>
+      <div class="legend-item"><div class="legend-dot l-red"></div>核心应用</div>
+      <div class="legend-item"><div class="legend-dot l-purple"></div>数据分析</div>
+      <div class="legend-item"><div class="legend-dot l-teal"></div>平台能力</div>
+      <div class="legend-item"><div class="legend-dot l-orange"></div>数据采集</div>
+      <div class="legend-item"><div class="legend-dot l-indigo"></div>基础数据</div>
+      <div class="legend-item"><div class="legend-dot l-gray"></div>基础设施</div>
+    </div>
+  </div>
+
+  <div class="main-with-sidebar">
+    <!-- 左侧：公共支撑服务 -->
+    <div class="sidebar-infra">
+      <div class="sidebar-title">公共支撑服务</div>
+      <div class="sidebar-item"><div class="si-name">统一认证</div><div class="si-desc">SSO / CAS / OAuth</div></div>
+      <div class="sidebar-item"><div class="si-name">权限管理</div><div class="si-desc">RBAC / ACL</div></div>
+      <div class="sidebar-item"><div class="si-name">消息中心</div><div class="si-desc">站内信/推送/短信</div></div>
+      <div class="sidebar-item"><div class="si-name">文件服务</div><div class="si-desc">OSS / 转码 / CDN</div></div>
+      <div class="sidebar-item"><div class="si-name">AI 网关</div><div class="si-desc">多模型/审计/限流</div></div>
+      <div class="sidebar-item"><div class="si-name">运维监控</div><div class="si-desc">日志/链路/告警</div></div>
+      <div class="sidebar-hint">═══▶ 贯穿全层</div>
+    </div>
+
+    <!-- 右侧主区域 -->
+    <div class="main-content product-arch">
+
+      <!-- 第一层：用户角色 -->
+      <div class="arch-layer bg-blue">
+        <div class="layer-label">👤 用户角色层 <span class="badge" style="background:#1565c0;color:#fff;">六大角色</span></div>
+        <div class="card-grid">
+          <div class="arch-card"><div class="card-title">🏛️ 教育局/集团</div><div class="card-desc">区域数据看板/学校评估/政策下发/督导巡检</div></div>
+          <div class="arch-card"><div class="card-title">👔 校长/管理层</div><div class="card-desc">全校数据驾驶舱/决策分析/审批/绩效总览</div></div>
+          <div class="arch-card"><div class="card-title">📋 中层干部</div><div class="card-desc">教务主任/德育主任/年级主任/教研组长</div></div>
+          <div class="arch-card"><div class="card-title">👨‍🏫 教师</div><div class="card-desc">备课/授课/作业部署与批改/教研/班级管理/考勤/家校沟通</div></div>
+          <div class="arch-card"><div class="card-title">👨‍🎓 学生</div><div class="card-desc">学习/作业/考试/错题/自主练习/成长档案</div></div>
+          <div class="arch-card"><div class="card-title">👨‍👩‍👧 家长</div><div class="card-desc">学情查看/请假审批/缴费/家校沟通/成长报告</div></div>
+        </div>
+      </div>
+
+      <div class="layer-arrow blue">▼ ▼ ▼ ▼</div>
+
+      <!-- 第二层：学生学习终端 & AI应用 -->
+      <div style="display:grid; grid-template-columns:3fr 1fr; gap:10px; margin-bottom:8px;">
+        <div class="arch-layer" style="background:#e0f2f1; border-color:#00796b; margin-bottom:0;">
+          <div class="layer-label" style="color:#004d40;">📱 学生学习终端 <span class="badge" style="background:#00796b;color:#fff;">学生端</span></div>
+          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">📅</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">课表</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">个人/走班/调课</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">🤖</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">AI学伴</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">智能问答/学习辅导</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">🎯</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">成长目标与学习路径</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">路径规划/目标/进度</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">📝</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">作业任务</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">提交/批改/反馈</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">⭐</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">行为习惯</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">记录/养成/积分</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">📊</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">成长报告</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">学术成长/综合素养</div>
+            </div>
+            <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:6px; padding:6px 10px; text-align:center;">
+              <div style="font-size:16px; margin-bottom:2px;">🧰</div>
+              <div style="font-size:11px; font-weight:700; color:#004d40;">工具箱</div>
+              <div style="font-size:9px; color:#00695c; line-height:1.3;">词典/计算器/笔记</div>
+            </div>
+          </div>
+        </div>
+        <div class="arch-layer" style="background:#e0f7fa; border-color:#00838f; margin-bottom:0;">
+          <div class="layer-label" style="color:#006064;">🤖 AI应用 <span class="badge" style="background:#00838f;color:#fff;">AI平台</span></div>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div class="arch-card"><div class="card-title">AI智能体管理</div><div class="card-desc">智能体注册/配置/权限/调度</div></div>
+            <div class="arch-card"><div class="card-title">AI应用管理</div><div class="card-desc">创建/编辑/调试/发布/数据统计</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-arrow" style="color:#00796b;">▼ ▼ ▼ ▼</div>
+
+      <!-- 数据分析与学情报告层 -->
+      <div class="arch-layer bg-purple">
+        <div class="layer-label">📊 数据分析与学情报告层 <span class="badge" style="background:#6a1b9a;color:#fff;">精准画像</span></div>
+        <div class="two-col">
+          <div>
+            <div style="font-size:12px; font-weight:700; color:#4a148c; margin-bottom:6px;">学生分析</div>
+            <div class="card-grid">
+              <div class="arch-card"><div class="card-title">学生概况</div><div class="card-desc">基础画像/综合评价</div></div>
+              <div class="arch-card"><div class="card-title">排名列表</div><div class="card-desc">班级/年级/学科排名</div></div>
+              <div class="arch-card"><div class="card-title">进退步分析</div><div class="card-desc">趋势追踪/波动预警</div></div>
+              <div class="arch-card"><div class="card-title">特殊学生</div><div class="card-desc">特控线/培优线</div></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px; font-weight:700; color:#4a148c; margin-bottom:6px;">个性化学情分析</div>
+            <div class="card-grid">
+              <div class="arch-card"><div class="card-title">个人学情报告</div><div class="card-desc">个体学习诊断/建议</div></div>
+              <div class="arch-card"><div class="card-title">班级学情报告</div><div class="card-desc">班级整体学情画像</div></div>
+              <div class="arch-card"><div class="card-title">年级学情报告</div><div class="card-desc">年级横向对比分析</div></div>
+              <div class="arch-card"><div class="card-title">错题集</div><div class="card-desc">智能归类/薄弱推送</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-arrow purple">▼ ▼ ▼ ▼</div>
+
+      <!-- 第四层：核心应用产品层 -->
+      <div class="dashed-wrapper" style="border-color:#c62828;">
+        <div class="wrapper-label" style="color:#c62828;">核心应用产品层</div>
+
+        <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:8px; align-items:stretch;">
+          <!-- 校园经营产品线 -->
+          <div class="arch-layer bg-orange" style="margin-bottom:0;">
+            <div class="layer-label">🏢 校园经营</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">招生管理</div><div class="card-desc">报名/审核/录取</div></div>
+              <div class="arch-card"><div class="card-title">财务管理</div><div class="card-desc">缴费/对账/报表</div></div>
+              <div class="arch-card"><div class="card-title">资产管理</div><div class="card-desc">登记/盘点/报废</div></div>
+              <div class="arch-card"><div class="card-title">后勤管理</div><div class="card-desc">报修/食堂/能耗</div></div>
+            </div>
+          </div>
+
+          <!-- 智慧安防产品线 -->
+          <div class="arch-layer bg-red" style="margin-bottom:0;">
+            <div class="layer-label">🛡️ 智慧安防</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">入离校考勤</div><div class="card-desc">校门通行 / 人脸/刷卡</div></div>
+              <div class="arch-card"><div class="card-title">宿舍归寝考勤</div><div class="card-desc">就寝签到 / 异常告警</div></div>
+              <div class="arch-card"><div class="card-title">课堂考勤</div><div class="card-desc">走班/固定班 / AI点名</div></div>
+              <div class="arch-card"><div class="card-title">学生请假</div><div class="card-desc">在线审批 / 出入校联动</div></div>
+            </div>
+          </div>
+
+          <!-- LMS 教学管理产品线 -->
+          <div class="arch-layer bg-red" style="margin-bottom:0;">
+            <div class="layer-label">📚 LMS 教学管理</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">在线备课</div><div class="card-desc">智能备课/模板/协作</div></div>
+              <div class="arch-card"><div class="card-title">课程资源库</div><div class="card-desc">校本/区域/国家资源</div></div>
+              <div class="arch-card"><div class="card-title">课标管理</div><div class="card-desc">课程标准/教学目标</div></div>
+              <div class="arch-card"><div class="card-title">知识图谱</div><div class="card-desc">学科知识网络/关联</div></div>
+              <div class="arch-card"><div class="card-title">课堂互动</div><div class="card-desc">实时答题/抢答/投屏</div></div>
+              <div class="arch-card"><div class="card-title">AI 校验</div><div class="card-desc">内容审核/质量评估</div></div>
+            </div>
+          </div>
+
+          <!-- 教师成长产品线 -->
+          <div class="arch-layer bg-amber" style="margin-bottom:0;">
+            <div class="layer-label">👨‍🏫 教师成长</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">教师档案</div><div class="card-desc">基本信息/履历/证书</div></div>
+              <div class="arch-card"><div class="card-title">教学教研</div><div class="card-desc">集体备课/听课评课</div></div>
+              <div class="arch-card"><div class="card-title">AI 教研</div><div class="card-desc">Seevo / AI辅助教研</div></div>
+            </div>
+          </div>
+
+          <!-- 精准教学产品线 -->
+          <div class="arch-layer bg-red" style="margin-bottom:0;">
+            <div class="layer-label">🎯 精准教学</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">在线组卷</div><div class="card-desc">智能组卷/题库抽取</div></div>
+              <div class="arch-card"><div class="card-title">成绩分析</div><div class="card-desc">三分三率/分层分段</div></div>
+              <div class="arch-card"><div class="card-title">试题分析</div><div class="card-desc">大题/小题/高频错题</div></div>
+            </div>
+          </div>
+
+          <!-- 学生成长产品线 -->
+          <div class="arch-layer bg-green" style="margin-bottom:0;">
+            <div class="layer-label">🌱 学生成长</div>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="arch-card"><div class="card-title">素养评价</div><div class="card-desc">五育并举/多维评价</div></div>
+              <div class="arch-card"><div class="card-title">全息画像</div><div class="card-desc">360°学生画像</div></div>
+              <div class="arch-card"><div class="card-title">成长档案</div><div class="card-desc">里程碑/荣誉/轨迹</div></div>
+              <div class="arch-card"><div class="card-title">综合素质报告</div><div class="card-desc">学期报告/升学档案</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-arrow red">▼ ▼ ▼ ▼</div>
+
+      <!-- 第六层：平台能力 -->
+      <div class="arch-layer bg-teal">
+        <div class="layer-label">⚙️ 平台能力层 <span class="badge" style="background:#00796b;color:#fff;">中台服务</span></div>
+        <div class="product-grid-7">
+          <div class="arch-card"><div class="card-title">考勤中心</div><div class="card-desc">统一考勤引擎</div></div>
+          <div class="arch-card"><div class="card-title">题库中心</div><div class="card-desc">试题/知识点管理</div></div>
+          <div class="arch-card"><div class="card-title">评价中心</div><div class="card-desc">多维度评估</div></div>
+          <div class="arch-card"><div class="card-title">分析引擎</div><div class="card-desc">统计/BI/报表</div></div>
+          <div class="arch-card"><div class="card-title">资源中心</div><div class="card-desc">课件/视频/素材</div></div>
+          <div class="arch-card"><div class="card-title">通知中心</div><div class="card-desc">全渠道触达</div></div>
+          <div class="arch-card"><div class="card-title">审批流程</div><div class="card-desc">请假/调课/报修</div></div>
+        </div>
+      </div>
+
+      <div class="layer-arrow teal">▼ ▼ ▼</div>
+
+      <!-- 第七层：基础数据 -->
+      <div class="arch-layer bg-indigo">
+        <div class="layer-label">🗄️ 基础数据模型层 <span class="badge" style="background:#283593;color:#fff;">MDM 主数据</span></div>
+        <div class="product-grid-7">
+          <div class="arch-card"><div class="card-title">组织架构</div><div class="card-desc">集团/学校/年级/班级</div></div>
+          <div class="arch-card"><div class="card-title">时间维度</div><div class="card-desc">学年/学期/节次</div></div>
+          <div class="arch-card"><div class="card-title">教学元数据</div><div class="card-desc">课程/科目/教材</div></div>
+          <div class="arch-card"><div class="card-title">人员档案</div><div class="card-desc">学籍/教师/家长</div></div>
+          <div class="arch-card"><div class="card-title">场地资源</div><div class="card-desc">教室/宿舍/功能室</div></div>
+          <div class="arch-card"><div class="card-title">设备台账</div><div class="card-desc">考勤机/扫描仪/大屏</div></div>
+          <div class="arch-card"><div class="card-title">权限模型</div><div class="card-desc">角色/数据/功能权限</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================================
+     TAB 2: 业务架构图
+     ======================================================================== -->
+<div class="tab-content active" id="tab-business">
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">业务架构</div>
+    <div class="tab-desc-en">Business Architecture</div>
+    <div class="tab-desc-divider"></div>
+    <div class="tab-desc-purpose">解决"为什么做" — 明确业务战略目标、核心业务域与业务流程</div>
+    <div class="tab-desc-legends">
+      <div class="legend-item"><div class="legend-dot l-red"></div>智慧安防</div>
+      <div class="legend-item"><div class="legend-dot l-blue"></div>LMS 教学管理</div>
+      <div class="legend-item"><div class="legend-dot l-amber"></div>教师成长</div>
+      <div class="legend-item"><div class="legend-dot l-purple"></div>精准教学</div>
+      <div class="legend-item"><div class="legend-dot l-green"></div>学生成长</div>
+      <div class="legend-item"><div class="legend-dot l-orange"></div>校园经营</div>
+      <div class="legend-item"><div class="legend-dot l-teal"></div>支撑服务</div>
+    </div>
+  </div>
+
+  <!-- 顶层：业务战略目标 -->
+  <div class="biz-full-layer" style="background:#e3f2fd; border:2px solid #1565c0;">
+    <div class="layer-label" style="color:#0d47a1; text-align:center;">🎯 业务战略目标：构建数据驱动、AI 赋能的 K12 全链路智慧校园生态</div>
+    <div class="card-grid">
+      <div style="background:#bbdefb; border:1.5px solid #1976d2; border-radius:8px; padding:8px 14px; flex:1; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#0d47a1;">安全校园</div>
+        <div style="font-size:10px; color:#1565c0;">全场景考勤·实时预警</div>
+      </div>
+      <div style="background:#bbdefb; border:1.5px solid #1976d2; border-radius:8px; padding:8px 14px; flex:1; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#0d47a1;">高效教学</div>
+        <div style="font-size:10px; color:#1565c0;">备授批辅考全流程</div>
+      </div>
+      <div style="background:#bbdefb; border:1.5px solid #1976d2; border-radius:8px; padding:8px 14px; flex:1; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#0d47a1;">精准育人</div>
+        <div style="font-size:10px; color:#1565c0;">因材施教·个性推送</div>
+      </div>
+      <div style="background:#bbdefb; border:1.5px solid #1976d2; border-radius:8px; padding:8px 14px; flex:1; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#0d47a1;">教师成长</div>
+        <div style="font-size:10px; color:#1565c0;">AI教研·专业发展</div>
+      </div>
+      <div style="background:#bbdefb; border:1.5px solid #1976d2; border-radius:8px; padding:8px 14px; flex:1; text-align:center;">
+        <div style="font-size:13px; font-weight:700; color:#0d47a1;">科学决策</div>
+        <div style="font-size:10px; color:#1565c0;">数据可视·辅助决策</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-arrow blue">▼ ▼ ▼ ▼ ▼</div>
+
+  <!-- 学情分析横向层 -->
+  <div class="biz-full-layer" style="background:#f3e5f5; border:2px solid #6a1b9a;">
+    <div class="layer-label" style="color:#4a148c;">📊 个性化学情分析业务域 — 贯穿教学全流程的数据洞察</div>
+    <div class="card-grid">
+      <div style="background:#e1bee7; border:1.5px solid #8e24aa; border-radius:8px; padding:10px 14px; flex:1;">
+        <div style="font-size:13px; font-weight:700; color:#4a148c;">个人学情报告</div>
+        <div style="font-size:10px; color:#6a1b9a; margin-top:3px;">知识掌握度 → 薄弱诊断 → 个性化学习路径推荐</div>
+      </div>
+      <div style="background:#e1bee7; border:1.5px solid #8e24aa; border-radius:8px; padding:10px 14px; flex:1;">
+        <div style="font-size:13px; font-weight:700; color:#4a148c;">班级学情报告</div>
+        <div style="font-size:10px; color:#6a1b9a; margin-top:3px;">班级均分 → 优秀率 → 共性薄弱点 → 教学改进建议</div>
+      </div>
+      <div style="background:#e1bee7; border:1.5px solid #8e24aa; border-radius:8px; padding:10px 14px; flex:1;">
+        <div style="font-size:13px; font-weight:700; color:#4a148c;">年级学情报告</div>
+        <div style="font-size:10px; color:#6a1b9a; margin-top:3px;">年级横向对比 → 班级排名 → 学科均衡度 → 分层指导</div>
+      </div>
+      <div style="background:#e1bee7; border:1.5px solid #8e24aa; border-radius:8px; padding:10px 14px; flex:1;">
+        <div style="font-size:13px; font-weight:700; color:#4a148c;">错题集管理</div>
+        <div style="font-size:10px; color:#6a1b9a; margin-top:3px;">自动归集 → 知识点标注 → 变式推送 → 掌握度追踪</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-arrow purple">▼ ▼ ▼ ▼</div>
+
+  <!-- 核心业务域 -->
+  <div class="biz-arch-grid">
+    <!-- 校园经营 -->
+    <div class="biz-domain" style="background:#fff3e0; border:2px solid #e65100;">
+      <div class="domain-title" style="color:#bf360c;">🏢 校园经营</div>
+      <div class="biz-item">
+        <div class="biz-name">招生管理</div>
+        <div class="biz-desc">招生计划 → 报名登记 → 资格审核 → 录取通知 → 数据统计</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">财务管理</div>
+        <div class="biz-desc">学费缴纳 → 账单推送 → 收费对账 → 退费审批 → 财务报表</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">资产管理</div>
+        <div class="biz-desc">资产登记 → 领用归还 → 盘点清查 → 维修报废 → 台账统计</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">后勤管理</div>
+        <div class="biz-desc">报修工单 → 派工维修 → 验收反馈 → 食堂管理 → 能耗监控</div>
+      </div>
+    </div>
+
+    <!-- 智慧安防 -->
+    <div class="biz-domain" style="background:#fce4ec; border:2px solid #c62828;">
+      <div class="domain-title" style="color:#b71c1c;">🛡️ 智慧安防</div>
+      <div class="biz-item" style="background:rgba(198,40,40,0.08); border-color:#e53935;">
+        <div class="biz-name" style="color:#c62828;">⬆ 数据采集适配</div>
+        <div class="biz-desc">海康 / 大华 / 易联 / 立方 / 钉钉考勤机 统一对接</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">入离校管理</div>
+        <div class="biz-desc">多源人脸/刷卡 → 实时通知家长 → 缺勤自动预警</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">宿舍归寝管理</div>
+        <div class="biz-desc">晚自习签退 → 宿舍签到 → 未归预警 → 通知班主任</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">课堂考勤管理</div>
+        <div class="biz-desc">走班排课联动 → AI 点名 → 缺勤自动标记</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">学生请假审批</div>
+        <div class="biz-desc">线上申请 → 多级审批 → 出入校联动 → 统计汇总</div>
+      </div>
+    </div>
+
+    <!-- LMS 教学管理 -->
+    <div class="biz-domain" style="background:#e3f2fd; border:2px solid #1565c0;">
+      <div class="domain-title" style="color:#0d47a1;">📚 LMS 教学管理</div>
+      <div class="biz-item">
+        <div class="biz-name">在线备课</div>
+        <div class="biz-desc">教案编辑 → 资源引用 → 课标对齐 → AI 智能推荐</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">课程资源管理</div>
+        <div class="biz-desc">校本资源库 → 区域共享 → 版本管理 → 评审发布</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">课标与知识图谱</div>
+        <div class="biz-desc">课标拆解 → 知识点关联 → 学科图谱构建 → 导航</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">课堂互动教学</div>
+        <div class="biz-desc">实时答题 → 随堂练习 → 投屏互动 → 课堂评价</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">AI 内容校验</div>
+        <div class="biz-desc">教学内容审核 → 知识点准确性 → 课标一致性检查</div>
+      </div>
+    </div>
+
+    <!-- 教师成长 -->
+    <div class="biz-domain" style="background:#fff8e1; border:2px solid #f9a825;">
+      <div class="domain-title" style="color:#f57f17;">👨‍🏫 教师成长</div>
+      <div class="biz-item">
+        <div class="biz-name">教师档案管理</div>
+        <div class="biz-desc">基本信息 → 教学履历 → 资质证书 → 成果记录</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">教学教研活动</div>
+        <div class="biz-desc">集体备课 → 听课评课 → 公开课 → 教研成果</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">AI 辅助教研</div>
+        <div class="biz-desc">Seevo 课堂观察 → AI 教学分析 → 改进建议</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">专业发展规划</div>
+        <div class="biz-desc">继续教育 → 培训记录 → 职称评审 → 成长轨迹</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">教师绩效评估</div>
+        <div class="biz-desc">工作量统计 → 教学质量 → 科研成果 → 综合评价</div>
+      </div>
+    </div>
+
+    <!-- 精准教学 -->
+    <div class="biz-domain" style="background:#f3e5f5; border:2px solid #6a1b9a;">
+      <div class="domain-title" style="color:#4a148c;">🎯 精准教学</div>
+      <div class="biz-item" style="background:rgba(106,27,154,0.08); border-color:#8e24aa;">
+        <div class="biz-name" style="color:#6a1b9a;">⬆ 数据采集适配</div>
+        <div class="biz-desc">高速扫描仪 / 点阵笔 / AI拍照 / 作业上传</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">在线组卷</div>
+        <div class="biz-desc">题库抽取 → 智能组卷 → 难度均衡 → 知识点覆盖</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">成绩统计分析</div>
+        <div class="biz-desc">三分三率 → 分层分段 → 班级对比 → 趋势追踪</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">试题深度分析</div>
+        <div class="biz-desc">大题分析 → 小题分析 → 高频错题 → 难度区分</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">学生分析</div>
+        <div class="biz-desc">概况/排名 → 进退步 → 特殊学生 → 特控/培优线</div>
+      </div>
+    </div>
+
+    <!-- 学生成长 -->
+    <div class="biz-domain" style="background:#e8f5e9; border:2px solid #2e7d32;">
+      <div class="domain-title" style="color:#1b5e20;">🌱 学生成长</div>
+      <div class="biz-item">
+        <div class="biz-name">素养评价</div>
+        <div class="biz-desc">品德 → 学业 → 身心 → 艺术 → 劳动 五育并举评价</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">全息画像</div>
+        <div class="biz-desc">学业数据 + 行为数据 + 体质数据 → 360° 学生画像</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">成长档案</div>
+        <div class="biz-desc">里程碑记录 → 荣誉奖项 → 社团活动 → 成长轨迹</div>
+      </div>
+      <div class="biz-item">
+        <div class="biz-name">综合素质报告</div>
+        <div class="biz-desc">学期报告 → 多维雷达图 → 家长可视 → 升学档案</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layer-arrow teal">▼ ▼ ▼</div>
+
+  <!-- 支撑服务层 -->
+  <div class="biz-full-layer" style="background:#e0f2f1; border:2px solid #00796b;">
+    <div class="layer-label" style="color:#004d40;">⚙️ 业务支撑服务域</div>
+    <div class="card-grid">
+      <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:8px; padding:8px 12px; flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#004d40;">统一身份认证</div>
+        <div style="font-size:10px; color:#00695c;">SSO / CAS / 多端登录</div>
+      </div>
+      <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:8px; padding:8px 12px; flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#004d40;">消息通知中心</div>
+        <div style="font-size:10px; color:#00695c;">站内信/APP推送/短信/钉钉</div>
+      </div>
+      <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:8px; padding:8px 12px; flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#004d40;">审批流程引擎</div>
+        <div style="font-size:10px; color:#00695c;">请假/调课/报修/多级审批</div>
+      </div>
+      <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:8px; padding:8px 12px; flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#004d40;">设备管理中心</div>
+        <div style="font-size:10px; color:#00695c;">考勤机/扫描仪/IoT统一管理</div>
+      </div>
+      <div style="background:#b2dfdb; border:1.5px solid #00897b; border-radius:8px; padding:8px 12px; flex:1;">
+        <div style="font-size:12px; font-weight:700; color:#004d40;">数据可视化</div>
+        <div style="font-size:10px; color:#00695c;">领导驾驶舱/BI报表/大屏</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========================================================================
+     TAB 3: 功能模块架构图
+     ======================================================================== -->
+<div class="tab-content" id="tab-functional">
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">功能模块架构</div>
+    <div class="tab-desc-en">Functional Module Architecture</div>
+    <div class="tab-desc-divider"></div>
+    <div class="tab-desc-purpose">解决"做成什么样" — 各模块的详细功能清单、数据采集源与子功能拆解</div>
+    <div class="tab-desc-legends">
+      <div class="legend-item"><div class="legend-dot l-orange"></div>数据采集源</div>
+      <div class="legend-item"><div class="legend-dot l-red"></div>智慧安防</div>
+      <div class="legend-item"><div class="legend-dot l-blue"></div>LMS 教学管理</div>
+      <div class="legend-item"><div class="legend-dot l-amber"></div>教师成长</div>
+      <div class="legend-item"><div class="legend-dot l-purple"></div>精准教学</div>
+      <div class="legend-item"><div class="legend-dot l-teal"></div>学情分析</div>
+    </div>
+  </div>
+
+  <!-- ===== 个性化学情分析（置顶） ===== -->
+  <div class="func-module" style="background:#e0f2f1; border:2.5px solid #00796b;">
+    <div class="module-header">
+      <div class="module-icon">📊</div>
+      <div>
+        <div class="module-title" style="color:#004d40;">个性化学情分析模块</div>
+        <div class="module-subtitle" style="color:#00796b;">多维度学情诊断报告 — 个人·班级·年级全覆盖</div>
+      </div>
+    </div>
+
+    <div class="func-section">
+      <div class="section-label" style="color:#004d40;">▎学情报告体系</div>
+      <div class="func-grid">
+        <div class="func-card" style="background:#b2dfdb; border:1.5px solid #00897b; color:#004d40;">
+          <div class="fc-title">个人学情报告</div>
+          <div class="fc-desc">个体知识掌握度诊断，薄弱知识点定位，个性化学习路径推荐，提升建议</div>
+          <div class="fc-tags">
+            <span class="fc-tag">知识掌握度</span>
+            <span class="fc-tag">薄弱诊断</span>
+            <span class="fc-tag">路径推荐</span>
+            <span class="fc-tag">提升建议</span>
+          </div>
+        </div>
+        <div class="func-card" style="background:#b2dfdb; border:1.5px solid #00897b; color:#004d40;">
+          <div class="fc-title">班级学情报告</div>
+          <div class="fc-desc">班级整体学情画像，优秀率/及格率，共性薄弱知识点，教学改进建议</div>
+          <div class="fc-tags">
+            <span class="fc-tag">班级画像</span>
+            <span class="fc-tag">共性薄弱</span>
+            <span class="fc-tag">教学建议</span>
+            <span class="fc-tag">班级对比</span>
+          </div>
+        </div>
+        <div class="func-card" style="background:#b2dfdb; border:1.5px solid #00897b; color:#004d40;">
+          <div class="fc-title">年级学情报告</div>
+          <div class="fc-desc">年级横向对比分析，班级排名，学科均衡度评估，分层教学指导</div>
+          <div class="fc-tags">
+            <span class="fc-tag">横向对比</span>
+            <span class="fc-tag">均衡度</span>
+            <span class="fc-tag">分层指导</span>
+            <span class="fc-tag">趋势分析</span>
+          </div>
+        </div>
+        <div class="func-card" style="background:#b2dfdb; border:1.5px solid #00897b; color:#004d40;">
+          <div class="fc-title">错题集</div>
+          <div class="fc-desc">错题自动归集，按知识点/题型分类，变式题推送，掌握度追踪</div>
+          <div class="fc-tags">
+            <span class="fc-tag">自动归集</span>
+            <span class="fc-tag">知识点标注</span>
+            <span class="fc-tag">变式推送</span>
+            <span class="fc-tag">掌握追踪</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 四大功能模块（水平排列） ===== -->
+  <div class="func-modules-row">
+
+    <!-- 智慧安防 -->
+    <div class="func-module" style="background:#fce4ec; border:2.5px solid #c62828;">
+      <div class="module-header">
+        <div class="module-icon">🛡️</div>
+        <div>
+          <div class="module-title" style="color:#b71c1c;">智慧安防</div>
+          <div class="module-subtitle" style="color:#c62828;">多源设备统一接入</div>
+        </div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#bf360c;">▎数据采集</div>
+        <div style="font-size:10px; color:#c62828; margin-bottom:6px;">海康/大华/易联/立方/钉钉 → 统一协议</div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#b71c1c;">▎功能模块</div>
+        <div class="func-grid">
+          <div class="func-card" style="background:#ffcdd2; border:1.5px solid #e53935; color:#b71c1c;">
+            <div class="fc-title">入离校考勤</div>
+            <div class="fc-desc">人脸/刷卡识别，家长通知，缺勤告警</div>
+          </div>
+          <div class="func-card" style="background:#ffcdd2; border:1.5px solid #e53935; color:#b71c1c;">
+            <div class="fc-title">宿舍归寝考勤</div>
+            <div class="fc-desc">就寝签到，未归告警，宿管联动</div>
+          </div>
+          <div class="func-card" style="background:#ffcdd2; border:1.5px solid #e53935; color:#b71c1c;">
+            <div class="fc-title">课堂考勤</div>
+            <div class="fc-desc">走班/固定班，AI点名，课表关联</div>
+          </div>
+          <div class="func-card" style="background:#ffcdd2; border:1.5px solid #e53935; color:#b71c1c;">
+            <div class="fc-title">学生请假</div>
+            <div class="fc-desc">在线申请，多级审批，闸机联动</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LMS 教学管理 -->
+    <div class="func-module" style="background:#e3f2fd; border:2.5px solid #1565c0;">
+      <div class="module-header">
+        <div class="module-icon">📚</div>
+        <div>
+          <div class="module-title" style="color:#0d47a1;">LMS 教学管理</div>
+          <div class="module-subtitle" style="color:#1565c0;">备—授—批—辅—考全流程</div>
+        </div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#0d47a1;">▎功能模块</div>
+        <div class="func-grid">
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">在线备课</div>
+            <div class="fc-desc">教案编辑，课标对齐，AI推荐资源</div>
+          </div>
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">课程资源库</div>
+            <div class="fc-desc">校本/区域/国家三级资源体系</div>
+          </div>
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">课标管理</div>
+            <div class="fc-desc">课标导入，目标拆解，对齐检查</div>
+          </div>
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">知识图谱</div>
+            <div class="fc-desc">知识网络可视化，学习路径导航</div>
+          </div>
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">课堂互动</div>
+            <div class="fc-desc">实时答题，抢答，投屏，即时评价</div>
+          </div>
+          <div class="func-card" style="background:#bbdefb; border:1.5px solid #1976d2; color:#0d47a1;">
+            <div class="fc-title">AI 校验</div>
+            <div class="fc-desc">内容审核，准确性校验，一致性检查</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 教师成长 -->
+    <div class="func-module" style="background:#fff8e1; border:2.5px solid #f9a825;">
+      <div class="module-header">
+        <div class="module-icon">👨‍🏫</div>
+        <div>
+          <div class="module-title" style="color:#e65100;">教师成长</div>
+          <div class="module-subtitle" style="color:#f57f17;">AI 赋能教学教研</div>
+        </div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#e65100;">▎AI 教研</div>
+        <div style="font-size:10px; color:#e65100; margin-bottom:6px;">Seevo 课堂观察 / 其他AI教研平台 → AI 教研数据分析</div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#e65100;">▎功能模块</div>
+        <div class="func-grid">
+          <div class="func-card" style="background:#ffecb3; border:1.5px solid #fbc02d; color:#e65100;">
+            <div class="fc-title">教师基本档案</div>
+            <div class="fc-desc">信息、履历、证书、荣誉、培训</div>
+          </div>
+          <div class="func-card" style="background:#ffecb3; border:1.5px solid #fbc02d; color:#e65100;">
+            <div class="fc-title">教学教研</div>
+            <div class="fc-desc">集体备课，听课评课，公开课，课题</div>
+          </div>
+          <div class="func-card" style="background:#ffecb3; border:1.5px solid #fbc02d; color:#e65100;">
+            <div class="fc-title">AI 教研分析</div>
+            <div class="fc-desc">课堂观察，质量分析，改进建议</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 精准教学 -->
+    <div class="func-module" style="background:#f3e5f5; border:2.5px solid #6a1b9a;">
+      <div class="module-header">
+        <div class="module-icon">🎯</div>
+        <div>
+          <div class="module-title" style="color:#4a148c;">精准教学</div>
+          <div class="module-subtitle" style="color:#6a1b9a;">多源采集·智能分析·靶向提升</div>
+        </div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#4a148c;">▎数据采集</div>
+        <div style="font-size:10px; color:#4a148c; margin-bottom:6px;">扫描仪/点阵笔/AI拍照/作业上传 → 统一采集层</div>
+      </div>
+      <div class="func-section">
+        <div class="section-label" style="color:#4a148c;">▎功能模块</div>
+        <div class="func-grid">
+          <div class="func-card" style="background:#e1bee7; border:1.5px solid #8e24aa; color:#4a148c;">
+            <div class="fc-title">在线组卷</div>
+            <div class="fc-desc">智能抽题，难度控制，知识点覆盖</div>
+          </div>
+          <div class="func-card" style="background:#e1bee7; border:1.5px solid #8e24aa; color:#4a148c;">
+            <div class="fc-title">成绩分析</div>
+            <div class="fc-desc">三分三率，分层分段，目标达成</div>
+          </div>
+          <div class="func-card" style="background:#e1bee7; border:1.5px solid #8e24aa; color:#4a148c;">
+            <div class="fc-title">试题分析</div>
+            <div class="fc-desc">大题/小题得分率，区分度，错题排行</div>
+          </div>
+          <div class="func-card" style="background:#e1bee7; border:1.5px solid #8e24aa; color:#4a148c;">
+            <div class="fc-title">学生分析</div>
+            <div class="fc-desc">综合画像，排名趋势，进退步预警</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /func-modules-row -->
+
+</div>
+
+<!-- ========================================================================
+     TAB 4: 技术架构图 (AI-Native Agent 驱动)
+     ======================================================================== -->
+<div class="tab-content" id="tab-tech">
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">技术架构</div>
+    <div class="tab-desc-en">Technical Architecture</div>
+    <div class="tab-desc-divider"></div>
+    <div class="tab-desc-purpose">解决"怎么实现" — AI-Native Agent 驱动的八层技术分层与系统实现路径</div>
+    <div class="tab-desc-legends">
+      <span class="tleg-green" style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#d8f5e3;color:#206040;border:1px solid #339966;">设备终端</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#d4edff;color:#0033cc;border:1px solid #0066cc;">用户入口</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#fff;color:#333;border:1px solid #999;">交互/能力</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#fff5f5;color:#cc0000;border:1px solid #cc0000;">Agent 编排核心</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#ffe0e0;color:#cc0000;border:1px solid #cc0000;">共享能力中台</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#e8d5ff;color:#6600cc;border:1px solid #6600cc;">基础数据中台</span>
+      <span style="padding:2px 8px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap;background:#ffe8cc;color:#996600;border:1px solid #cc6600;">公共支撑服务</span>
+    </div>
+  </div>
+
+  <div class="tech-layout">
+    <!-- 左侧：公共支撑服务 -->
+    <div class="tech-left-infra">
+      <div class="tl-title">公共支撑服务</div>
+      <div class="tl-subtitle">通用技术组件 · 贯穿全层</div>
+      <div class="tl-items">
+        <div class="t-infra-card">
+          <span class="t-icon">🔒</span>
+          <div class="t-info"><div class="t-name">安全与鉴权</div><div class="t-desc">SSO / ACL / 细粒度权限</div></div>
+        </div>
+        <div class="t-infra-card">
+          <span class="t-icon">📨</span>
+          <div class="t-info"><div class="t-name">交互与触达</div><div class="t-desc">message-center · 全平台通知</div></div>
+        </div>
+        <div class="t-infra-card">
+          <span class="t-icon">📇</span>
+          <div class="t-info"><div class="t-name">聚合展示端</div><div class="t-desc">student-profile · 统一画像</div></div>
+        </div>
+        <div class="t-infra-card">
+          <span class="t-icon">📁</span>
+          <div class="t-info"><div class="t-name">文件与运维</div><div class="t-desc">card-center · 上传/转码</div></div>
+        </div>
+        <div class="t-infra-card">
+          <span class="t-icon">📈</span>
+          <div class="t-info"><div class="t-name">可观测性</div><div class="t-desc">Tracing / Logs · Agent 链路</div></div>
+        </div>
+        <div class="t-infra-card">
+          <span class="t-icon">🤖</span>
+          <div class="t-info"><div class="t-name">AI 网关</div><div class="t-desc">LLM Gateway · 多模型/审计</div></div>
+        </div>
+      </div>
+      <div class="tl-hint">══▶ 贯穿全层</div>
+    </div>
+
+    <!-- 右侧：八层技术架构 -->
+    <div class="tech-right-layers">
+      <!-- 第一层：设备终端层 -->
+      <div class="t-layer tl-1">
+        <div class="t-layer-title">🟢 第一层：设备终端层</div>
+        <div class="t-layer-items">
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📱</span><div class="t-card-name">教学/学习终端</div></div>
+            <div class="t-card-desc">学习平板 / 学习机</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🖥️</span><div class="t-card-name">桌面 PC</div></div>
+            <div class="t-card-desc">教师办公 / 管理后台</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📲</span><div class="t-card-name">手机端</div></div>
+            <div class="t-card-desc">独立APP / 钉钉 / 企微移动端</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📺</span><div class="t-card-name">教室智慧大屏 / 电子班牌 / 宣发屏</div></div>
+            <div class="t-card-desc">教室 / 走廊 / 校门</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">⌚</span><div class="t-card-name">手环 / 录音卡</div></div>
+            <div class="t-card-desc">穿戴设备 / IoT 终端</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-arrow-row" style="color:#339966;">▼ ▼ ▼ ▼ ▼</div>
+
+      <!-- 第二层：用户触达入口 -->
+      <div class="t-layer tl-2">
+        <div class="t-layer-title">🔵 第二层：用户触达入口层（AI Native + SaaS 并存）</div>
+        <div class="t-layer-items">
+          <div class="t-card" style="flex:2; max-width:480px;">
+            <div class="t-card-header"><span class="t-card-icon">🤖</span><div class="t-card-name">AI-Agent 统一入口</div></div>
+            <div class="t-card-desc" style="white-space:nowrap;">自然语言 / 语音 / IM / 钉钉 / 企业微信 / APP &nbsp; Intent → Plan → Act</div>
+            <div class="t-sub-cards">
+              <div class="t-sub-card"><div class="t-sub-name">平台 AI Agent 矩阵</div></div>
+              <div class="t-sub-card"><div class="t-sub-name">学校 AI Agent 矩阵</div></div>
+              <div class="t-sub-card"><div class="t-sub-name">教师个人 AI Agent 矩阵</div></div>
+            </div>
+          </div>
+          <div class="t-card" style="flex:2; max-width:480px;">
+            <div class="t-card-header"><span class="t-card-icon">🏫</span><div class="t-card-name">传统门户 / SaaS 入口</div></div>
+            <div class="t-sub-cards">
+              <div class="t-sub-card"><div class="t-sub-name">教学/教务/校务/育人</div><div class="t-sub-desc">标准业务线</div></div>
+              <div class="t-sub-card"><div class="t-sub-name">VibeCoding AI 应用</div><div class="t-sub-desc">用户创建</div></div>
+              <div class="t-sub-card"><div class="t-sub-name">用户自建 SaaS</div><div class="t-sub-desc">定制应用</div></div>
+            </div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📱</span><div class="t-card-name">第三方入口</div></div>
+            <div class="t-card-desc">小程序 / 开放平台 / 家校 IM</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-arrow-row" style="color:#0066cc;">▼ ▼ ▼</div>
+
+      <!-- 第三层：体验与交互 -->
+      <div class="t-layer tl-3">
+        <div class="t-layer-title">💬 第三层：体验与交互层</div>
+        <div class="t-layer-items">
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🗣️</span><div class="t-card-name">对话式交互</div></div>
+            <div class="t-card-desc">在通用 Agent 里迭代澄清</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">⚡</span><div class="t-card-name">任务式交互</div></div>
+            <div class="t-card-desc">一键执行 / 批处理 / 自动化</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🖥️</span><div class="t-card-name">工具界面分发</div></div>
+            <div class="t-card-desc">跳转专用工作台 / 表单 / 页面</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📄</span><div class="t-card-name">多模态产出</div></div>
+            <div class="t-card-desc">文档 / 图片 / 表格 / 作业 / 课表</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-arrow-row">▼ ▼ ▼ ▼</div>
+
+      <!-- 第四层：Agent 编排 -->
+      <div class="t-layer tl-4">
+        <div class="t-layer-title" style="display:flex; align-items:center; justify-content:space-between;">
+          <span>🔴 第四层：Agent 编排与运行时（"意图 → 编排 → 调用"）<span style="font-weight:400; font-style:italic; font-size:11px; color:#cc0000; margin-left:8px;">— AI 核心大脑：理解意图、选择工具、编排工作流、管理知识与安全</span></span>
+          <span style="font-weight:700; color:#cc0000; font-size:13px; white-space:nowrap;">利用Cowork执行引擎或自研</span>
+        </div>
+        <div class="t-layer-items">
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🧠</span><div class="t-card-name">意图理解 & 上下文</div></div>
+            <div class="t-card-desc">用户 / 角色 / 班级 / 时间 / 权限</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🔀</span><div class="t-card-name">工具路由器</div></div>
+            <div class="t-card-desc">Tool Router · 选择工具 / UI / 流程</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🔄</span><div class="t-card-name">工作流 / 状态机</div></div>
+            <div class="t-card-desc">Temporal / 队列 / 事件 · 重试 / 补偿 / 反思</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">📚</span><div class="t-card-name">记忆与知识</div></div>
+            <div class="t-card-desc">RAG / 知识图谱 / 向量库 / 策略库</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🛡️</span><div class="t-card-name">信任与安全策略</div></div>
+            <div class="t-card-desc">数据分级 / 审计 / 脱敏 / 合规</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-dep-row">
+        <span class="t-dep-tag red-dashed">Agent 调用能力包</span>
+        <span style="font-size:11px; color:#cc0000; font-weight:700;">· · · 传统 SaaS 也可直接调用能力包（渐进式 Agent 化）· · ·</span>
+        <span style="color:#cc0000; font-size:14px;">▼ ▼</span>
+      </div>
+
+      <!-- 第五层：API 开放层 -->
+      <div class="t-layer tl-5">
+        <div class="t-layer-title">🟢 第五层：API 开放层</div>
+        <div class="t-layer-items">
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🔗</span><div class="t-card-name">Open API</div></div>
+            <div class="t-card-desc">RESTful 标准接口 / 开发者门户 / SDK / Webhook</div>
+          </div>
+          <div class="t-card">
+            <div class="t-card-header"><span class="t-card-icon">🧩</span><div class="t-card-name">Skills & MCP API</div></div>
+            <div class="t-card-desc">MCP Protocol / Tool Discovery / Agent 可调用语义接口</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-arrow-row" style="color:#14b8a6;">▼ ▼</div>
+
+      <!-- 可复用 SaaS 包裹 -->
+      <div class="t-reuse-wrapper">
+        <div class="t-reuse-label">▾ 基本可以复用现有 SaaS ▾</div>
+
+        <!-- 第六层：能力供给层 -->
+        <div class="t-layer tl-6">
+          <div class="t-layer-title">⚙️ 第六层：能力供给层（Skills及MCP：业务能力包 / 可组合业务语义API）</div>
+          <div class="t-layer-items">
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📚</span><div class="t-card-name">教学能力包</div></div>
+              <div class="t-card-desc">学习任务 / 阅读打卡 / 画像 / 评价</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📋</span><div class="t-card-name">教务能力包</div></div>
+              <div class="t-card-desc">排课 / 课表 / 选课 / 作业 / 日程</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🏢</span><div class="t-card-name">校务能力包</div></div>
+              <div class="t-card-desc">缴费 / 考勤 / 流程 / 报修 / 健康 IoT</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🌱</span><div class="t-card-name">育人能力包</div></div>
+              <div class="t-card-desc">成长记录 / 宿舍 / 绩效 / 荣誉</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-dep-row">
+          <span class="t-dep-tag solid">任务</span>
+          <span class="t-dep-tag solid">评价</span>
+          <span class="t-dep-tag solid">排课</span>
+          <span class="t-dep-tag solid">日程</span>
+          <span class="t-dep-tag solid">通用应用</span>
+          <span class="t-dep-tag solid">健康</span>
+          <span class="t-dep-tag solid">绩效</span>
+          <span style="color:#cc0000; font-size:14px; margin-left:4px;">▼ ▼ ▼ ▼ ▼ ▼ ▼</span>
+        </div>
+
+        <!-- 第七层：共享能力中心 -->
+        <div class="t-layer tl-7">
+          <div class="t-layer-title">🔴 第七层：共享能力中心（微服务 / 中台层 — 复用现有"红圈"）<span style="font-weight:400; font-style:italic; font-size:11px; color:#cc0000; margin-left:8px;">— 通用原子能力沉淀，拒绝重复造轮子</span></div>
+          <div class="t-layer-items">
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🎯</span><div class="t-card-name">task</div></div>
+              <div class="t-card-desc">任务中心 · 待办/成长记录</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📊</span><div class="t-card-name">evaluation</div></div>
+              <div class="t-card-desc">评价中心 · 学业/健康/荣誉</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📅</span><div class="t-card-name">scheduling</div></div>
+              <div class="t-card-desc">调度中心 · 排课/资源/缴费</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🕐</span><div class="t-card-name">calendar</div></div>
+              <div class="t-card-desc">日程中心 · 考勤/时间轴</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📝</span><div class="t-card-name">common-app</div></div>
+              <div class="t-card-desc">通用应用 · 表单/低代码</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">💊</span><div class="t-card-name">health</div></div>
+              <div class="t-card-desc">健康服务 · 体测 IoT</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">👨‍🏫</span><div class="t-card-name">teacher-time</div></div>
+              <div class="t-card-desc">教师绩效服务</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="t-dep-row">
+          <span class="t-dep-tag dashed">元数据/时间/组织</span>
+          <span class="t-dep-tag dashed">时间维度</span>
+          <span class="t-dep-tag dashed">人员信息</span>
+          <span class="t-dep-tag dashed">组织架构</span>
+          <span style="color:#8833cc; font-size:14px; margin-left:4px;">▼ ▼ ▼ ▼</span>
+        </div>
+
+        <!-- 第八层：基础数据模型 -->
+        <div class="t-layer tl-8">
+          <div class="t-layer-title">🟣 第八层：K12教育-基础数据模型（教育教学校务教务主数据统一 MDM）</div>
+          <div class="t-layer-items">
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🏛️</span><div class="t-card-name">组织架构</div></div>
+              <div class="t-card-desc">集团-学校多级</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📆</span><div class="t-card-name">时间维度</div></div>
+              <div class="t-card-desc">学年 / 学期</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📖</span><div class="t-card-name">教学元数据</div></div>
+              <div class="t-card-desc">课程 / 科目 / 节次</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">👤</span><div class="t-card-name">人员档案</div></div>
+              <div class="t-card-desc">学籍 / 家长 / 教师 / SSO</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">🎯</span><div class="t-card-name">精准教学</div></div>
+              <div class="t-card-desc">题库 / 试卷 / 测验 / 学情分析 / 错题集</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">📋</span><div class="t-card-name">考勤</div></div>
+              <div class="t-card-desc">请假 / 入离校考勤 / 课堂考勤</div>
+            </div>
+            <div class="t-card">
+              <div class="t-card-header"><span class="t-card-icon">⭐</span><div class="t-card-name">行为</div></div>
+              <div class="t-card-desc">指标 / 加减分 / 积分 / 登记兑换 / 奖惩</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- end t-reuse-wrapper -->
+
+      <div class="t-arrow-row" style="color:#757575;">▼ ▼ ▼</div>
+
+      <!-- 基础设施层 -->
+      <div class="t-layer" style="background:#f5f5f5; border:2px solid #757575; border-radius:10px; padding:8px 14px;">
+        <div class="t-layer-title" style="color:#424242;">🏗️ 基础设施层</div>
+        <div class="t-layer-items">
+          <div class="t-card" style="background:#e0e0e0; border:1.5px solid #9e9e9e; color:#424242;">
+            <div class="t-card-header"><span class="t-card-icon">☁️</span><div class="t-card-name">云计算</div></div>
+            <div class="t-card-desc">公有云 / 私有化 / 混合云</div>
+          </div>
+          <div class="t-card" style="background:#e0e0e0; border:1.5px solid #9e9e9e; color:#424242;">
+            <div class="t-card-header"><span class="t-card-icon">🔧</span><div class="t-card-name">微服务架构</div></div>
+            <div class="t-card-desc">Spring Cloud / K8s</div>
+          </div>
+          <div class="t-card" style="background:#e0e0e0; border:1.5px solid #9e9e9e; color:#424242;">
+            <div class="t-card-header"><span class="t-card-icon">💾</span><div class="t-card-name">数据存储</div></div>
+            <div class="t-card-desc">MySQL / Redis / ES / OSS</div>
+          </div>
+          <div class="t-card" style="background:#e0e0e0; border:1.5px solid #9e9e9e; color:#424242;">
+            <div class="t-card-header"><span class="t-card-icon">📨</span><div class="t-card-name">消息队列</div></div>
+            <div class="t-card-desc">RocketMQ / Kafka</div>
+          </div>
+          <div class="t-card" style="background:#e0e0e0; border:1.5px solid #9e9e9e; color:#424242;">
+            <div class="t-card-header"><span class="t-card-icon">🔒</span><div class="t-card-name">安全合规</div></div>
+            <div class="t-card-desc">等保 / 数据加密 / 审计</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键问题与解决方案 -->
+  <div class="tech-qa-section">
+    <div class="qa-title">关键架构问题与解决方案</div>
+    <div class="tech-qa-grid">
+
+      <!-- 问题1 -->
+      <div class="qa-card" style="background:#e3f2fd; border:2px solid #1565c0;">
+        <div class="qa-num" style="background:#1565c0; color:#fff;">问题 1</div>
+        <div class="qa-question" style="color:#0d47a1;">解决传统 SaaS 与 AI Agent 双轨并存问题，如何面向Agent开发能力</div>
+        <div class="qa-label" style="color:#1565c0;">现状</div>
+        <div class="qa-status" style="background:#bbdefb; color:#0d47a1;">系统已有 500+ API、70+ 路由、4 条业务线，是一个成熟的传统 SaaS。现在要让 AI Agent 也能操作这套系统。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#e8f0fe; color:#0d47a1;">在目前SaaS 提供的带登录校验，带权限约束的Restful API基础上，复用并同时增加建设面向 AI 的 Agent API Gateway 这一层（MCP 或者RestAPI）访问传统 SaaS;  并在这一层的基础上包装技能包。</div>
+      </div>
+
+      <!-- 问题2 -->
+      <div class="qa-card" style="background:#fff5f5; border:2px solid #c62828;">
+        <div class="qa-num" style="background:#c62828; color:#fff;">问题 2</div>
+        <div class="qa-question" style="color:#b71c1c;">解决 AI 幻觉可能带来的操作偏差</div>
+        <div class="qa-label" style="color:#c62828;">现状</div>
+        <div class="qa-status" style="background:#ffcdd2; color:#b71c1c;">教育数据（学生信息、成绩、课表）高度敏感。AI 直接操作有不可逆风险。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#ffeaea; color:#b71c1c;">
+          <ol>
+            <li><span class="qa-solution-item">审批引擎:</span> 写操作需要当事人确认或者审核流程（Human-in-the-Loop）</li>
+            <li><span class="qa-solution-item">预演沙箱:</span> 先模拟再执行（Simulate-before-Commit）</li>
+            <li><span class="qa-solution-item">四层审计:</span> 调用→决策→编排→数据，全链路可追溯可回滚</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- 问题3 -->
+      <div class="qa-card" style="background:#f3e5f5; border:2px solid #6a1b9a;">
+        <div class="qa-num" style="background:#6a1b9a; color:#fff;">问题 3</div>
+        <div class="qa-question" style="color:#4a148c;">解决业务 API 的复杂度，设计面向Agent 友好接入的业务抽象</div>
+        <div class="qa-label" style="color:#6a1b9a;">现状</div>
+        <div class="qa-status" style="background:#e1bee7; color:#4a148c;">后端 14 模块、60+ Controller、500+ API。AI Agent 不可能直接面对这种复杂度。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#f0e4f7; color:#4a148c;">微服务中心（7 个能力中心）+ Agent API（82 个高级抽象）+ 三层 API 架构（Query/Operation/Orchestration）</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== Tab 5: 开放的云端架构 ===== -->
+<div class="tab-content" id="tab-platform">
+
+  <!-- 描述行 + 图例 -->
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">
+      <strong>开放的云端架构</strong> <span style="font-weight:400; opacity:0.7;">(Platform Architecture)</span>
+      <span style="font-weight:400; opacity:0.6; margin-left:8px;">— 解决"如何开放"</span>
+    </div>
+    <div class="tab-desc-legends" style="margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#1565c0;display:inline-block;"></span><span style="font-size:11px;">接口层</span></span>
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#2e7d32;display:inline-block;"></span><span style="font-size:11px;">Agent层</span></span>
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#e65100;display:inline-block;"></span><span style="font-size:11px;">业务层</span></span>
+      <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#6a1b9a;display:inline-block;"></span><span style="font-size:11px;">基础设施</span></span>
+    </div>
+  </div>
+
+  <!-- 徽章 -->
+  <div class="pf-badges">
+    <span class="pf-badge" style="background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7;">Open API</span>
+    <span class="pf-badge" style="background:#e3f2fd; color:#1565c0; border:1px solid #90caf9;">Agent Ready</span>
+    <span class="pf-badge" style="background:#fff3e0; color:#e65100; border:1px solid #ffcc80;">Onboarding</span>
+    <span class="pf-badge" style="background:#fce4ec; color:#c62828; border:1px solid #ef9a9a;">Simulate before Commit</span>
+  </div>
+
+  <!-- ① Open API 接口层 -->
+  <div class="pf-layer" style="background:#e3f2fd; border:1.5px solid #90caf9;">
+    <div class="pf-layer-title" style="color:#1565c0;">① Open API 接口层 — 开发者/第三方入口</div>
+    <div class="pf-row">
+      <div class="pf-chip" style="background:#bbdefb; color:#0d47a1;">
+        <div class="pf-chip-title">API Key 认证</div>
+        <div class="pf-chip-desc">IAM 权限校验绑定</div>
+      </div>
+      <div class="pf-chip" style="background:#bbdefb; color:#0d47a1;">
+        <div class="pf-chip-title">API 适配</div>
+        <div class="pf-chip-desc">Compute/Resource</div>
+      </div>
+      <div class="pf-chip" style="background:#bbdefb; color:#0d47a1;">
+        <div class="pf-chip-title">Swagger / Compute 调用</div>
+        <div class="pf-chip-desc">API 文档与执行</div>
+      </div>
+      <div class="pf-chip" style="background:#bbdefb; color:#0d47a1;">
+        <div class="pf-chip-title">EventBus 事件订阅</div>
+        <div class="pf-chip-desc">异步事件推送</div>
+      </div>
+      <div class="pf-chip" style="background:#bbdefb; color:#0d47a1;">
+        <div class="pf-chip-title">Webhook / 回调</div>
+        <div class="pf-chip-desc">外部系统通知</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② Agent 能力层 -->
+  <div class="pf-layer" style="background:#e8f5e9; border:1.5px solid #a5d6a7;">
+    <div class="pf-layer-title" style="color:#2e7d32;">② Agent 能力层 — In Agent (MCP/REST)</div>
+    <div class="pf-row">
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">MCP 注册 / Tool Discovery</div>
+        <div class="pf-chip-desc">能力发现与注册</div>
+      </div>
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">Token 管理</div>
+        <div class="pf-chip-desc">凭证与配额</div>
+      </div>
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">AI 模型 + Tool 技能</div>
+        <div class="pf-chip-desc">模型编排与调用</div>
+      </div>
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">编排控制</div>
+        <div class="pf-chip-desc">流程与策略</div>
+      </div>
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">Swagger / Compute 执行</div>
+        <div class="pf-chip-desc">API 实际调用</div>
+      </div>
+      <div class="pf-chip" style="background:#c8e6c9; color:#1b5e20;">
+        <div class="pf-chip-title">审批确认</div>
+        <div class="pf-chip-desc">Human-in-the-Loop</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 业务 Business -->
+  <div class="pf-layer" style="background:#fff; border:1.5px solid #e0e0e0;">
+    <div class="pf-layer-title" style="color:#333;">③ 业务 Business</div>
+    <div class="pf-biz-grid">
+      <div class="pf-biz-card" style="border-color:#ef5350;">
+        <div class="pf-biz-title" style="color:#c62828;">智慧安防 / 考勤</div>
+        <div class="pf-biz-desc">智能门禁管理、通道闸机、访客管理、考勤打卡、人脸核验、安防告警</div>
+      </div>
+      <div class="pf-biz-card" style="border-color:#42a5f5;">
+        <div class="pf-biz-title" style="color:#1565c0;">第三方互联 / 智能推荐</div>
+        <div class="pf-biz-desc">MCP 接入、第三方数据同步、智能推荐引擎、消息互通</div>
+      </div>
+      <div class="pf-biz-card" style="border-color:#66bb6a;">
+        <div class="pf-biz-title" style="color:#2e7d32;">LMS 教学管理</div>
+        <div class="pf-biz-desc">课程管理、资源库、课表编排、在线备课、课堂互动、作业管理</div>
+      </div>
+      <div class="pf-biz-card" style="border-color:#ffa726;">
+        <div class="pf-biz-title" style="color:#e65100;">精准教学</div>
+        <div class="pf-biz-desc">多源数据采集、试卷分析、学情画像、个性化学习方案</div>
+      </div>
+      <div class="pf-biz-card" style="border-color:#ab47bc;">
+        <div class="pf-biz-title" style="color:#6a1b9a;">教师成长</div>
+        <div class="pf-biz-desc">教研活动、听评课、教师评价、专业发展档案、AI 课堂分析</div>
+      </div>
+      <div class="pf-biz-card" style="border-color:#78909c;">
+        <div class="pf-biz-title" style="color:#37474f;">校园经营</div>
+        <div class="pf-biz-desc">招生管理、财务收费、资产管理、后勤服务、家校沟通、校园 OA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ 开放平台 -->
+  <div class="pf-layer" style="background:#fafafa; border:1.5px solid #e0e0e0;">
+    <div class="pf-layer-title" style="color:#333;">④ 开放平台 Open Store</div>
+    <div class="pf-open-row">
+      <div class="pf-open-card">
+        <div class="pf-open-title">Api Store</div>
+        <div class="pf-open-desc">开放 API 市场</div>
+      </div>
+      <div class="pf-open-card">
+        <div class="pf-open-title">MIT Store</div>
+        <div class="pf-open-desc">开源组件市场</div>
+      </div>
+      <div class="pf-open-card">
+        <div class="pf-open-title">Playground</div>
+        <div class="pf-open-desc">在线调试</div>
+      </div>
+      <div class="pf-open-card">
+        <div class="pf-open-title">MCP Payment</div>
+        <div class="pf-open-desc">能力计费</div>
+      </div>
+      <div class="pf-open-card">
+        <div class="pf-open-title">Marketplace</div>
+        <div class="pf-open-desc">应用市场</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ Domain API — 高级业务操作 -->
+  <div class="pf-api-section">
+    <div class="pf-api-title" style="color:#1565c0;">⑤ Domain API — 全操作型(↑) / 高频读模型</div>
+    <div class="pf-api-grid">
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">student.enroll()</span>
+        <span class="pf-api-desc">学生入学注册</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">schedule.solve()</span>
+        <span class="pf-api-desc">智能排课</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">selection.open()</span>
+        <span class="pf-api-desc">开启选课</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">evaluation.submit()</span>
+        <span class="pf-api-desc">提交评教</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">workflow.start()</span>
+        <span class="pf-api-desc">启动审批流</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">notify.send()</span>
+        <span class="pf-api-desc">消息推送</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">analytics.query()</span>
+        <span class="pf-api-desc">数据分析查询</span>
+      </div>
+      <div class="pf-api-item" style="background:#e8f5e9;">
+        <span class="pf-method" style="background:#2e7d32; color:#fff;">POST</span>
+        <span class="pf-path">matching.reserve()</span>
+        <span class="pf-api-desc">资源预约匹配</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ Resource API — RESTful 资源 -->
+  <div class="pf-api-section">
+    <div class="pf-api-title" style="color:#e65100;">⑥ Resource API — REST(↓) 标准资源操作</div>
+    <div class="pf-rest-grid">
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/property</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+          <span style="background:#fff9c4; color:#f57f17;">PUT</span>
+          <span style="background:#ffcdd2; color:#b71c1c;">DEL</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/evaluations</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+          <span style="background:#fff9c4; color:#f57f17;">PUT</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/schedules</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+          <span style="background:#fff9c4; color:#f57f17;">PUT</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/corp</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/classes</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+          <span style="background:#fff9c4; color:#f57f17;">PUT</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/events</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/workflows</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+        </div>
+      </div>
+      <div class="pf-rest-item">
+        <div class="pf-rest-path">/v1/workflowTmpl</div>
+        <div class="pf-rest-methods">
+          <span style="background:#bbdefb; color:#0d47a1;">GET</span>
+          <span style="background:#c8e6c9; color:#1b5e20;">POST</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 跨层能力支撑 Infrastructure/Primitives -->
+  <div style="margin-bottom:8px;">
+    <div class="pf-layer-title" style="color:#333;">⑦ 跨层能力支撑 Infrastructure/Primitives</div>
+    <div class="pf-infra-grid">
+      <!-- Storage -->
+      <div class="pf-infra-col" style="background:#e3f2fd; border:1.5px solid #90caf9;">
+        <div class="pf-infra-title" style="color:#1565c0;">Storage 对象/文件存储</div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">ObjectStore</div>
+          <div class="pf-inf-desc">上传/目录、预签、对比版本</div>
+        </div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">BlobStore</div>
+          <div class="pf-inf-desc">分片上传、断点续传</div>
+        </div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">EvaluationStore</div>
+          <div class="pf-inf-desc">评估大文件存储/归档</div>
+        </div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">OrgStore</div>
+          <div class="pf-inf-desc">组织架构数据持久化</div>
+        </div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">AssetStore</div>
+          <div class="pf-inf-desc">资产/设备台账</div>
+        </div>
+        <div class="pf-infra-item" style="background:#bbdefb; color:#0d47a1;">
+          <div class="pf-inf-name">EventStore</div>
+          <div class="pf-inf-desc">事件流持久化</div>
+        </div>
+      </div>
+
+      <!-- Compute -->
+      <div class="pf-infra-col" style="background:#e8f5e9; border:1.5px solid #a5d6a7;">
+        <div class="pf-infra-title" style="color:#2e7d32;">Compute 算力/计算引擎</div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">ScheduleEngine</div>
+          <div class="pf-inf-desc">课程/考试/值班排程</div>
+        </div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">RuleEngine</div>
+          <div class="pf-inf-desc">成绩/报名/业务规则</div>
+        </div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">WorkflowEngine</div>
+          <div class="pf-inf-desc">审批/流程引擎</div>
+        </div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">NotifyEngine</div>
+          <div class="pf-inf-desc">消息/通知/推送</div>
+        </div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">AnalyticsEngine</div>
+          <div class="pf-inf-desc">数据分析/BI 报表</div>
+        </div>
+        <div class="pf-infra-item" style="background:#c8e6c9; color:#1b5e20;">
+          <div class="pf-inf-name">MatchingEngine</div>
+          <div class="pf-inf-desc">选课/预约匹配</div>
+        </div>
+      </div>
+
+      <!-- Network -->
+      <div class="pf-infra-col" style="background:#fff3e0; border:1.5px solid #ffcc80;">
+        <div class="pf-infra-title" style="color:#e65100;">Network 网络/互通协议</div>
+        <div class="pf-infra-item" style="background:#ffe0b2; color:#bf360c;">
+          <div class="pf-inf-name">API Gateway</div>
+          <div class="pf-inf-desc">限流、熔断、路由</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffe0b2; color:#bf360c;">
+          <div class="pf-inf-name">ServiceMesh</div>
+          <div class="pf-inf-desc">服务网格/治理</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffe0b2; color:#bf360c;">
+          <div class="pf-inf-name">Toll Discovery</div>
+          <div class="pf-inf-desc">MCP Tool 发现与注册</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffe0b2; color:#bf360c;">
+          <div class="pf-inf-name">Webhook</div>
+          <div class="pf-inf-desc">回调/事件通知</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffe0b2; color:#bf360c;">
+          <div class="pf-inf-name">ConnectorHub</div>
+          <div class="pf-inf-desc">三方对接/协议适配</div>
+        </div>
+      </div>
+
+      <!-- Security -->
+      <div class="pf-infra-col" style="background:#fce4ec; border:1.5px solid #ef9a9a;">
+        <div class="pf-infra-title" style="color:#c62828;">Security 安全/合规治理</div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">API Key / JWT</div>
+          <div class="pf-inf-desc">身份认证/令牌</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">RBAC/ABAC</div>
+          <div class="pf-inf-desc">权限策略引擎</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">MCP Permission</div>
+          <div class="pf-inf-desc">Agent 操作权限</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">AuditTrail</div>
+          <div class="pf-inf-desc">审计日志/合规</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">SandboxPlatform</div>
+          <div class="pf-inf-desc">预演沙箱/回滚</div>
+        </div>
+        <div class="pf-infra-item" style="background:#ffcdd2; color:#b71c1c;">
+          <div class="pf-inf-name">RateLimiter</div>
+          <div class="pf-inf-desc">限流/配额/熔断</div>
+        </div>
+      </div>
+
+      <!-- Observability -->
+      <div class="pf-infra-col" style="background:#f3e5f5; border:1.5px solid #ce93d8;">
+        <div class="pf-infra-title" style="color:#6a1b9a;">Observability 可观测性</div>
+        <div class="pf-infra-item" style="background:#e1bee7; color:#4a148c;">
+          <div class="pf-inf-name">Tracing</div>
+          <div class="pf-inf-desc">全链路追踪</div>
+        </div>
+        <div class="pf-infra-item" style="background:#e1bee7; color:#4a148c;">
+          <div class="pf-inf-name">Metrics</div>
+          <div class="pf-inf-desc">性能指标/告警</div>
+        </div>
+        <div class="pf-infra-item" style="background:#e1bee7; color:#4a148c;">
+          <div class="pf-inf-name">Logging</div>
+          <div class="pf-inf-desc">结构化日志</div>
+        </div>
+        <div class="pf-infra-item" style="background:#e1bee7; color:#4a148c;">
+          <div class="pf-inf-name">AgentMonitor</div>
+          <div class="pf-inf-desc">Agent 行为监控</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ 平台底座 PaaS -->
+  <div class="pf-paas">
+    <div class="pf-paas-title">⑧ 平台底座 PaaS</div>
+    <div class="pf-paas-row" style="margin-bottom:6px;">
+      <div class="pf-paas-chip"><span class="pf-paas-name">K8S 容器(Pod)</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">Nacos 注册中心</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">OLCSS (Loadtest)</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">MySQL / HBase</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">Redis</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">MQ</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">Nginx</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">ES</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">CAS / SSO</span></div>
+    </div>
+    <div class="pf-paas-row">
+      <div class="pf-paas-chip"><span class="pf-paas-name">Observability</span> <span class="pf-paas-desc">监控</span></div>
+      <div class="pf-paas-chip"><span class="pf-paas-name">ElasticSearch</span></div>
+      <div class="pf-paas-chip" style="margin-left:auto;"><span class="pf-paas-desc" style="font-size:11px;">基础保障 (Storage) ｜ 数据服务 (Data) ｜ 开发框架 (Framework)</span></div>
+    </div>
+  </div>
+
+  <!-- 关键问题与解决方案 -->
+  <div class="tech-qa-section">
+    <div class="qa-title">关键架构问题与解决方案</div>
+    <div class="tech-qa-grid" style="grid-template-columns:repeat(2,1fr);">
+
+      <!-- 问题1 -->
+      <div class="qa-card" style="background:#e3f2fd; border:2px solid #1565c0;">
+        <div class="qa-num" style="background:#1565c0; color:#fff;">问题 1</div>
+        <div class="qa-question" style="color:#0d47a1;">从"卖软件"到"卖能力"的商业模式转型</div>
+        <div class="qa-label" style="color:#1565c0;">现状</div>
+        <div class="qa-status" style="background:#bbdefb; color:#0d47a1;">传统教育 SaaS 按模块卖 license，客户定制需求高，交付重。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#e8f0fe; color:#0d47a1;">
+          <ul>
+            <li>将功能拆解为 API 原语（Resource API）和 业务语义（Domain API）</li>
+            <li>第三方可以基于 API 自建应用，不再依赖我们的前端</li>
+            <li>最终形态：Skill Market 让学校按需选择工作流，而非买整套系统</li>
+          </ul>
+        </div>
+        <div style="margin-top:8px; font-size:12px; font-weight:700; color:#c62828;">落地难点</div>
+        <div style="font-size:12px; line-height:1.5; color:#0d47a1; background:#dceefb; padding:6px 10px; border-radius:6px; margin-top:4px;">Dogfooding 是前提——官方应用自己都不走 Open API 的话，API 质量无法保证。</div>
+      </div>
+
+      <!-- 问题2 -->
+      <div class="qa-card" style="background:#e8f5e9; border:2px solid #2e7d32;">
+        <div class="qa-num" style="background:#2e7d32; color:#fff;">问题 2</div>
+        <div class="qa-question" style="color:#1b5e20;">AI Agent 的规模化接入</div>
+        <div class="qa-label" style="color:#2e7d32;">现状</div>
+        <div class="qa-status" style="background:#c8e6c9; color:#1b5e20;">82 个 MCP Tool 已经跑起来了，但只服务内部 Agent，缺乏开放生态。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#dcedc8; color:#1b5e20;">
+          <ul>
+            <li><span class="qa-solution-item">Skill Market:</span> 将 Agent 工作流打包为可分发的 Plugin（Skills + MCP config + hooks）</li>
+            <li><span class="qa-solution-item">MCP Explorer:</span> 让开发者浏览和测试 Tool</li>
+            <li><span class="qa-solution-item">Playground:</span> 在线调试 API 调用</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 问题3 -->
+      <div class="qa-card" style="background:#fff3e0; border:2px solid #e65100;">
+        <div class="qa-num" style="background:#e65100; color:#fff;">问题 3</div>
+        <div class="qa-question" style="color:#bf360c;">系统复杂度的降维</div>
+        <div class="qa-label" style="color:#e65100;">现状</div>
+        <div class="qa-status" style="background:#ffe0b2; color:#bf360c;">500+ API、70+ 路由、14 个后端模块——开发者面对的复杂度太高。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#fff3e0; color:#bf360c;">
+          两层拆分
+          <ul>
+            <li><span class="qa-solution-item">Domain API:</span> 高级业务语义接口（schedule.solve(), student.enroll()），一个调用完成一个业务任务</li>
+            <li><span class="qa-solution-item">Resource API:</span> 标准 CRUD 端点（/v1/students, /v1/courses），按资源分组</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 问题4 -->
+      <div class="qa-card" style="background:#f3e5f5; border:2px solid #6a1b9a;">
+        <div class="qa-num" style="background:#6a1b9a; color:#fff;">问题 4</div>
+        <div class="qa-question" style="color:#4a148c;">底座能力的教育领域化</div>
+        <div class="qa-label" style="color:#6a1b9a;">现状</div>
+        <div class="qa-status" style="background:#e1bee7; color:#4a148c;">通用云基础设施（K8S/MySQL/Redis）没有教育语义，开发者需要从数据库表理解业务。</div>
+        <div class="qa-label-solution">解决方案</div>
+        <div class="qa-solution" style="background:#f0e4f7; color:#4a148c;">
+          四大领域化原语
+          <ul>
+            <li><span class="qa-solution-item">Storage:</span> 不是 MySQL 表，而是 StudentStore / CourseStore / ScheduleStore 等教育领域对象</li>
+            <li><span class="qa-solution-item">Compute:</span> 不是通用计算，而是 SchedulingEngine / SelectionEngine / EvaluationEngine 等教育专属引擎</li>
+            <li><span class="qa-solution-item">Network:</span> API Gateway + MCP Gateway 双入口，EventBus + Webhook 双出口</li>
+            <li><span class="qa-solution-item">Security:</span> IAM + PolicyEngine + AuditTrail + DataClassification 教育数据安全体系</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== Tab 6: 领域模型 ===== -->
+<div class="tab-content" id="tab-domain">
+
+  <!-- 描述行 -->
+  <div class="tab-desc-row">
+    <div class="tab-desc-title">
+      <strong>领域模型</strong> <span style="font-weight:400; opacity:0.7;">(Domain Model)</span>
+      <span style="font-weight:400; opacity:0.6; margin-left:8px;">— 解决"业务概念与关系"</span>
+    </div>
+  </div>
+
+  <!-- ========== 图1: 用户服务领域模型 ========== -->
+  <div class="dm-section">
+    <div class="dm-section-title">用户服务领域模型 <span style="font-weight:400; color:#888; font-size:13px;">User Service Domain</span></div>
+    <div class="dm-toolbar" data-viewer="v0">
+      <div class="dm-zoom-group">
+        <button class="dm-zoom-btn" onclick="dmViewers[0].zoom(-0.15)" title="缩小">−</button>
+        <span class="dm-zoom-level">100%</span>
+        <button class="dm-zoom-btn" onclick="dmViewers[0].zoom(0.15)" title="放大">+</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[0].reset()" title="重置" style="font-size:13px;">↺</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[0].fitAll()" title="适应窗口" style="font-size:13px;">⊞</button>
+      </div>
+      <button class="dm-domain-btn" data-vi="0" data-dm="user">用户领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="student">学生领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="class">班级领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="grade">年级学段领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="time">时间周期领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="org">组织架构领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="tag">标签领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="teaching">教学领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="thirdparty">第三方集成</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="config">配置领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="infra">基础设施领域</button>
+      <button class="dm-domain-btn" data-vi="0" data-dm="audit">日志审计领域</button>
+    </div>
+    <div class="dm-viewer" data-vi="0">
+      <img src="domain-model.svg" alt="用户服务领域模型" draggable="false">
+      <div class="dm-hint">滚轮缩放 · 拖拽平移 · 点击领域按钮定位</div>
+    </div>
+  </div>
+
+  <!-- ========== 图2: 任务服务领域模型 ========== -->
+  <div class="dm-section">
+    <div class="dm-section-title">任务服务领域模型 <span style="font-weight:400; color:#888; font-size:13px;">Task Service Domain</span></div>
+    <div class="dm-toolbar" data-viewer="v1">
+      <div class="dm-zoom-group">
+        <button class="dm-zoom-btn" onclick="dmViewers[1].zoom(-0.15)" title="缩小">−</button>
+        <span class="dm-zoom-level">100%</span>
+        <button class="dm-zoom-btn" onclick="dmViewers[1].zoom(0.15)" title="放大">+</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[1].reset()" title="重置" style="font-size:13px;">↺</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[1].fitAll()" title="适应窗口" style="font-size:13px;">⊞</button>
+      </div>
+      <button class="dm-domain-btn" data-vi="1" data-dm="exam">考试管理领域</button>
+      <button class="dm-domain-btn" data-vi="1" data-dm="score">成绩管理领域</button>
+      <button class="dm-domain-btn" data-vi="1" data-dm="marking">在线阅卷领域</button>
+      <button class="dm-domain-btn" data-vi="1" data-dm="correction">成绩校正领域</button>
+      <button class="dm-domain-btn" data-vi="1" data-dm="knowledge">知识体系领域</button>
+      <button class="dm-domain-btn" data-vi="1" data-dm="report">报告生成领域</button>
+    </div>
+    <div class="dm-viewer" data-vi="1">
+      <img src="task-service.svg" alt="任务服务领域模型" draggable="false">
+      <div class="dm-hint">滚轮缩放 · 拖拽平移 · 点击领域按钮定位</div>
+    </div>
+  </div>
+
+  <!-- ========== 图3: 评估服务领域模型 ========== -->
+  <div class="dm-section">
+    <div class="dm-section-title">评估服务领域模型 <span style="font-weight:400; color:#888; font-size:13px;">Evaluation Service Domain</span></div>
+    <div class="dm-toolbar" data-viewer="v2">
+      <div class="dm-zoom-group">
+        <button class="dm-zoom-btn" onclick="dmViewers[2].zoom(-0.15)" title="缩小">−</button>
+        <span class="dm-zoom-level">100%</span>
+        <button class="dm-zoom-btn" onclick="dmViewers[2].zoom(0.15)" title="放大">+</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[2].reset()" title="重置" style="font-size:13px;">↺</button>
+        <button class="dm-zoom-btn" onclick="dmViewers[2].fitAll()" title="适应窗口" style="font-size:13px;">⊞</button>
+      </div>
+      <button class="dm-domain-btn" data-vi="2" data-dm="common">公共基础</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="evalplan">评估计划核心</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="honor">荣誉系统</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="courseeval">课程评价</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="habit">好习惯评估</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="fitness">体能测试</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="evidence">证据管理</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="portrait">成长画像</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="project">项目体验</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="moment">精彩时刻</button>
+      <button class="dm-domain-btn" data-vi="2" data-dm="goal">成长目标</button>
+    </div>
+    <div class="dm-viewer" data-vi="2">
+      <img src="evaluation-model.svg" alt="评估服务领域模型" draggable="false">
+      <div class="dm-hint">滚轮缩放 · 拖拽平移 · 点击领域按钮定位</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== JavaScript ===== -->
+<script>
+// Tab 切换
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tabName).classList.add('active');
+  const tabMap = { business: 0, product: 1, functional: 2, tech: 3, platform: 4, domain: 5 };
+  document.querySelectorAll('.tab-btn')[tabMap[tabName]].classList.add('active');
+}
+
+// 全屏
+const fsBtn = document.getElementById('fsBtn');
+const fsIcon = document.getElementById('fsIcon');
+const expandPath = '<path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>';
+const shrinkPath = '<path d="M4 14h3a2 2 0 012 2v3m4-12V4a2 2 0 012-2h3M3 10h3a2 2 0 002-2V5m8 14v-3a2 2 0 012-2h3"/>';
+
+fsBtn.addEventListener('click', function() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+document.addEventListener('fullscreenchange', function() {
+  fsIcon.innerHTML = document.fullscreenElement ? shrinkPath : expandPath;
+  fsBtn.title = document.fullscreenElement ? '退出全屏' : '全屏';
+});
+
+// ===== 领域模型 多图交互式查看器 =====
+(function() {
+  // 三张图的配置：SVG 尺寸 + 领域锚点
+  var configs = [
+    { // 图0: 用户服务
+      svgW: 6132, svgH: 3431,
+      domains: {
+        user:       { x: 1430, y: 980,  w: 750, h: 620 },
+        student:    { x: 3100, y: 250,  w: 1400, h: 900 },
+        class:      { x: 650,  y: 1420, w: 650, h: 500 },
+        grade:      { x: 650,  y: 2100, w: 750, h: 550 },
+        time:       { x: 3550, y: 1550, w: 450, h: 450 },
+        org:        { x: 2050, y: 2600, w: 1400, h: 750 },
+        tag:        { x: 4000, y: 1600, w: 850, h: 600 },
+        teaching:   { x: 0,    y: 1050, w: 740, h: 650 },
+        thirdparty: { x: 4750, y: 2200, w: 400, h: 400 },
+        config:     { x: 5050, y: 2180, w: 1000, h: 700 },
+        infra:      { x: 4730, y: 0,    w: 400, h: 550 },
+        audit:      { x: 2750, y: 0,    w: 550, h: 350 }
+      }
+    },
+    { // 图1: 任务服务
+      svgW: 3661, svgH: 2819,
+      domains: {
+        exam:       { x: 540,  y: 0,    w: 900, h: 500 },
+        score:      { x: 1150, y: 420,  w: 500, h: 600 },
+        marking:    { x: 1540, y: 400,  w: 700, h: 650 },
+        correction: { x: 3100, y: 390,  w: 550, h: 600 },
+        knowledge:  { x: 0,    y: 2400, w: 650, h: 400 },
+        report:     { x: 2200, y: 490,  w: 900, h: 700 }
+      }
+    },
+    { // 图2: 评估服务
+      svgW: 7920, svgH: 1463,
+      domains: {
+        common:     { x: 2380, y: 0,    w: 1760, h: 650 },
+        evalplan:   { x: 4070, y: 220,  w: 1960, h: 550 },
+        honor:      { x: 5920, y: 0,    w: 1140, h: 650 },
+        courseeval:  { x: 700,  y: 240,  w: 720, h: 550 },
+        habit:      { x: 1310, y: 600,  w: 600, h: 450 },
+        fitness:    { x: 2360, y: 600,  w: 650, h: 450 },
+        evidence:   { x: 0,    y: 250,  w: 720, h: 550 },
+        portrait:   { x: 4990, y: 250,  w: 1040, h: 550 },
+        project:    { x: 6950, y: 0,    w: 960, h: 650 },
+        moment:     { x: 3490, y: 600,  w: 370, h: 450 },
+        goal:       { x: 3750, y: 600,  w: 370, h: 450 }
+      }
+    }
+  ];
+
+  // DmViewer 类
+  function DmViewer(idx, cfg) {
+    this.idx = idx;
+    this.cfg = cfg;
+    this.scale = 0.2;
+    this.panX = 0;
+    this.panY = 0;
+    this.isDragging = false;
+    this.viewer = null;
+    this.img = null;
+    this.zoomLabel = null;
+    this.inited = false;
+  }
+
+  DmViewer.prototype.init = function() {
+    var self = this;
+    this.viewer = document.querySelector('.dm-viewer[data-vi="' + this.idx + '"]');
+    if (!this.viewer) return;
+    this.img = this.viewer.querySelector('img');
+    this.zoomLabel = this.viewer.parentElement.querySelector('.dm-zoom-level');
+
+    // 适应窗口
+    requestAnimationFrame(function() { self.fitAll(); });
+
+    // 拖拽
+    var startX, startY, startPX, startPY;
+    this.viewer.addEventListener('mousedown', function(e) {
+      self.isDragging = true;
+      startX = e.clientX; startY = e.clientY;
+      startPX = self.panX; startPY = self.panY;
+      self.img.classList.add('dragging');
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!self.isDragging) return;
+      self.panX = startPX + (e.clientX - startX);
+      self.panY = startPY + (e.clientY - startY);
+      self.applyTransform();
+    });
+    document.addEventListener('mouseup', function() {
+      if (self.isDragging) {
+        self.isDragging = false;
+        self.img.classList.remove('dragging');
+      }
+    });
+
+    // 滚轮缩放
+    this.viewer.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      var rect = self.viewer.getBoundingClientRect();
+      var mx = e.clientX - rect.left;
+      var my = e.clientY - rect.top;
+      var delta = e.deltaY > 0 ? -0.08 : 0.08;
+      var ns = Math.max(0.05, Math.min(3, self.scale + delta));
+      self.panX = mx - (mx - self.panX) * (ns / self.scale);
+      self.panY = my - (my - self.panY) * (ns / self.scale);
+      self.scale = ns;
+      self.applyTransform();
+    }, { passive: false });
+
+    // 领域按钮
+    var btns = document.querySelectorAll('.dm-domain-btn[data-vi="' + this.idx + '"]');
+    btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var key = this.getAttribute('data-dm');
+        self.navigateTo(key);
+        btns.forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+      });
+    });
+
+    this.inited = true;
+  };
+
+  DmViewer.prototype.applyTransform = function() {
+    if (!this.img) return;
+    this.img.style.transform = 'translate(' + this.panX + 'px,' + this.panY + 'px) scale(' + this.scale + ')';
+    if (this.zoomLabel) this.zoomLabel.textContent = Math.round(this.scale * 100) + '%';
+  };
+
+  DmViewer.prototype.navigateTo = function(key) {
+    var d = this.cfg.domains[key];
+    if (!d || !this.viewer) return;
+    var vw = this.viewer.clientWidth;
+    var vh = this.viewer.clientHeight;
+    var sx = vw * 0.85 / d.w;
+    var sy = vh * 0.85 / d.h;
+    this.scale = Math.min(sx, sy, 2.5);
+    this.panX = vw / 2 - (d.x + d.w / 2) * this.scale;
+    this.panY = vh / 2 - (d.y + d.h / 2) * this.scale;
+    this.img.classList.remove('dragging');
+    this.applyTransform();
+  };
+
+  DmViewer.prototype.zoom = function(delta) {
+    if (!this.viewer) this.init();
+    var vw = this.viewer.clientWidth / 2;
+    var vh = this.viewer.clientHeight / 2;
+    var ns = Math.max(0.05, Math.min(3, this.scale + delta));
+    this.panX = vw - (vw - this.panX) * (ns / this.scale);
+    this.panY = vh - (vh - this.panY) * (ns / this.scale);
+    this.scale = ns;
+    this.img.classList.remove('dragging');
+    this.applyTransform();
+  };
+
+  DmViewer.prototype.reset = function() {
+    if (!this.viewer) this.init();
+    this.scale = 0.2;
+    this.panX = 0; this.panY = 0;
+    var btns = document.querySelectorAll('.dm-domain-btn[data-vi="' + this.idx + '"]');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    this.img.classList.remove('dragging');
+    this.applyTransform();
+  };
+
+  DmViewer.prototype.fitAll = function() {
+    if (!this.viewer) this.init();
+    var vw = this.viewer.clientWidth;
+    var vh = this.viewer.clientHeight;
+    this.scale = Math.min(vw / this.cfg.svgW, vh / this.cfg.svgH);
+    this.panX = (vw - this.cfg.svgW * this.scale) / 2;
+    this.panY = (vh - this.cfg.svgH * this.scale) / 2;
+    var btns = document.querySelectorAll('.dm-domain-btn[data-vi="' + this.idx + '"]');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    this.img.classList.remove('dragging');
+    this.applyTransform();
+  };
+
+  // 创建 3 个查看器实例
+  window.dmViewers = configs.map(function(cfg, i) { return new DmViewer(i, cfg); });
+
+  function initAllViewers() {
+    dmViewers.forEach(function(v) { if (!v.inited) v.init(); });
+  }
+
+  // Tab 切换时初始化
+  var origSwitch = window.switchTab;
+  window.switchTab = function(name) {
+    origSwitch(name);
+    if (name === 'domain') {
+      setTimeout(initAllViewers, 50);
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var tab = document.getElementById('tab-domain');
+    if (tab && tab.classList.contains('active')) {
+      setTimeout(initAllViewers, 50);
+    }
+  });
+})();
+</script>
+</body>
+</html>
